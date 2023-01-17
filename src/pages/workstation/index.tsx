@@ -1,12 +1,21 @@
-import { Button, HStack } from '@chakra-ui/react';
+import { Box, Button, HStack, useDisclosure, VStack } from '@chakra-ui/react';
+import { useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
+// import { WorkstationsFilter } from '@/components/workstations-filter';
+import { ListView } from '@/components/list';
+import { WorkstationModal } from '@/features/workstations/components/workstation-modal/workstation-modal';
+import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
+import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
 
 export function Workstation() {
-  // const isCreateAuthorized = true;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [workstationToEdit, setWorkstationToEdit] = useState<Workstation>();
 
+  const { data: workstations, isLoading, refetch } = useGetAllWorkstations();
   // const { filters, updateField } = useFilters(workstationFields);
-
+  const { mutate: deleteCity, isLoading: isRemovingCity } =
+    useDeleteWorkstation({});
   // const {
   //   data: workstations,
   //   isLoading,
@@ -24,9 +33,6 @@ export function Workstation() {
   //     revalidateIfStale: false,
   //   }
   // );
-
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [workstationToEdit, setWorkstationToEdit] = useState<Workstation>();
 
   // const refresh = useCallback(
   //   (data?: Workstation[]) =>
@@ -123,25 +129,17 @@ export function Workstation() {
     <>
       <PageHeader title="Gerenciar Postos de Trabalho">
         <HStack spacing={2}>
-          <RefreshButton
-            refresh={() =>
-              new Promise((resolve) => {
-                resolve(5);
-              })
-            }
-          />
-          <Button onClick={() => console.log('novo')}>
-            Novo Posto de Trabalho
-          </Button>
+          <RefreshButton refresh={refetch} />
+          <Button onClick={onOpen}>Novo Posto de Trabalho</Button>
         </HStack>
       </PageHeader>
 
-      {/* <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" spacing={6}>
         <Box width="50%" minWidth="300px">
-          <WorkstationsFilter onFilter={handleFilterChange} />
+          {/* <WorkstationsFilter onFilter={handleFilterChange} /> */}
         </Box>
-
-        <ListView<Workstation>
+      </VStack>
+      {/*   <ListView<Workstation>
           items={workstations?.data}
           render={renderWorkstationItem}
           isLoading={isLoading || isValidating}
@@ -158,11 +156,9 @@ export function Workstation() {
             Selecione uma regional para visualizar os postos de trabalho
           </Heading>
         )}
-      </VStack> */}
+      </VStack>
 
-      <p>Em progresso! Será entregue nas próximas interações..</p>
-
-      {/* <WorkstationModal
+      <WorkstationModal
         isOpen={isOpen}
         onClose={handleClose}
         workstation={workstationToEdit}

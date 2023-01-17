@@ -15,8 +15,8 @@ import { ControlledSelect, Input } from '@/components/form-fields';
 import { getSelectOptions } from '@/utils/form-utils';
 import { ActionButton } from '@/components/action-buttons';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
-import { useGetCitiesData } from '@/components/forms/workstation-form/api/get-cities-data';
-import { useGetWorkstationData } from '@/components/forms/workstation-form/api/get-workstations-data';
+import { useGetCitiesData } from '@/features/workstations/components/workstation-form/api/get-cities-data';
+import { useGetWorkstationData } from '@/features/workstations/components/workstation-form/api/get-workstations-data';
 
 export interface WorkstationFormProps {
   defaultValues?: Workstation | undefined;
