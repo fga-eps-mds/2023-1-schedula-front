@@ -3,7 +3,7 @@ import { ModalProps } from '@chakra-ui/react';
 import {
   WorkstationForm,
   WorkstationFormValues,
-} from '@/components/forms/workstation-form';
+} from '@/features/workstations/components/workstation-form';
 import { Modal } from '@/components/modal';
 
 interface WorkstationModalProps extends Partial<ModalProps> {

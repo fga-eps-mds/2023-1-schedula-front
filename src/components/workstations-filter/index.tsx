@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 import { HStack } from '@chakra-ui/react';
 import { ControlledSelect } from '@/components/form-fields';
 import { getSelectOptions } from '@/utils/form-utils';
+import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 
-export type Filters = {
+/* export type Filters = {
   regional: SelectOption | null;
   nome: string;
 };
@@ -18,15 +19,7 @@ interface WorkstationsFilterProps {
 export function WorkstationsFilter({ onFilter }: WorkstationsFilterProps) {
   const { control, watch } = useForm<Filters>();
 
-  // const { data: regionais, isLoading: isLoadingRegionais } = useRequest<
-  //   Workstation[]
-  // >(
-  //   getWorkstations({
-  //     params: {
-  //       regional: true,
-  //     },
-  //   })
-  // );
+  const { data: workstations, isLoading, refetch } = useGetAllWorkstations();
 
   // Callback version of watch.  It's your responsibility to unsubscribe when done.
   useEffect(() => {
@@ -37,16 +30,16 @@ export function WorkstationsFilter({ onFilter }: WorkstationsFilterProps) {
 
   return (
     <HStack spacing={4}>
-      {/* <ControlledSelect
+      <ControlledSelect
         control={control}
         label="Regional"
         name="regional"
         id="regional"
-        options={getSelectOptions(regionais?.data, 'name', 'id')}
+        options={getSelectOptions(workstations, 'name', 'id')}
         isClearable
-        isLoading={isLoadingRegionais}
+        isLoading={isLoading}
         placeholder="Filtrar por regional"
-      /> */}
+      />
     </HStack>
   );
-}
+} */
