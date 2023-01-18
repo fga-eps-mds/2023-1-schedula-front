@@ -11,7 +11,7 @@ const events = [
   'keypress',
 ];
 
-const THIRTY_MINUTES_IN_MS = 60000 * 30;
+const THIRTY_MINUTES_IN_MS = 60000 * 2;
 
 export function AutoLogoutComponent({ children }: { children: ReactNode }) {
   const { signOut } = useAuth();
