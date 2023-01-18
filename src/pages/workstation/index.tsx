@@ -1,5 +1,12 @@
-import { Box, Button, HStack, useDisclosure, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+import {
+  Box,
+  Button,
+  Checkbox,
+  HStack,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
+import { useCallback, useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 // import { WorkstationsFilter } from '@/components/workstations-filter';
@@ -7,6 +14,7 @@ import { ListView } from '@/components/list';
 import { WorkstationModal } from '@/features/workstations/components/workstation-modal/workstation-modal';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
+import { WorkstationItem } from '@/features/workstations/components/workstation-item';
 
 export function Workstation() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -14,8 +22,40 @@ export function Workstation() {
 
   const { data: workstations, isLoading, refetch } = useGetAllWorkstations();
   // const { filters, updateField } = useFilters(workstationFields);
-  const { mutate: deleteCity, isLoading: isRemovingCity } =
+  const { mutate: deleteCity, isLoading: isDeletingWorkstation } =
     useDeleteWorkstation({});
+
+  const onEdit = useCallback(
+    (work: Workstation) => {
+      setWorkstationToEdit(work);
+      onOpen();
+    },
+    [onOpen]
+  );
+
+  /* const onDelete = useCallback(
+    (workstationId: string) => {
+      deleteCity({ workstationId, data: });
+    },
+    [deleteCity]
+  ); */
+
+  const handleClose = useCallback(() => {
+    setWorkstationToEdit(undefined);
+    onClose();
+  }, [onClose]);
+
+  const renderWorkstationItem = useCallback(
+    (work: Workstation) => (
+      <WorkstationItem
+        workstation={work}
+        onEdit={onEdit}
+        onDelete={() => {}}
+        isDeleting={isDeletingWorkstation}
+      />
+    ),
+    [/* onDelete */ onEdit, isDeletingWorkstation]
+  );
   // const {
   //   data: workstations,
   //   isLoading,
@@ -136,34 +176,23 @@ export function Workstation() {
 
       <VStack align="stretch" spacing={6}>
         <Box width="50%" minWidth="300px">
-          {/* <WorkstationsFilter onFilter={handleFilterChange} /> */}
+          <Checkbox size="md" colorScheme="green">
+            Regionais
+          </Checkbox>
         </Box>
-      </VStack>
-      {/*   <ListView<Workstation>
-          items={workstations?.data}
+
+        <ListView<Workstation>
+          items={workstations}
           render={renderWorkstationItem}
-          isLoading={isLoading || isValidating}
+          isLoading={isLoading}
         />
-
-        {workstations?.data?.length === 0 && (
-          <Heading size="md" textAlign="center">
-            Nenhum posto de trabalho encontrado
-          </Heading>
-        )}
-
-        {!filters?.regional && (
-          <Heading size="md" color="GrayText">
-            Selecione uma regional para visualizar os postos de trabalho
-          </Heading>
-        )}
       </VStack>
 
       <WorkstationModal
         isOpen={isOpen}
         onClose={handleClose}
         workstation={workstationToEdit}
-        onSubmit={onSubmit}
-      /> */}
+      />
     </>
   );
 }

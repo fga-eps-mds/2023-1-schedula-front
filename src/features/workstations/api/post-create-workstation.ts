@@ -10,7 +10,7 @@ import { WORKSTATIONS_CACHE_KEYS } from '@/features/workstations/constants/cache
 import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
-function postCreateWorkstation(data: PostCreateWorkstationParams) {
+function createWorkstation(data: PostCreateWorkstationParams) {
   return api.post<PostCreateWorkstationResponse>(
     `${WORKSTATIONS_ENDPOINT}/workstations`,
     data
@@ -24,7 +24,7 @@ export function usePostCreateWorkstation({
 }) {
   const queryClient = useQueryClient();
 
-  return useMutation(postCreateWorkstation, {
+  return useMutation(createWorkstation, {
     onSuccess() {
       queryClient.invalidateQueries([WORKSTATIONS_CACHE_KEYS.allWorkstations]);
 

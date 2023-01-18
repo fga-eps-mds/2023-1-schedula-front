@@ -1,12 +1,12 @@
 export interface Workstation {
   id: string;
   name: string;
-  city_id: string;
+  city: City;
   phone: string;
   ip: string;
   gateway: string;
-  parent_workstation_id?: string;
-  child_workstation_ids?: string[];
+  parent_workstation?: Workstation;
+  child_workstations?: Workstation[];
 }
 
 export interface PostCreateWorkstationParams {
@@ -22,18 +22,17 @@ export interface PostCreateWorkstationParams {
 export interface PostCreateWorkstationResponse {
   id: string;
   name: string;
-  city_id: string;
+  city: City;
   phone: string;
   ip: string;
   gateway: string;
-  parent_workstation_id?: string;
-  child_workstation_ids?: string[];
+  parent_workstation?: Workstation;
+  child_workstations?: Workstation[];
 }
 
 export interface PutUpdateWorkstationParams {
-  workId: string;
+  workstationId: string;
   data: {
-    id: string;
     name: string;
     city_id: string;
     phone: string;
@@ -47,15 +46,15 @@ export interface PutUpdateWorkstationParams {
 export interface PutUpdateWorkstationResponse {
   id: string;
   name: string;
-  city_id: string;
+  city: City;
   phone: string;
   ip: string;
   gateway: string;
-  parent_workstation_id?: string;
-  child_workstation_ids?: string[];
+  parent_workstation?: Workstation;
+  child_workstations?: Workstation[];
 }
 
 export interface DeleteWorkstationParams {
-  workId: string;
+  workstationId: string;
   data: Record<string, string[]>;
 }

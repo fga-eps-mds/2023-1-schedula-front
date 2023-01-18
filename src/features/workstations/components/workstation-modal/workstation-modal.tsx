@@ -1,57 +1,75 @@
 import { useCallback } from 'react';
 import { ModalProps } from '@chakra-ui/react';
-import {
-  WorkstationForm,
-  WorkstationFormValues,
-} from '@/features/workstations/components/workstation-form';
+import { WorkstationForm } from '@/features/workstations/components/workstation-form';
 import { Modal } from '@/components/modal';
+import { usePostCreateWorkstation } from '@/features/workstations/api/post-create-workstation';
+import { usePutUpdateWorkstation } from '@/features/workstations/api/put-update-workstation';
+import { PostCreateWorkstationParams } from '@/features/workstations/api/types';
 
 interface WorkstationModalProps extends Partial<ModalProps> {
-  workstation?: Workstation | undefined;
-  onSubmit: (result: Result<ApiResponse<Workstation>>) => void;
+  workstation?: Workstation;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export function WorkstationModal({
   workstation,
-  onSubmit,
   onClose,
   ...props
 }: WorkstationModalProps) {
-  const handleSubmit = useCallback(async (data: WorkstationFormValues) => {
-    const payload = {
-      ...data,
-      phones: (data.phones as unknown as { number: string }[])?.map(
-        (phone) => phone?.number
-      ),
-      city_id: data.city_id?.value,
-      regional_id: data.regional_id?.value,
-    };
+  const { mutate: createWorkstation, isLoading: isCreatingWorkstation } =
+    usePostCreateWorkstation({
+      onSuccessCallBack: onClose,
+    });
 
-    // const response = await request<Workstation>(
-    //   workstation
-    //     ? updateWorkstation(workstation.id)(payload)
-    //     : createWorkstation(payload)
-    // );
+  const { mutate: updateWorkstation, isLoading: isUpdatingWorkstation } =
+    usePutUpdateWorkstation({
+      onSuccessCallBack: onClose,
+    });
 
-    // onSubmit?.(response);
-    // onClose?.();
+  const handleSubmit = useCallback(
+    async ({
+      name,
+      city_id,
+      gateway,
+      ip,
+      phone,
+      child_workstation_ids,
+      parent_workstation_id,
+    }: WorkstationPayload) => {
+      const payload: PostCreateWorkstationParams = {
+        name,
+        city_id,
+        gateway,
+        ip,
+        phone,
+        child_workstation_ids,
+        parent_workstation_id,
+      };
 
-    // if (response.type === 'error') {
-    //   // Let hook form know that submit was not successful
-    //   return Promise.reject(response.error?.message);
-    // }
-  }, []);
+      if (workstation?.id) {
+        updateWorkstation({
+          workstationId: workstation.id,
+          data: payload,
+        });
+      } else {
+        createWorkstation(payload);
+      }
+    },
+    [createWorkstation, updateWorkstation, workstation?.id]
+  );
 
   return (
     <Modal
       title={`${workstation ? 'Editar' : 'Novo'} Posto de Trabalho`}
-      size="2xl"
       onClose={onClose}
       {...props}
     >
-      <WorkstationForm defaultValues={workstation} onSubmit={handleSubmit} />
+      <WorkstationForm
+        defaultValues={workstation}
+        onSubmit={handleSubmit}
+        isSubmitting={isCreatingWorkstation || isUpdatingWorkstation}
+      />
     </Modal>
   );
 }

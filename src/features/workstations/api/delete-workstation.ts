@@ -7,9 +7,9 @@ import { WORKSTATIONS_CACHE_KEYS } from '@/features/workstations/constants/cache
 import { DeleteWorkstationParams } from '@/features/workstations/api/types';
 import { ApiError } from '@/config/lib/axios/types';
 
-function deleteWorkstation({ workId, data }: DeleteWorkstationParams) {
+function deleteWorkstation({ workstationId, data }: DeleteWorkstationParams) {
   return api.post<string>(
-    `${WORKSTATIONS_ENDPOINT}/workstations/${workId}`,
+    `${WORKSTATIONS_ENDPOINT}/workstations/${workstationId}`,
     data
   );
 }
