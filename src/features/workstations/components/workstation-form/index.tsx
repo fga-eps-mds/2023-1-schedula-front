@@ -1,114 +1,44 @@
-import { useCallback, useEffect } from 'react';
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { FaPlus } from 'react-icons/fa';
-import {
-  Button,
-  Checkbox,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  HStack,
-  Text,
-} from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button, Grid, GridItem, HStack } from '@chakra-ui/react';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import { getSelectOptions } from '@/utils/form-utils';
-import { ActionButton } from '@/components/action-buttons';
-import { DeleteButton } from '@/components/action-buttons/delete-button';
-import { useGetCitiesData } from '@/features/workstations/components/workstation-form/api/get-cities-data';
-import { useGetWorkstationData } from '@/features/workstations/components/workstation-form/api/get-workstations-data';
+import { useGetAllCities } from '@/features/cities/api/get-all-cities';
+import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 
-export interface WorkstationFormProps {
-  defaultValues?: Workstation | undefined;
-  onSubmit: SubmitHandler<WorkstationFormValues>;
+interface WorkstationFormProps {
+  defaultValues?: Workstation;
+  onSubmit: (data: WorkstationPayload) => void;
+  isSubmitting: boolean;
 }
-
-export type WorkstationFormValues = CreateWorkstationPayload & {
-  phones: { number: string }[];
-  city_id: SelectOption<number>;
-  regional_id: SelectOption<number>;
-};
 
 export function WorkstationForm({
   defaultValues,
   onSubmit,
+  isSubmitting,
 }: WorkstationFormProps) {
-  const { data: cidades, isLoading: isLoadingCidades } = useGetCitiesData();
+  const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
 
-  const { data: regionais, isLoading: isLoadingRegionais } =
-    useGetWorkstationData();
+  const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities();
+
+  const { data: workstations, isLoading: isLoadingWorkstations } =
+    useGetAllWorkstations();
+
+  const parent_workstations = workstations?.filter(
+    (work) => (work.child_workstations?.length ?? 0) > 0
+  );
 
   const {
     register,
     control,
     handleSubmit,
     watch,
-    resetField,
-    formState: { errors, isSubmitting },
-  } = useForm<WorkstationFormValues>({
+    formState: { errors },
+  } = useForm<WorkstationPayload>({
     defaultValues: {
       ...defaultValues,
-      phones: defaultValues?.phones?.map((phone) => ({ number: phone })),
     },
   });
-
-  const isADSL = watch('adsl_vpn');
-  const isRegional = watch('regional');
-
-  useEffect(() => {
-    // THIS A HACKY SOLUTION UNTIL BACKEND SENDS THE NAME OF THE CITY/WORKSTATION
-    // Get workstation label from defaultValues and set it on the select
-    if (defaultValues?.regional_id && regionais) {
-      const label = regionais?.data.find(
-        (regional: { id: number }) =>
-          regional?.id === defaultValues?.regional_id
-      )?.name;
-
-      if (label)
-        resetField('regional_id', {
-          defaultValue: {
-            value: defaultValues?.regional_id,
-            label,
-          },
-        });
-    }
-  }, [defaultValues, regionais, resetField]);
-
-  useEffect(() => {
-    // THIS A HACKY SOLUTION UNTIL BACKEND SENDS THE NAME OF THE CITY/WORKSTATION
-    // Get workstation label from defaultValues and set it on the select
-    if (defaultValues?.city_id && cidades) {
-      const label = cidades?.data.find(
-        (city: { id: number }) => city?.id === defaultValues?.city_id
-      )?.name;
-
-      if (label)
-        resetField('city_id', {
-          defaultValue: {
-            value: defaultValues?.city_id,
-            label,
-          },
-        });
-    }
-  }, [cidades, defaultValues, resetField]);
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'phones',
-  });
-
-  const handleAddPhone = useCallback(() => {
-    append({
-      number: '',
-    });
-  }, [append]);
-
-  const handleRemovePhone = useCallback(
-    (index: number) => () => {
-      remove(index);
-    },
-    [remove]
-  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -120,69 +50,57 @@ export function WorkstationForm({
           placeholder="Nome"
         />
 
+        <Input
+          label="Telefone"
+          {...register('phone', { required: 'Campo obrigatórtio' })}
+          errors={errors?.name}
+          placeholder="Telefone"
+        />
+
+        <Input
+          label="IP"
+          {...register('ip', { required: 'Campo obrigatórtio' })}
+          errors={errors?.name}
+          placeholder="IP"
+        />
+
+        <Input
+          label="Gateway"
+          {...register('gateway', { required: 'Campo obrigatórtio' })}
+          errors={errors?.name}
+          placeholder="Gateway"
+        />
+
         <GridItem alignSelf="center">
-          <HStack spacing={6}>
-            <Checkbox {...register('regional')} size="lg" colorScheme="orange">
-              Regional
-            </Checkbox>
-            <Checkbox {...register('adsl_vpn')} size="lg" colorScheme="orange">
-              ADSL/VPN
-            </Checkbox>
-          </HStack>
+          <HStack spacing={6} />
         </GridItem>
-
-        {!isADSL && (
-          <>
-            <Input
-              label="Link"
-              {...register('link', {
-                required: 'Campo obrigatório',
-                shouldUnregister: true,
-              })}
-              errors={errors?.link}
-              placeholder="00.00.000.1"
-            />
-
-            <Input
-              label="IP"
-              {...register('ip', {
-                required: 'Campo obrigatório',
-                shouldUnregister: true,
-              })}
-              errors={errors?.ip}
-              placeholder="00.000.00.2 a 00.00.000.3"
-            />
-          </>
-        )}
 
         <ControlledSelect
           control={control}
           name="city_id"
           id="city_id"
-          options={getSelectOptions(cidades?.data, 'name', 'id')}
+          options={getSelectOptions(cidades, 'name', 'id')}
           isLoading={isLoadingCidades}
           placeholder="Cidade"
           label="Cidade"
           rules={{ required: 'Campo obrigatório' }}
         />
 
-        {!isRegional && (
-          <ControlledSelect
-            control={control}
-            name="regional_id"
-            id="regional_id"
-            options={getSelectOptions(regionais?.data, 'name', 'id')}
-            isLoading={isLoadingRegionais}
-            placeholder="Regional"
-            label="Regional"
-            rules={{
-              required: 'Campo obrigatório',
-              shouldUnregister: true,
-            }}
-          />
-        )}
+        <ControlledSelect
+          control={control}
+          name="parent_workstation_id"
+          id="parent_workstation_id"
+          options={getSelectOptions(parent_workstations, 'name', 'id')}
+          isLoading={isLoadingWorkstations}
+          placeholder="Regional"
+          label="Regional"
+          rules={{
+            required: 'Campo obrigatório',
+            shouldUnregister: true,
+          }}
+        />
 
-        <GridItem colSpan={2}>
+        {/* <GridItem colSpan={2}>
           <Flex gap={2} alignItems="center">
             <ActionButton
               label="Adicionar Telefone"
@@ -221,11 +139,11 @@ export function WorkstationForm({
               );
             })}
           </Grid>
-        </GridItem>
+        </GridItem> */}
 
         <GridItem colSpan={2}>
           <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>
-            Registrar
+            {isEditing ? 'Salvar' : 'Criar Posto de Trabalho'}
           </Button>
         </GridItem>
       </Grid>

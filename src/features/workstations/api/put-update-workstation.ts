@@ -10,9 +10,12 @@ import { toast } from '@/utils/toast';
 import { WORKSTATIONS_CACHE_KEYS } from '@/features/workstations/constants/cache';
 import { ApiError } from '@/config/lib/axios/types';
 
-function putUpdateWorkstation({ workId, data }: PutUpdateWorkstationParams) {
+function updateWorkstation({
+  workstationId,
+  data,
+}: PutUpdateWorkstationParams) {
   return api.put<PutUpdateWorkstationResponse>(
-    `${WORKSTATIONS_ENDPOINT}/workstations/${workId}`,
+    `${WORKSTATIONS_ENDPOINT}/workstations/${workstationId}`,
     data
   );
 }
@@ -24,7 +27,7 @@ export function usePutUpdateWorkstation({
 }) {
   const queryClient = useQueryClient();
 
-  return useMutation(putUpdateWorkstation, {
+  return useMutation(updateWorkstation, {
     onSuccess() {
       queryClient.invalidateQueries([WORKSTATIONS_CACHE_KEYS.allWorkstations]);
 

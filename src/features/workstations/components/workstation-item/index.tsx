@@ -1,24 +1,21 @@
-import { ReactElement, useCallback } from 'react';
-import { Badge, Flex, HStack, Skeleton, Text, Tooltip } from '@chakra-ui/react';
+import { Badge, Flex, HStack, Text, Tooltip } from '@chakra-ui/react';
 import { Item } from '@/components/list-item';
+import { ItemActions } from '@/components/list-item/list-item-actions';
+import { EditButton } from '@/components/action-buttons/edit-button';
+import { DeleteButton } from '@/components/action-buttons/delete-button';
 
 interface WorkstationItemProps {
   workstation: Workstation;
-  onEdit: (chamado: Workstation) => void;
-  onDelete: (
-    result: Result<ApiResponse<null>>,
-    workstation: Workstation
-  ) => void;
+  onEdit: (workstation: Workstation) => void;
+  onDelete: (workstationId: string) => void;
+  isDeleting: boolean;
 }
-
 export function WorkstationItem({
   workstation,
   onEdit,
   onDelete,
+  isDeleting,
 }: WorkstationItemProps) {
-  const isEditAuthorized = true;
-  const isDeleteAuthorized = true;
-
   // const { data: city, isLoading: isLoadingCity } = useRequest<City>(
   //   workstation ? getCityById(workstation?.city_id) : null,
   //   {
@@ -36,64 +33,49 @@ export function WorkstationItem({
   // );
 
   return (
-    // <Item<Workstation>
-    //   title={
-    //     <Flex>
-    //       {workstation?.name}
-    //       <HStack spacing={2} ml={4}>
-    //         {workstation?.regional && (
-    //           <Badge colorScheme="purple" variant="solid">
-    //             Regional
-    //           </Badge>
-    //         )}
-    //         {
-    //           {
-    //             true: (
-    //               <Badge colorScheme="cyan" variant="subtle">
-    //                 ADSL_VPN
-    //               </Badge>
-    //             ),
-    //             false: (
-    //               <>
-    //                 <Tooltip
-    //                   colorScheme="blackAlpha"
-    //                   label="IP"
-    //                   placement="top"
-    //                   openDelay={350}
-    //                 >
-    //                   <Badge colorScheme="orange" variant="outline">
-    //                     {workstation?.ip}
-    //                   </Badge>
-    //                 </Tooltip>
-    //                 <Badge colorScheme="orange" variant="subtle">
-    //                   {workstation?.link}
-    //                 </Badge>
-    //               </>
-    //             ),
-    //           }[workstation?.adsl_vpn?.toString?.()]
-    //         }
-    //       </HStack>
-    //     </Flex>
-    //   }
-    //   description={
-    //     <Skeleton isLoaded={!isLoadingCity}>
-    //       <Text>{city?.data?.name || '---'}</Text>
-    //     </Skeleton>
-    //   }
-    // >
-    //   <Item.Actions item={workstation}>
-    //     {
-    //       (isEditAuthorized && (
-    //         <EditButton onClick={onEdit} label={workstation?.name} />
-    //       )) as ReactElement
-    //     }
-    //     {
-    //       (isDeleteAuthorized && (
-    //         <DeleteButton onClick={handleDelete} label={workstation?.name} />
-    //       )) as ReactElement
-    //     }
-    //   </Item.Actions>
-    // </Item>
-    <p>CORRIGIR</p>
+    <Item<Workstation>
+      title={
+        <Flex>
+          {workstation?.name}
+          <HStack spacing={2} ml={4}>
+            {(workstation.child_workstations?.length ?? 0) > 0 && (
+              <Badge colorScheme="purple" variant="solid">
+                Regional
+              </Badge>
+            )}
+            <>
+              <Tooltip
+                colorScheme="blackAlpha"
+                label="IP"
+                placement="top"
+                openDelay={350}
+              >
+                <Badge colorScheme="orange" variant="outline">
+                  {workstation?.ip}
+                </Badge>
+              </Tooltip>
+              <Badge colorScheme="orange" variant="subtle">
+                {workstation?.gateway}
+              </Badge>
+            </>
+          </HStack>
+        </Flex>
+      }
+      description={<Text>{workstation?.city.name}</Text>}
+    >
+      <ItemActions item={workstation}>
+        <EditButton
+          onClick={onEdit}
+          label={workstation.name}
+          disabled={isDeleting}
+        />
+
+        <DeleteButton
+          onClick={() => onDelete(workstation.id)}
+          label={workstation.name}
+          isLoading={isDeleting}
+        />
+      </ItemActions>
+    </Item>
   );
 }
