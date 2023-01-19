@@ -38,7 +38,7 @@ export function WorkstationItem({
         <Flex>
           {workstation?.name}
           <HStack spacing={2} ml={4}>
-            {(workstation.child_workstations?.length ?? 0) > 0 && (
+            {workstation?.is_regional && (
               <Badge colorScheme="purple" variant="solid">
                 Regional
               </Badge>

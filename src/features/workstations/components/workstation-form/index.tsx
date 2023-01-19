@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Grid, GridItem, HStack } from '@chakra-ui/react';
+import { Button, Checkbox, Grid, GridItem, HStack } from '@chakra-ui/react';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import { getSelectOptions } from '@/utils/form-utils';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -19,65 +19,69 @@ export function WorkstationForm({
 }: WorkstationFormProps) {
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
 
+  const [isSelected, setIsSelected] = useState(false);
+
+  const handleSelect = useCallback(() => {
+    setIsSelected(!isSelected);
+  }, [isSelected]);
+
   const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities();
 
   const { data: workstations, isLoading: isLoadingWorkstations } =
     useGetAllWorkstations();
 
-  const parent_workstations = workstations?.filter(
-    (work) => (work.child_workstations?.length ?? 0) > 0
-  );
+  const parent_workstations = workstations?.filter((work) => work.is_regional);
+
+  const child_workstations = workstations?.filter((work) => !work.is_regional);
 
   const {
     register,
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<WorkstationPayload>({
     defaultValues: {
       ...defaultValues,
+      is_regional: defaultValues?.is_regional
+        ? defaultValues.is_regional
+        : !isSelected,
     },
   });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid templateColumns="1fr 1fr" gap={6}>
-        <Input
-          label="Nome"
-          {...register('name', { required: 'Campo obrigatório' })}
-          errors={errors?.name}
-          placeholder="Nome"
-        />
+      <Input
+        label="Nome"
+        {...register('name', { required: 'Campo obrigatório' })}
+        errors={errors?.name}
+        placeholder="Nome"
+      />
 
+      <Grid templateColumns="1fr 1fr" gap={6}>
         <Input
           label="Telefone"
           {...register('phone', { required: 'Campo obrigatórtio' })}
-          errors={errors?.name}
+          errors={errors?.phone}
           placeholder="Telefone"
         />
 
         <Input
           label="IP"
           {...register('ip', { required: 'Campo obrigatórtio' })}
-          errors={errors?.name}
+          errors={errors?.ip}
           placeholder="IP"
         />
 
         <Input
           label="Gateway"
           {...register('gateway', { required: 'Campo obrigatórtio' })}
-          errors={errors?.name}
+          errors={errors?.gateway}
           placeholder="Gateway"
         />
 
-        <GridItem alignSelf="center">
-          <HStack spacing={6} />
-        </GridItem>
-
         <ControlledSelect
           control={control}
-          name="city_id"
+          name="city_payload"
           id="city_id"
           options={getSelectOptions(cidades, 'name', 'id')}
           isLoading={isLoadingCidades}
@@ -88,58 +92,41 @@ export function WorkstationForm({
 
         <ControlledSelect
           control={control}
-          name="parent_workstation_id"
-          id="parent_workstation_id"
+          name="parent_workstation_payload"
+          id="parent_workstation_payload"
           options={getSelectOptions(parent_workstations, 'name', 'id')}
           isLoading={isLoadingWorkstations}
           placeholder="Regional"
           label="Regional"
+          isDisabled={isSelected}
           rules={{
-            required: 'Campo obrigatório',
             shouldUnregister: true,
           }}
         />
 
-        {/* <GridItem colSpan={2}>
-          <Flex gap={2} alignItems="center">
-            <ActionButton
-              label="Adicionar Telefone"
-              icon={<FaPlus />}
-              onClick={handleAddPhone}
-              variant="outline"
-              color="primary"
-              tooltipProps={{
-                placement: 'bottom',
-              }}
-            />
-            <Text>Telefones</Text>
-          </Flex>
-          <Divider mb={4} mt={1} />
-          <Grid templateColumns="repeat(auto-fill, minmax(220px, 1fr))" gap={6}>
-            {fields?.map((phone, index) => {
-              return (
-                <Flex key={phone.id} gap={1}>
-                  <Input
-                    label={`Telefone ${index + 1}`}
-                    {...register(`phones.${index}.number` as const, {
-                      required: 'Campo obrigatório',
-                    })}
-                    errors={errors?.phones?.[index]?.number}
-                  />
-                  <DeleteButton
-                    label={`Telefone ${index + 1}`}
-                    onClick={handleRemovePhone(index)}
-                    variant="ghost"
-                    alignSelf="flex-end"
-                    _hover={{
-                      backgroundColor: 'blackAlpha.300',
-                    }}
-                  />
-                </Flex>
-              );
-            })}
-          </Grid>
-        </GridItem> */}
+        <ControlledSelect
+          control={control}
+          isMulti
+          name="child_workstation_payload"
+          id="child_workstation_payload"
+          options={getSelectOptions(child_workstations, 'name', 'id')}
+          isLoading={isLoadingWorkstations}
+          placeholder="Postos Agregados"
+          label="Postos Agregados"
+          isDisabled={!isSelected}
+          rules={{
+            shouldUnregister: true,
+          }}
+        />
+
+        <Checkbox
+          size="md"
+          colorScheme="green"
+          onChange={handleSelect}
+          checked={isSelected}
+        >
+          Regional
+        </Checkbox>
 
         <GridItem colSpan={2}>
           <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>
