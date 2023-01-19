@@ -30,33 +30,45 @@ export function WorkstationModal({
   const handleSubmit = useCallback(
     async ({
       name,
-      city_id,
+      city_payload,
       gateway,
       ip,
       phone,
-      child_workstation_ids,
-      parent_workstation_id,
+      is_regional,
+      child_workstation_payload,
+      parent_workstation_payload,
     }: WorkstationPayload) => {
+      const childs = child_workstation_payload?.map((work) => {
+        return work.value;
+      });
       const payload: PostCreateWorkstationParams = {
         name,
-        city_id,
+        city_id: city_payload.value,
         gateway,
         ip,
         phone,
-        child_workstation_ids,
-        parent_workstation_id,
+        is_regional,
+        child_workstation_ids: is_regional ? childs : null,
+        parent_workstation_id: is_regional
+          ? null
+          : parent_workstation_payload?.value,
       };
 
       if (workstation?.id) {
         updateWorkstation({
           workstationId: workstation.id,
-          data: payload,
+          data: { ...payload, is_regional: workstation?.is_regional },
         });
       } else {
         createWorkstation(payload);
       }
     },
-    [createWorkstation, updateWorkstation, workstation?.id]
+    [
+      createWorkstation,
+      updateWorkstation,
+      workstation?.id,
+      workstation?.is_regional,
+    ]
   );
 
   return (

@@ -4,6 +4,7 @@ export interface Workstation {
   city: City;
   phone: string;
   ip: string;
+  is_regional: boolean;
   gateway: string;
   parent_workstation?: Workstation;
   child_workstations?: Workstation[];
@@ -15,8 +16,9 @@ export interface PostCreateWorkstationParams {
   phone: string;
   ip: string;
   gateway: string;
-  parent_workstation_id?: string;
-  child_workstation_ids?: string[];
+  is_regional: boolean;
+  parent_workstation_id?: string | null;
+  child_workstation_ids?: string[] | null;
 }
 
 export interface PostCreateWorkstationResponse {
@@ -26,6 +28,7 @@ export interface PostCreateWorkstationResponse {
   phone: string;
   ip: string;
   gateway: string;
+  is_regional: boolean;
   parent_workstation?: Workstation;
   child_workstations?: Workstation[];
 }
@@ -38,8 +41,9 @@ export interface PutUpdateWorkstationParams {
     phone: string;
     ip: string;
     gateway: string;
-    parent_workstation_id?: string;
-    child_workstation_ids?: string[];
+    is_regional: boolean;
+    parent_workstation_id?: string | null;
+    child_workstation_ids?: string[] | null;
   };
 }
 
@@ -50,6 +54,7 @@ export interface PutUpdateWorkstationResponse {
   phone: string;
   ip: string;
   gateway: string;
+  is_regional: boolean;
   parent_workstation?: Workstation;
   child_workstations?: Workstation[];
 }

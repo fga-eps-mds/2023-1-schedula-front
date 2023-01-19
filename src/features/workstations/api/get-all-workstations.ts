@@ -9,19 +9,9 @@ import { Workstation } from '@/features/workstations/api/types';
 
 type GetAllWorkstationsResponse = Array<Workstation>;
 
-export const configGetWorkstations = {
-  headers: {
-    response_fields:
-      '{name: true, city_id: true, phone: true, ip: true, gateway: true, parent_workstation_id: true, child_workstation_ids: true}',
-  },
-};
-
 const getAllWorkstations = async () =>
   api
-    .get<GetAllWorkstationsResponse>(
-      `${WORKSTATIONS_ENDPOINT}/workstations`,
-      configGetWorkstations
-    )
+    .get<GetAllWorkstationsResponse>(`${WORKSTATIONS_ENDPOINT}/workstations`)
     .then((response) => response.data)
     .catch(() => {
       toast.error(
