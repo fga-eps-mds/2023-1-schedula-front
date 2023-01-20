@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Checkbox, Grid, GridItem, HStack } from '@chakra-ui/react';
 import { ControlledSelect, Input } from '@/components/form-fields';
@@ -8,6 +8,7 @@ import { useGetAllWorkstations } from '@/features/workstations/api/get-all-works
 
 interface WorkstationFormProps {
   defaultValues?: Workstation;
+  isRegional: boolean;
   onSubmit: (data: WorkstationPayload) => void;
   isSubmitting: boolean;
 }
@@ -16,14 +17,15 @@ export function WorkstationForm({
   defaultValues,
   onSubmit,
   isSubmitting,
+  isRegional,
 }: WorkstationFormProps) {
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
 
-  const [isSelected, setIsSelected] = useState(false);
+  const [isRegionalState, setIsRegionalState] = useState(isRegional);
 
   const handleSelect = useCallback(() => {
-    setIsSelected(!isSelected);
-  }, [isSelected]);
+    setIsRegionalState(!isRegionalState);
+  }, [isRegionalState]);
 
   const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities();
 
@@ -42,11 +44,23 @@ export function WorkstationForm({
   } = useForm<WorkstationPayload>({
     defaultValues: {
       ...defaultValues,
-      is_regional: defaultValues?.is_regional
-        ? defaultValues.is_regional
-        : !isSelected,
+      is_regional: isRegionalState,
     },
   });
+
+  const defaultChildWorkstations = defaultValues?.child_workstations?.map(
+    (workstation) => ({
+      value: workstation.id,
+      label: workstation.name,
+    })
+  );
+
+  const defaultParentWorkstation = (workstation: Workstation | undefined) => {
+    return {
+      label: workstation?.name ?? '',
+      value: workstation?.id ?? '',
+    };
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -56,6 +70,18 @@ export function WorkstationForm({
         errors={errors?.name}
         placeholder="Nome"
       />
+
+      <Checkbox
+        size="md"
+        width="full"
+        marginY="5"
+        colorScheme="green"
+        onChange={handleSelect}
+        checked={isRegionalState}
+        isChecked={isRegionalState}
+      >
+        Regional
+      </Checkbox>
 
       <Grid templateColumns="1fr 1fr" gap={6}>
         <Input
@@ -98,7 +124,10 @@ export function WorkstationForm({
           isLoading={isLoadingWorkstations}
           placeholder="Regional"
           label="Regional"
-          isDisabled={isSelected}
+          isDisabled={isRegionalState}
+          defaultValue={defaultParentWorkstation(
+            defaultValues?.parent_workstation
+          )}
           rules={{
             shouldUnregister: true,
           }}
@@ -113,20 +142,12 @@ export function WorkstationForm({
           isLoading={isLoadingWorkstations}
           placeholder="Postos Agregados"
           label="Postos Agregados"
-          isDisabled={!isSelected}
+          isDisabled={!isRegionalState}
+          defaultValue={defaultChildWorkstations}
           rules={{
             shouldUnregister: true,
           }}
         />
-
-        <Checkbox
-          size="md"
-          colorScheme="green"
-          onChange={handleSelect}
-          checked={isSelected}
-        >
-          Regional
-        </Checkbox>
 
         <GridItem colSpan={2}>
           <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>

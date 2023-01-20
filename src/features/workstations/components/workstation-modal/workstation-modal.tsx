@@ -54,6 +54,8 @@ export function WorkstationModal({
           : parent_workstation_payload?.value,
       };
 
+      console.log(is_regional);
+
       if (workstation?.id) {
         updateWorkstation({
           workstationId: workstation.id,
@@ -79,6 +81,7 @@ export function WorkstationModal({
     >
       <WorkstationForm
         defaultValues={workstation}
+        isRegional={workstation?.is_regional ? workstation.is_regional : false}
         onSubmit={handleSubmit}
         isSubmitting={isCreatingWorkstation || isUpdatingWorkstation}
       />
