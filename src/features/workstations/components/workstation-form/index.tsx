@@ -34,7 +34,9 @@ export function WorkstationForm({
 
   const parent_workstations = workstations?.filter((work) => work.is_regional);
 
-  const child_workstations = workstations?.filter((work) => !work.is_regional);
+  const child_workstations = workstations?.filter(
+    (work) => !work.is_regional && !work.parent_workstation
+  );
 
   const {
     register,
@@ -59,6 +61,13 @@ export function WorkstationForm({
     return {
       label: workstation?.name ?? '',
       value: workstation?.id ?? '',
+    };
+  };
+
+  const defaultWorkstationCity = (city: City | undefined) => {
+    return {
+      label: city?.name ?? '',
+      value: city?.id ?? '',
     };
   };
 
@@ -113,41 +122,46 @@ export function WorkstationForm({
           isLoading={isLoadingCidades}
           placeholder="Cidade"
           label="Cidade"
+          defaultValue={defaultWorkstationCity(defaultValues?.city)}
           rules={{ required: 'Campo obrigatório' }}
         />
 
-        <ControlledSelect
-          control={control}
-          name="parent_workstation_payload"
-          id="parent_workstation_payload"
-          options={getSelectOptions(parent_workstations, 'name', 'id')}
-          isLoading={isLoadingWorkstations}
-          placeholder="Regional"
-          label="Regional"
-          isDisabled={isRegionalState}
-          defaultValue={defaultParentWorkstation(
-            defaultValues?.parent_workstation
-          )}
-          rules={{
-            shouldUnregister: true,
-          }}
-        />
+        <GridItem colSpan={2}>
+          <ControlledSelect
+            control={control}
+            name="parent_workstation_payload"
+            id="parent_workstation_payload"
+            options={getSelectOptions(parent_workstations, 'name', 'id')}
+            isLoading={isLoadingWorkstations}
+            placeholder="Regional"
+            label="Regional"
+            isDisabled={isRegionalState}
+            defaultValue={defaultParentWorkstation(
+              defaultValues?.parent_workstation
+            )}
+            rules={{
+              shouldUnregister: true,
+            }}
+          />
+        </GridItem>
 
-        <ControlledSelect
-          control={control}
-          isMulti
-          name="child_workstation_payload"
-          id="child_workstation_payload"
-          options={getSelectOptions(child_workstations, 'name', 'id')}
-          isLoading={isLoadingWorkstations}
-          placeholder="Postos Agregados"
-          label="Postos Agregados"
-          isDisabled={!isRegionalState}
-          defaultValue={defaultChildWorkstations}
-          rules={{
-            shouldUnregister: true,
-          }}
-        />
+        <GridItem colSpan={2}>
+          <ControlledSelect
+            control={control}
+            isMulti
+            name="child_workstation_payload"
+            id="child_workstation_payload"
+            options={getSelectOptions(child_workstations, 'name', 'id')}
+            isLoading={isLoadingWorkstations}
+            placeholder="Postos Agregados"
+            label="Postos Agregados"
+            isDisabled={!isRegionalState}
+            defaultValue={defaultChildWorkstations}
+            rules={{
+              shouldUnregister: true,
+            }}
+          />
+        </GridItem>
 
         <GridItem colSpan={2}>
           <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>
