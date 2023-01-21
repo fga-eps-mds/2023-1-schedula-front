@@ -15,10 +15,20 @@ import { WorkstationModal } from '@/features/workstations/components/workstation
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
 import { WorkstationItem } from '@/features/workstations/components/workstation-item';
+import { DeleteWorkstationModal } from '@/features/workstations/components/workstation-modal/delete-workstation-modal';
 
 export function Workstation() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [workstationToEdit, setWorkstationToEdit] = useState<Workstation>();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
+  const [selectedWorkstation, setSelectedWorkstation] = useState<Workstation>();
 
   const { data: workstations, isLoading, refetch } = useGetAllWorkstations();
   // const { filters, updateField } = useFilters(workstationFields);
@@ -27,34 +37,35 @@ export function Workstation() {
 
   const onEdit = useCallback(
     (work: Workstation) => {
-      setWorkstationToEdit(work);
-      onOpen();
+      setSelectedWorkstation(work);
+      onOpenEdit();
     },
-    [onOpen]
+    [onOpenEdit]
   );
 
-  /* const onDelete = useCallback(
-    (workstationId: string) => {
-      deleteCity({ workstationId, data: });
+  const onDelete = useCallback(
+    (workstation: Workstation) => {
+      setSelectedWorkstation(workstation);
+      onOpenDelete();
     },
-    [deleteCity]
-  ); */
+    [onOpenDelete]
+  );
 
   const handleClose = useCallback(() => {
-    setWorkstationToEdit(undefined);
-    onClose();
-  }, [onClose]);
+    setSelectedWorkstation(undefined);
+    onCloseEdit();
+  }, [onCloseEdit]);
 
   const renderWorkstationItem = useCallback(
     (work: Workstation) => (
       <WorkstationItem
         workstation={work}
         onEdit={onEdit}
-        onDelete={() => {}}
+        onDelete={onDelete}
         isDeleting={isDeletingWorkstation}
       />
     ),
-    [/* onDelete */ onEdit, isDeletingWorkstation]
+    [onDelete, onEdit, isDeletingWorkstation]
   );
   // const {
   //   data: workstations,
@@ -109,7 +120,7 @@ export function Workstation() {
 
   // const onEdit = useCallback(
   //   (workstation: Workstation) => {
-  //     setWorkstationToEdit(workstation);
+  //     setSelectedWorkstation(workstation);
   //     onOpen();
   //   },
   //   [onOpen]
@@ -125,23 +136,23 @@ export function Workstation() {
 
   //     toast.success(result.value?.message);
 
-  //     const newWorkstations = workstationToEdit
+  //     const newWorkstations = selectedWorkstation
   //       ? workstations?.data.map((workstation) =>
-  //           workstation.id === workstationToEdit?.id
+  //           workstation.id === selectedWorkstation?.id
   //             ? result.value?.data
   //             : workstation
   //         )
   //       : [...(workstations?.data || []), result.value?.data];
 
   //     refresh(newWorkstations);
-  //     setWorkstationToEdit(undefined);
+  //     setSelectedWorkstation(undefined);
   //     onClose();
   //   },
-  //   [onClose, refresh, workstationToEdit, workstations?.data]
+  //   [onClose, refresh, selectedWorkstation, workstations?.data]
   // );
 
   // const handleClose = useCallback(() => {
-  //   setWorkstationToEdit(undefined);
+  //   setSelectedWorkstation(undefined);
   //   onClose();
   // }, [onClose]);
 
@@ -170,7 +181,7 @@ export function Workstation() {
       <PageHeader title="Gerenciar Postos de Trabalho">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpen}>Novo Posto de Trabalho</Button>
+          <Button onClick={onOpenEdit}>Novo Posto de Trabalho</Button>
         </HStack>
       </PageHeader>
 
@@ -189,9 +200,15 @@ export function Workstation() {
       </VStack>
 
       <WorkstationModal
-        isOpen={isOpen}
+        isOpen={isOpenEdit}
         onClose={handleClose}
-        workstation={workstationToEdit}
+        workstation={selectedWorkstation}
+      />
+
+      <DeleteWorkstationModal
+        isOpen={isOpenDelete}
+        onClose={onCloseDelete}
+        workstation={selectedWorkstation}
       />
     </>
   );
