@@ -57,6 +57,9 @@ export function WorkstationItem({
               <Badge colorScheme="orange" variant="subtle">
                 {workstation?.gateway}
               </Badge>
+              <Badge colorScheme="orange" variant="subtle">
+                {workstation?.phone}
+              </Badge>
             </>
           </HStack>
         </Flex>

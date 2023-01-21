@@ -20,3 +20,13 @@ interface WorkstationPayload {
   parent_workstation_payload?: { label: string; value: string };
   child_workstation_payload?: { label: string; value: string }[];
 }
+
+interface DeleteWorkstationPayload {
+  workstationDeleteId?: string;
+  workstationsRealoc?: [
+    {
+      workstation?: { label: string; value: string };
+      workstationsToRealoc?: { label: string; value: string }[];
+    }
+  ];
+}
