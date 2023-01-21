@@ -54,8 +54,6 @@ export function WorkstationModal({
           : parent_workstation_payload?.value,
       };
 
-      console.log(is_regional);
-
       if (workstation?.id) {
         updateWorkstation({
           workstationId: workstation.id,

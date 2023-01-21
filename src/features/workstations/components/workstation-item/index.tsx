@@ -1,13 +1,15 @@
 import { Badge, Flex, HStack, Text, Tooltip } from '@chakra-ui/react';
+import { FaTrash } from 'react-icons/fa';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
+import { ActionButton } from '@/components/action-buttons';
 
 interface WorkstationItemProps {
   workstation: Workstation;
   onEdit: (workstation: Workstation) => void;
-  onDelete: (workstationId: string) => void;
+  onDelete: (workstation: Workstation) => void;
   isDeleting: boolean;
 }
 export function WorkstationItem({
@@ -73,11 +75,21 @@ export function WorkstationItem({
           disabled={isDeleting}
         />
 
-        <DeleteButton
-          onClick={() => onDelete(workstation.id)}
-          label={workstation.name}
-          isLoading={isDeleting}
-        />
+        {workstation?.is_regional ? (
+          <ActionButton
+            label={`Excluir ${workstation.name}`}
+            icon={<FaTrash />}
+            onClick={() => onDelete(workstation)}
+            color="red.500"
+            tabIndex={0}
+          />
+        ) : (
+          <DeleteButton
+            onClick={() => onDelete(workstation)}
+            label={workstation.name}
+            isLoading={isDeleting}
+          />
+        )}
       </ItemActions>
     </Item>
   );
