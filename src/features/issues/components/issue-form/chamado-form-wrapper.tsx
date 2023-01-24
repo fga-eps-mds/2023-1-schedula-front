@@ -30,7 +30,7 @@ import {
 } from '@/utils/form-utils';
 import { Input } from '@/components/form-fields';
 import { EditButton } from '@/components/action-buttons/edit-button';
-import { ChamadoForm } from '@/components/forms/chamado-form';
+import { ChamadoForm } from '@/features/issues/components/issue-form';
 // import { toast } from '@/utils/toast';
 // import { WorkstationModal } from '@/components/modals/workstation-modal';
 

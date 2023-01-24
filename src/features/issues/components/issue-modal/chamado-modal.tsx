@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { formValuesToPayload } from '@/utils/form-utils';
 import { Modal } from '@/components/modal';
-import { ChamadoFormWrapper } from '@/components/forms/chamado-form/chamado-form-wrapper';
+import { ChamadoFormWrapper } from '@/features/issues/components/issue-form/chamado-form-wrapper';
 
 interface ChamadoModalProps extends Partial<ModalProps> {
   chamado?: Chamado | undefined;

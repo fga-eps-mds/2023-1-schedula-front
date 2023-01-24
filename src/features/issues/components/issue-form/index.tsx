@@ -19,8 +19,8 @@ import { ControlledSelect } from '@/components/form-fields';
 // import { getSelectOptions } from '@/utils/form-utils';
 import { CHAMADO_PRIORITY, CHAMADO_STATUS } from '@/constants/chamados';
 import { Modal } from '@/components/modal';
-import { EventInfo } from '@/components/forms/chamado-form/event-info';
-import { EventForm } from '@/components/forms/chamado-form/event-form';
+import { EventInfo } from '@/features/issues/components/issue-form/event-info';
+import { EventForm } from '@/features/issues/components/issue-form/event-form';
 
 interface ChamadoFormProps {
   index: number;
