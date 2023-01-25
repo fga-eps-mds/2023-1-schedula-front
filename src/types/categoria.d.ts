@@ -1,8 +1,6 @@
 interface Category {
-  id: number;
-  active: boolean;
+  id: string;
   description: string;
-  updated_at: Date;
   name: string;
 }
 
