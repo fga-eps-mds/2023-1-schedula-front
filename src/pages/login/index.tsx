@@ -28,7 +28,7 @@ export function Login() {
       h="100vh"
       color="white"
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} aria-label="form">
         <Box
           bg="white"
           borderRadius="10px"
