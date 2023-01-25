@@ -15,7 +15,9 @@ describe('CategoriaForm', () => {
     render(<CategoriaForm defaultValues={category} onSubmit={() => {}} />);
 
     expect(screen.getByLabelText('Nome')).toHaveValue('Categoria');
-    expect(screen.getByLabelText('Descrição')).toHaveValue('Descrição da Categoria');
+    expect(screen.getByLabelText('Descrição')).toHaveValue(
+      'Descrição da Categoria'
+    );
   });
 
   it('should be able to call CategoriaForm handleSubmit function', async () => {

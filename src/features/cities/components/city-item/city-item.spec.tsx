@@ -51,10 +51,12 @@ describe('CityItem', () => {
       />
     );
 
-    const deleteButton = getByRole('button', {name: `Excluir ${mockedCity.name}`});
-    /*act(() => {
+    const deleteButton = getByRole('button', {
+      name: `Excluir ${mockedCity.name}`,
+    });
+    /* act(() => {
       fireEvent.click(deleteButton);
-    });*/
+    }); */
 
     expect(deleteButton).toBeInTheDocument();
     // expect(mockedOnDeleteFunction).toHaveBeenCalledWith({
