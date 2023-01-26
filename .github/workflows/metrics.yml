@@ -26,7 +26,7 @@ jobs:
           node-version: 16.x
 
       - name: Create Metrics SonarCloud
-        run: python metrics/sonar-metrics.py ${{ github.event.repository.name }} ${{ steps.previoustag.outputs.tag }}
+        run: python metrics/sonar-metrics.py -X ${{ github.event.repository.name }} ${{ steps.previoustag.outputs.tag }}
 
       - name: Commit Metrics SonarCloud File
         run: |
