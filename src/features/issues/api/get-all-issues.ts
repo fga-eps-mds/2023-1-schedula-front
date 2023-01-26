@@ -20,5 +20,5 @@ const getAllIssues = async () =>
       return [] as GetAllIssuesResponse;
     });
 
-export const useGetAllCities = () =>
+export const useGetAllIssues = () =>
   useQuery([ISSUES_CACHE_KEYS.allIssues], getAllIssues);

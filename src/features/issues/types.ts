@@ -82,3 +82,15 @@ export interface PutUpdateIssueResponse {
 export interface DeleteIssueParams {
   issueId: string;
 }
+
+export interface IssuePayload {
+  issueId: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: Date;
+  problem_category_id: string;
+  problem_types_ids: string[];
+}

@@ -5,14 +5,14 @@ import { toast } from '@/utils/toast';
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { DeleteIssueParams } from '@/features/issues/types';
 
-function deleteCity({ issueId }: DeleteIssueParams) {
+function deleteIssue({ issueId }: DeleteIssueParams) {
   return api.delete<boolean>(`${ISSUES_ENDPOINT}/issues/${issueId}`);
 }
 
-export function useDeleteCity() {
+export function useDeleteIssue() {
   const queryClient = useQueryClient();
 
-  return useMutation(deleteCity, {
+  return useMutation(deleteIssue, {
     onSuccess() {
       toast.success('Chamado removido com sucesso!');
 
