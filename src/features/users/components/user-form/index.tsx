@@ -87,7 +87,7 @@ export function UserForm({
           placeholder="Confirmar Senha"
         />
 
-        {/* <ControlledSelect
+        <ControlledSelect
           label="Perfil"
           control={control}
           name="profile"
@@ -98,7 +98,7 @@ export function UserForm({
           }))}
           placeholder="Perfil"
           rules={{ required: 'Campo obrigatório' }}
-        /> */}
+        />
         <Input
           label="Cargo"
           {...register('position', { required: 'Campo obrigatório' })}
