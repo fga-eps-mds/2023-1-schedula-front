@@ -1,14 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { Modal } from '@/components/modal';
-import { ChamadoFormWrapper } from '@/features/issues/components/issue-form/chamado-form-wrapper';
 import {
   Issue,
   IssuePayload,
-  PostCreateIssueParams,
   PutUpdateIssueParams,
 } from '@/features/issues/types';
 import { usePutUpdateIssue } from '@/features/issues/api/put-update-issue';
+import { IssueForm } from '@/features/issues/components/issue-form/issue-form';
 
 interface IssueModalProps extends Partial<ModalProps> {
   issue: Issue;
@@ -31,26 +30,26 @@ export function IssueModal({
   const handleSubmit = useCallback(
     async ({
       issueId,
-      city_id,
+      city_payload,
       date,
       email,
       phone,
-      problem_category_id,
-      problem_types_ids,
+      problem_category_payload,
+      problem_types_payload,
       requester,
-      workstation_id,
+      workstation_payload,
     }: IssuePayload) => {
       const payload: PutUpdateIssueParams = {
         issueId,
         data: {
           requester,
           phone,
-          city_id,
+          city_id: city_payload?.value,
           date,
           email,
-          problem_category_id,
-          problem_types_ids,
-          workstation_id,
+          problem_category_id: problem_category_payload?.value,
+          problem_types_ids: problem_types_payload?.map((type) => type?.value),
+          workstation_id: workstation_payload?.value,
         },
       };
 
@@ -59,12 +58,12 @@ export function IssueModal({
         data: {
           requester,
           phone,
-          city_id,
+          city_id: city_payload?.value,
           date,
           email,
-          problem_category_id,
-          problem_types_ids,
-          workstation_id,
+          problem_category_id: problem_category_payload?.value,
+          problem_types_ids: problem_types_payload?.map((type) => type?.value),
+          workstation_id: workstation_payload?.value,
         },
       });
     },
@@ -79,7 +78,11 @@ export function IssueModal({
       size="6xl"
       {...props}
     >
-      {/* <ChamadoFormWrapper defaultValues={chamado} onSubmit={handleSubmit} /> */}
+      <IssueForm
+        issue={issue}
+        onSubmit={handleSubmit}
+        isSubmitting={isUpdatingIssue}
+      />
     </Modal>
   );
 }

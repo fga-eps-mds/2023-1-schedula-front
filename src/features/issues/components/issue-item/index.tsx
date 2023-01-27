@@ -10,7 +10,10 @@ import {
 import { formatDate } from '@/utils/format-date';
 import { Issue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
-import { useGetCity } from '@/features/cities/api/get-all-cities';
+import {
+  useGetAllCities,
+  useGetCity,
+} from '@/features/cities/api/get-all-cities';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
@@ -28,7 +31,10 @@ export function IssueItem({
   onDelete,
   isDeleting,
 }: IssueItemProps) {
-  const { data: city, isLoading: isLoadingCity } = useGetCity(issue.city_id);
+  const { data: cities, isLoading: isLoadingCities } = useGetAllCities();
+  const city = cities?.find((city) => {
+    return city?.id === issue?.city_id;
+  });
 
   return (
     <Box>
@@ -41,11 +47,6 @@ export function IssueItem({
       <Item
         title={
           <HStack spacing={6}>
-            <Box>
-              <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Chamado
-              </Text>
-            </Box>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Local
@@ -70,15 +71,26 @@ export function IssueItem({
           <VStack align="stretch" spacing={2}>
             <HStack gap={4} mt={2} flexWrap="wrap">
               <Tag variant="subtle" colorScheme="purple">
-                {issue.problem_category.name}
+                {issue?.problem_category?.name}
               </Tag>
-              {issue.problem_types.map((problem) => (
+              {issue?.problem_types?.map((problem) => (
                 <HStack align="start" spacing={1} key={problem?.id}>
                   <Tag variant="subtle" colorScheme="gray">
-                    {problem.name}
+                    {problem?.name}
                   </Tag>
                 </HStack>
               ))}
+              <Box>
+                <Text fontSize="sm" fontWeight="light" color="GrayText">
+                  Data / Hora
+                </Text>
+                <Box textAlign="center" fontWeight="medium">
+                  <Text>
+                    {formatDate(issue?.date, 'date')}{' '}
+                    {formatDate(issue?.date, 'time')}
+                  </Text>
+                </Box>
+              </Box>
             </HStack>
           </VStack>
         }
@@ -94,18 +106,7 @@ export function IssueItem({
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Atendente
               </Text>
-              <Text noOfLines={1}>{issue.email}</Text>
-            </Box>
-            <Box>
-              <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Data / Hora
-              </Text>
-              <Box textAlign="center" fontWeight="medium">
-                <Text>
-                  {formatDate(issue.date, 'date')}{' '}
-                  {formatDate(issue.date, 'time')}
-                </Text>
-              </Box>
+              <Text noOfLines={1}>{issue?.email}</Text>
             </Box>
           </HStack>
 
@@ -117,7 +118,7 @@ export function IssueItem({
             />
 
             <DeleteButton
-              onClick={() => onDelete(issue.id)}
+              onClick={() => onDelete(issue?.id)}
               label="Deletar Chamado"
               isLoading={isDeleting}
             />

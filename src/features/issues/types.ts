@@ -87,10 +87,10 @@ export interface IssuePayload {
   issueId: string;
   requester: string;
   phone: string;
-  city_id: string;
-  workstation_id: string;
+  city_payload: { label: string; value: string };
+  workstation_payload: { label: string; value: string };
   email: string;
   date: Date;
-  problem_category_id: string;
-  problem_types_ids: string[];
+  problem_category_payload: { label: string; value: string };
+  problem_types_payload: { label: string; value: string }[];
 }
