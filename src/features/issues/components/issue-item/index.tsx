@@ -40,7 +40,7 @@ export function IssueItem({
     <Box>
       <HStack spacing={2}>
         <Badge colorScheme="blue" variant="outline">
-          {issue.problem_category.name}
+          {issue?.problem_category?.name}
         </Badge>
         <Spacer />
       </HStack>
@@ -57,13 +57,13 @@ export function IssueItem({
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Solicitante
               </Text>
-              <Text noOfLines={1}>{issue.requester}</Text>
+              <Text noOfLines={1}>{issue?.requester}</Text>
             </Box>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Telefone
               </Text>
-              <Text noOfLines={1}>{issue.phone}</Text>
+              <Text noOfLines={1}>{issue?.phone}</Text>
             </Box>
           </HStack>
         }
@@ -80,15 +80,18 @@ export function IssueItem({
                   </Tag>
                 </HStack>
               ))}
-              <Box>
-                <Text fontSize="sm" fontWeight="light" color="GrayText">
-                  Data / Hora
-                </Text>
+              <Box display="flex" gap={2}>
                 <Box textAlign="center" fontWeight="medium">
-                  <Text>
-                    {formatDate(issue?.date, 'date')}{' '}
-                    {formatDate(issue?.date, 'time')}
+                  <Text fontSize="sm" fontWeight="light" color="GrayText">
+                    Data
                   </Text>
+                  <Text>{formatDate(issue?.date, 'date')} </Text>
+                </Box>
+                <Box textAlign="center" fontWeight="medium">
+                  <Text fontSize="sm" fontWeight="light" color="GrayText">
+                    Hora
+                  </Text>
+                  <Text>{formatDate(issue?.date, 'time')}</Text>
                 </Box>
               </Box>
             </HStack>

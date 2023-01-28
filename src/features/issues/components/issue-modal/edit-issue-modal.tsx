@@ -10,7 +10,7 @@ import { usePutUpdateIssue } from '@/features/issues/api/put-update-issue';
 import { IssueForm } from '@/features/issues/components/issue-form/issue-form';
 
 interface IssueModalProps extends Partial<ModalProps> {
-  issue: Issue;
+  issue?: Issue;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -54,7 +54,7 @@ export function IssueModal({
       };
 
       updateIssue({
-        issueId: issue.id,
+        issueId: issue?.id ?? '',
         data: {
           requester,
           phone,

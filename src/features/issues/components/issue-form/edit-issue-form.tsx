@@ -13,7 +13,11 @@ interface IssueFormProps {
   isSubmitting: boolean;
 }
 
-export function IssueForm({ issue, onSubmit, isSubmitting }: IssueFormProps) {
+export function EditIssueForm({
+  issue,
+  onSubmit,
+  isSubmitting,
+}: IssueFormProps) {
   const { data: cities, isLoading: isLoadingCities } = useGetAllCities();
 
   const { data: workstations, isLoading: isLoadingWorkstations } =

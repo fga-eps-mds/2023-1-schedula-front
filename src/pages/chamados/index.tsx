@@ -8,6 +8,7 @@ import { Issue } from '@/features/issues/types';
 import { useDeleteIssue } from '@/features/issues/api/delete-issue';
 import { ListView } from '@/components/list';
 import { IssueItem } from '@/features/issues/components/issue-item';
+import { IssueModal } from '@/features/issues/components/issue-modal/edit-issue-modal';
 
 export function Chamados() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,12 +72,7 @@ export function Chamados() {
         isLoading={isLoadingIssues}
       />
 
-      {/* <IssueModal
-        isOpen={isOpen}
-        onClose={handleClose}
-        chamado={issueToEdit}
-        onSubmit={onSubmit}
-      /> */}
+      <IssueModal isOpen={isOpen} onClose={handleClose} issue={issueToEdit} />
     </>
   );
 }
