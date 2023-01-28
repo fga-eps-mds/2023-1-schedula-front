@@ -5,34 +5,27 @@ import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ActionButton } from '@/components/action-buttons';
+import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
 
 interface WorkstationItemProps {
   workstation: Workstation;
   onEdit: (workstation: Workstation) => void;
   onDelete: (workstation: Workstation) => void;
-  isDeleting: boolean;
+  isDeletingRegionalWorkstation: boolean;
 }
 export function WorkstationItem({
   workstation,
   onEdit,
   onDelete,
-  isDeleting,
+  isDeletingRegionalWorkstation,
 }: WorkstationItemProps) {
-  // const { data: city, isLoading: isLoadingCity } = useRequest<City>(
-  //   workstation ? getCityById(workstation?.city_id) : null,
-  //   {
-  //     revalidateIfStale: false,
-  //   }
-  // );
+  const isRegionalWithChildren =
+    workstation.is_regional &&
+    workstation.child_workstations &&
+    workstation.child_workstations.length > 0;
 
-  // const handleDelete = useCallback(
-  //   async ({ id }: Workstation) => {
-  //     const response = await request<null>(deleteWorkstation(id));
-
-  //     onDelete?.(response, workstation);
-  //   },
-  //   [workstation, onDelete]
-  // );
+  const { mutate: deleteWorkstation, isLoading: isDeletingWorkstation } =
+    useDeleteWorkstation({});
 
   return (
     <Item<Workstation>
@@ -53,11 +46,11 @@ export function WorkstationItem({
                 openDelay={350}
               >
                 <Badge colorScheme="orange" variant="outline">
-                  {workstation?.ip}
+                  IP: {workstation?.ip}
                 </Badge>
               </Tooltip>
-              <Badge colorScheme="orange" variant="subtle">
-                {workstation?.gateway}
+              <Badge colorScheme="orange" variant="solid">
+                Gateway: {workstation?.gateway}
               </Badge>
               <Badge colorScheme="orange" variant="subtle">
                 {workstation?.phone}
@@ -72,10 +65,10 @@ export function WorkstationItem({
         <EditButton
           onClick={onEdit}
           label={workstation.name}
-          disabled={isDeleting}
+          disabled={isDeletingWorkstation}
         />
 
-        {workstation?.is_regional ? (
+        {isRegionalWithChildren ? (
           <ActionButton
             label={`Excluir ${workstation.name}`}
             icon={<FaTrash />}
@@ -85,9 +78,11 @@ export function WorkstationItem({
           />
         ) : (
           <DeleteButton
-            onClick={() => onDelete(workstation)}
+            onClick={() =>
+              deleteWorkstation({ workstationId: workstation.id, data: [] })
+            }
             label={workstation.name}
-            isLoading={isDeleting}
+            isLoading={isDeletingWorkstation || isDeletingRegionalWorkstation}
           />
         )}
       </ItemActions>

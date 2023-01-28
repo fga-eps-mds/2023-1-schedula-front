@@ -64,8 +64,7 @@ export interface PutUpdateWorkstationResponse {
 export interface DeleteWorkstationParams {
   workstationId: string;
   data: {
-    name: string;
-    id: string;
-    destination: string;
+    destinationId: string;
+    reallocatedId: string;
   }[];
 }

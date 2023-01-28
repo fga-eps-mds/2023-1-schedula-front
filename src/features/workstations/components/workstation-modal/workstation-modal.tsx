@@ -30,45 +30,39 @@ export function WorkstationModal({
   const handleSubmit = useCallback(
     async ({
       name,
-      city_payload,
+      city,
       gateway,
       ip,
       phone,
       is_regional,
-      child_workstation_payload,
-      parent_workstation_payload,
+      child_workstation,
+      parent_workstation,
     }: WorkstationPayload) => {
-      const childs = child_workstation_payload?.map((work) => {
-        return work.value;
+      const childs = child_workstation?.map((workstationOption) => {
+        return workstationOption.value;
       });
+
       const payload: PostCreateWorkstationParams = {
         name,
-        city_id: city_payload.value,
+        city_id: city.value,
         gateway,
         ip,
         phone,
         is_regional,
         child_workstation_ids: is_regional ? childs : null,
-        parent_workstation_id: is_regional
-          ? null
-          : parent_workstation_payload?.value,
+        parent_workstation_id: is_regional ? null : parent_workstation?.value,
       };
 
       if (workstation?.id) {
         updateWorkstation({
           workstationId: workstation.id,
-          data: { ...payload, is_regional: workstation?.is_regional },
+          data: { ...payload },
         });
       } else {
         createWorkstation(payload);
       }
     },
-    [
-      createWorkstation,
-      updateWorkstation,
-      workstation?.id,
-      workstation?.is_regional,
-    ]
+    [createWorkstation, updateWorkstation, workstation?.id]
   );
 
   return (
@@ -78,8 +72,7 @@ export function WorkstationModal({
       {...props}
     >
       <WorkstationForm
-        defaultValues={workstation}
-        isRegional={workstation?.is_regional ? workstation.is_regional : false}
+        selectedWorkstation={workstation}
         onSubmit={handleSubmit}
         isSubmitting={isCreatingWorkstation || isUpdatingWorkstation}
       />
