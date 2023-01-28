@@ -9,13 +9,13 @@ import {
 import { useCallback, useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
-// import { WorkstationsFilter } from '@/components/workstations-filter';
 import { ListView } from '@/components/list';
 import { WorkstationModal } from '@/features/workstations/components/workstation-modal/workstation-modal';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
 import { WorkstationItem } from '@/features/workstations/components/workstation-item';
 import { DeleteWorkstationModal } from '@/features/workstations/components/workstation-modal/delete-workstation-modal';
+import { DeleteWorkstationProps } from '@/features/workstations/types';
 
 export function Workstation() {
   const {
@@ -28,16 +28,40 @@ export function Workstation() {
     onOpen: onOpenDelete,
     onClose: onCloseDelete,
   } = useDisclosure();
+  const [filter, setFilter] = useState('');
   const [selectedWorkstation, setSelectedWorkstation] = useState<Workstation>();
 
   const { data: workstations, isLoading, refetch } = useGetAllWorkstations();
-  // const { filters, updateField } = useFilters(workstationFields);
-  const { mutate: deleteCity, isLoading: isDeletingWorkstation } =
-    useDeleteWorkstation({});
+
+  const filteredWorkstations =
+    filter === 'regional'
+      ? workstations?.filter((workstation) => workstation.is_regional)
+      : workstations;
+
+  const {
+    mutate: deleteRegionalWorkstation,
+    isLoading: isDeletingRegionalWorkstation,
+  } = useDeleteWorkstation({ onSuccessCallBack: onCloseDelete });
+
+  const onSubmitRegionalDelete = (values: DeleteWorkstationProps) => {
+    if (values) {
+      const formattedData = values.reallocatedWorkstations.map((item) => ({
+        destinationId: item.destination.value,
+        reallocatedId: item.id,
+      }));
+
+      deleteRegionalWorkstation({
+        workstationId: selectedWorkstation?.id ?? '',
+        data: formattedData,
+      });
+
+      setSelectedWorkstation(undefined);
+    }
+  };
 
   const onEdit = useCallback(
-    (work: Workstation) => {
-      setSelectedWorkstation(work);
+    (workstation: Workstation) => {
+      setSelectedWorkstation(workstation);
       onOpenEdit();
     },
     [onOpenEdit]
@@ -56,125 +80,22 @@ export function Workstation() {
     onCloseEdit();
   }, [onCloseEdit]);
 
+  const handleCloseDeleteModal = useCallback(() => {
+    setSelectedWorkstation(undefined);
+    onCloseDelete();
+  }, [onCloseDelete]);
+
   const renderWorkstationItem = useCallback(
     (work: Workstation) => (
       <WorkstationItem
         workstation={work}
         onEdit={onEdit}
         onDelete={onDelete}
-        isDeleting={isDeletingWorkstation}
+        isDeletingRegionalWorkstation={isDeletingRegionalWorkstation}
       />
     ),
-    [onDelete, onEdit, isDeletingWorkstation]
+    [onDelete, onEdit, isDeletingRegionalWorkstation]
   );
-  // const {
-  //   data: workstations,
-  //   isLoading,
-  //   isValidating,
-  //   mutate,
-  // } = useRequest<Workstation[]>(
-  //   filters?.regional
-  //     ? getWorkstations({
-  //         params: {
-  //           regional_id: (filters?.regional as unknown as SelectOption)?.value,
-  //         },
-  //       })
-  //     : null,
-  //   {
-  //     revalidateIfStale: false,
-  //   }
-  // );
-
-  // const refresh = useCallback(
-  //   (data?: Workstation[]) =>
-  //     mutate(
-  //       {
-  //         data: {
-  //           error: null,
-  //           message: '',
-  //           data: data ?? [],
-  //         },
-  //       } as AxiosResponse<ApiResponse<Workstation[]>>,
-  //       { revalidate: !data }
-  //     ),
-  //   [mutate]
-  // );
-
-  // const onDelete = useCallback(
-  //   (result: Result<ApiResponse<null>>, { id }: Workstation) => {
-  //     if (result.type === 'success') {
-  //       toast.success(result.value?.message);
-
-  //       const newWorkstations = workstations?.data.filter(
-  //         (workstation) => workstation.id !== id
-  //       );
-  //       refresh(newWorkstations);
-
-  //       return;
-  //     }
-
-  //     toast.error(result.error?.message);
-  //   },
-  //   [refresh, workstations?.data]
-  // );
-
-  // const onEdit = useCallback(
-  //   (workstation: Workstation) => {
-  //     setSelectedWorkstation(workstation);
-  //     onOpen();
-  //   },
-  //   [onOpen]
-  // );
-
-  // const onSubmit = useCallback(
-  //   (result: Result<ApiResponse<Workstation>>) => {
-  //     if (result.type === 'error') {
-  //       toast.error(result.error?.message);
-
-  //       return;
-  //     }
-
-  //     toast.success(result.value?.message);
-
-  //     const newWorkstations = selectedWorkstation
-  //       ? workstations?.data.map((workstation) =>
-  //           workstation.id === selectedWorkstation?.id
-  //             ? result.value?.data
-  //             : workstation
-  //         )
-  //       : [...(workstations?.data || []), result.value?.data];
-
-  //     refresh(newWorkstations);
-  //     setSelectedWorkstation(undefined);
-  //     onClose();
-  //   },
-  //   [onClose, refresh, selectedWorkstation, workstations?.data]
-  // );
-
-  // const handleClose = useCallback(() => {
-  //   setSelectedWorkstation(undefined);
-  //   onClose();
-  // }, [onClose]);
-
-  // const renderWorkstationItem = useCallback(
-  //   (item: Workstation) => (
-  //     <WorkstationItem workstation={item} onEdit={onEdit} onDelete={onDelete} />
-  //   ),
-  //   [onDelete, onEdit]
-  // );
-
-  // const handleFilterChange = useCallback(
-  //   (values: Filters) =>
-  //     (
-  //       Object.entries(values) as [
-  //         keyof Filters,
-  //         (typeof values)[keyof Filters]
-  //       ][]
-  //     ).forEach(([field, value]) => {
-  //       updateField(field)(value);
-  //     }),
-  //   [updateField]
-  // );
 
   return (
     <>
@@ -187,13 +108,17 @@ export function Workstation() {
 
       <VStack align="stretch" spacing={6}>
         <Box width="50%" minWidth="300px">
-          <Checkbox size="md" colorScheme="green">
+          <Checkbox
+            size="md"
+            colorScheme="orange"
+            onChange={(e) => setFilter(e.target.checked ? 'regional' : '')}
+          >
             Regionais
           </Checkbox>
         </Box>
 
         <ListView<Workstation>
-          items={workstations}
+          items={filteredWorkstations}
           render={renderWorkstationItem}
           isLoading={isLoading}
         />
@@ -207,8 +132,10 @@ export function Workstation() {
 
       <DeleteWorkstationModal
         isOpen={isOpenDelete}
-        onClose={onCloseDelete}
+        onClose={handleCloseDeleteModal}
         workstation={selectedWorkstation}
+        onSubmit={onSubmitRegionalDelete}
+        isDeletingWorkstation={isDeletingRegionalWorkstation}
       />
     </>
   );

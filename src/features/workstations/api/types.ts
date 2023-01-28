@@ -1,5 +1,3 @@
-import { DeleteWorkstationProps } from '@/features/workstations/types';
-
 export interface Workstation {
   id: string;
   name: string;
@@ -64,8 +62,7 @@ export interface PutUpdateWorkstationResponse {
 export interface DeleteWorkstationParams {
   workstationId: string;
   data: {
-    name: string;
-    id: string;
-    destination: string;
+    destinationId: string;
+    reallocatedId: string;
   }[];
 }

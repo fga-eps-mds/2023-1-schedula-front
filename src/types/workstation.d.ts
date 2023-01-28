@@ -12,13 +12,13 @@ interface Workstation {
 
 interface WorkstationPayload {
   name: string;
-  city_payload: { label: string; value: string };
+  city: { label: string; value: string };
   phone: string;
   ip: string;
   gateway: string;
   is_regional: boolean;
-  parent_workstation_payload?: { label: string; value: string };
-  child_workstation_payload?: { label: string; value: string }[];
+  parent_workstation?: { label: string; value: string };
+  child_workstation?: { label: string; value: string }[];
 }
 
 interface DeleteWorkstationPayload {

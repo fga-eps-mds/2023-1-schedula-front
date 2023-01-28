@@ -1,9 +1,15 @@
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { Button, Flex, GridItem, Select } from '@chakra-ui/react';
+import { Box, Button, GridItem, SimpleGrid, Text } from '@chakra-ui/react';
+import { ControlledSelect } from 'components/form-fields/controlled-select';
 import { DeleteWorkstationProps } from '@/features/workstations/types';
+import { getSelectOptions } from '@/utils/form-utils';
 
 interface WorkstationFormProps {
-  defaultValues?: { name: string; id: string; destination: string }[];
+  defaultValues?: {
+    name: string;
+    id: string;
+    destination: { label: string; value: string };
+  }[];
   isSubmitting: boolean;
   workstations?: { name: string; value: string }[];
   onSubmit: (values: DeleteWorkstationProps) => void;
@@ -28,43 +34,43 @@ export function DeleteWorkstationForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {fields.map((field, index) => (
-        <Flex
-          key={field.id}
-          gap="1rem"
-          alignItems="center"
-          justifyContent="space-between"
-          mb="2rem"
-        >
-          <GridItem colSpan={1}>
-            <span>{field.name}</span>
-          </GridItem>
+      <Box>
+        <Text mb="2rem" textAlign="center" fontWeight="bold">
+          Para continuar, é necessário atribuir cada delegacia dessa regional
+          para outra regional
+        </Text>
+        {fields.map((field, index) => (
+          <SimpleGrid
+            key={field.id}
+            gap="1rem"
+            alignItems="center"
+            mb="2rem"
+            columns={2}
+          >
+            <Box>
+              <strong>Delegacia:</strong>
+              <p>{field.name}</p>
+            </Box>
 
-          <GridItem colSpan={1}>
             <Controller
               control={control}
               name={`reallocatedWorkstations.${index}.destination`}
-              render={({ field }) => (
-                <Select placeholder="Regional de Destino" {...field}>
-                  {workstations?.map((workstationsOption) => (
-                    <option
-                      style={{
-                        color: 'white',
-                        background: 'transparent',
-                        fontWeight: 'medium',
-                      }}
-                      key={workstationsOption.value}
-                      value={workstationsOption.value}
-                    >
-                      {workstationsOption.name}
-                    </option>
-                  ))}
-                </Select>
+              render={() => (
+                <ControlledSelect
+                  control={control}
+                  name={`reallocatedWorkstations.${index}.destination`}
+                  id="child_workstation"
+                  options={getSelectOptions(workstations, 'name', 'value')}
+                  label="Regional"
+                  rules={{
+                    shouldUnregister: true,
+                  }}
+                />
               )}
             />
-          </GridItem>
-        </Flex>
-      ))}
+          </SimpleGrid>
+        ))}
+      </Box>
 
       <GridItem colSpan={2}>
         <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>

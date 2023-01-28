@@ -10,7 +10,7 @@ import { ApiError } from '@/config/lib/axios/types';
 function deleteWorkstation({ workstationId, data }: DeleteWorkstationParams) {
   return api.post<string>(
     `${WORKSTATIONS_ENDPOINT}/workstations/${workstationId}`,
-    data
+    { data }
   );
 }
 

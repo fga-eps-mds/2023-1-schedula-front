@@ -13,10 +13,11 @@ const getAllCities = async () =>
   api
     .get<GetAllCitiesResponse>(`${CITIES_ENDPOINT}/cities`)
     .then((response) => response.data)
-    .catch(() => {
-      toast.error(
-        'Não foi possível carregar as cidades. Tente novamente mais tarde!'
-      );
+    .catch((err) => {
+      const errMessage =
+        err?.response?.data?.message ??
+        'Não foi possível carregar as cidades. Tente novamente mais tarde!';
+      toast.error(errMessage);
       return [] as GetAllCitiesResponse;
     });
 
