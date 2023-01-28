@@ -3,3 +3,4 @@ vitest.config.ts
 dist
 
 coverage
+server/
