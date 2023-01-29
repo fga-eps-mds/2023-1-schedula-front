@@ -2,11 +2,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, VStack } from '@chakra-ui/react';
 
 import { Input } from '@/components/form-fields';
-import { ProblemTypePayload } from '@/features/problem/problem-types/types';
 
 interface CategoriaFormProps {
   defaultValues?: Category | undefined;
-  onSubmit: SubmitHandler<CategoryPayload> | SubmitHandler<ProblemTypePayload>;
+  onSubmit: SubmitHandler<CategoryPayload>;
   isSubmitting: boolean;
 }
 
@@ -15,7 +14,7 @@ export function CategoriaForm({ defaultValues, onSubmit }: CategoriaFormProps) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ProblemTypePayload>({
+  } = useForm<CategoryPayload>({
     defaultValues,
   });
 
