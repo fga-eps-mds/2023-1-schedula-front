@@ -1,154 +1,103 @@
-import { Button, HStack, Skeleton, Tag, Text } from '@chakra-ui/react';
+import {
+  Button,
+  HStack,
+  Skeleton,
+  Tag,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import { useCallback, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 
+import { ProblemTypeModal } from '@/features/problem/problem-types/components/problem-type-modal';
+import { useDeleteProblemType } from '@/features/problem/problem-types/api/delete-problem-type';
+import { ProblemType } from '@/features/problem/problem-types/types';
+import { ProblemTypeItem } from '@/features/problem/problem-types/components/problem-type-item';
+import { useGetProblemCategory } from '@/features/problem/api/get-problem-category';
+import { ListView } from '@/components/list';
+
 export function ListaProblemas() {
-  // const isCreateAuthorized = true
-  // const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { id: categoryId } = useParams();
 
-  // const category_id = Number(router.query?.id)
+  const [problemTypeToEdit, setProblemTypeToEdit] = useState<ProblemType>();
 
-  // const { data: categoria, isLoading: isLoadingCategory } =
-  //   useRequest<Category>(category_id ? getCategoryById(category_id) : null)
+  const {
+    data: category,
+    isLoading,
+    refetch,
+  } = useGetProblemCategory({ categoryId });
 
-  // const {
-  //   data: problemTypes,
-  //   isLoading,
-  //   isValidating,
-  //   mutate
-  // } = useRequest<TipoProblema[]>(getProblemTypes(category_id))
+  const { mutate: deleteProblemType, isLoading: isDeletingProblemType } =
+    useDeleteProblemType();
 
-  // const refresh = useCallback(
-  //   (data?: TipoProblema[]) =>
-  //     mutate(
-  //       {
-  //         data: {
-  //           error: null,
-  //           message: "",
-  //           data: data ?? []
-  //         }
-  //       } as AxiosResponse<ApiResponse<TipoProblema[]>>,
-  //       { revalidate: !data }
-  //     ),
-  //   [mutate]
-  // )
+  const onEdit = useCallback(
+    (problem: ProblemType) => {
+      setProblemTypeToEdit(problem);
+      onOpen();
+    },
+    [onOpen]
+  );
 
-  // const { isOpen, onOpen, onClose } = useDisclosure()
+  const onDelete = useCallback(
+    (id: string) => {
+      deleteProblemType({ id });
+    },
+    [deleteProblemType]
+  );
 
-  // const [problemToEdit, setProblemToEdit] = useState<TipoProblema>()
+  const handleClose = useCallback(() => {
+    setProblemTypeToEdit(undefined);
+    onClose();
+  }, [onClose]);
 
-  // const onDelete = useCallback(
-  //   (result: Result<ApiResponse<null>>, { id }: TipoProblema) => {
-  //     if (result.type === "success") {
-  //       toast.success(result.value?.message)
-
-  //       const newProblemTypes = problemTypes?.data.filter(
-  //         (problem) => problem.id !== id
-  //       )
-  //       refresh(newProblemTypes)
-
-  //       return
-  //     }
-
-  //     toast.error(result.error?.message)
-  //   },
-  //   [problemTypes?.data, refresh]
-  // )
-
-  // const onEdit = useCallback(
-  //   (problemType: TipoProblema) => {
-  //     setProblemToEdit(problemType)
-  //     onOpen()
-  //   },
-  //   [onOpen]
-  // )
-
-  // const onSubmit = useCallback(
-  //   (result: Result<ApiResponse<TipoProblema>>) => {
-  //     if (result.type === "error") {
-  //       toast.error(result.error?.message)
-
-  //       return
-  //     }
-
-  //     toast.success(result.value?.message)
-
-  //     const newProblemTypes = problemToEdit
-  //       ? problemTypes?.data.map((problem) =>
-  //           problem.id === problemToEdit?.id ? result.value.data : problem
-  //         )
-  //       : [...(problemTypes?.data || []), result.value?.data]
-
-  //     refresh(newProblemTypes)
-  //     setProblemToEdit(undefined)
-  //     onClose()
-  //   },
-  //   [onClose, problemToEdit, problemTypes?.data, refresh]
-  // )
-
-  // const handleClose = useCallback(() => {
-  //   setProblemToEdit(undefined)
-  //   onClose()
-  // }, [onClose])
-
-  // const renderProblemTypeItem = useCallback(
-  //   (problemType: TipoProblema) => (
-  //     <ProblemTypeItem
-  //       problemType={problemType}
-  //       onEdit={onEdit}
-  //       onDelete={onDelete}
-  //     />
-  //   ),
-  //   [onDelete, onEdit]
-  // )
+  const renderProblemTypeItem = useCallback(
+    (problemType: ProblemType) => (
+      <ProblemTypeItem
+        problemType={problemType}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        isDeleting={isDeletingProblemType}
+      />
+    ),
+    [onDelete, onEdit, isDeletingProblemType]
+  );
 
   return (
-    // <>
-    <PageHeader
-      title="Gerenciar Tipos de Problema"
-      subtitle={
-        <Skeleton
-          h="16px"
-          isLoaded
-          // isLoaded={Boolean(!isLoadingCategory && category_id)}
-        >
-          <Text color="GrayText">
-            Da Categoria{' '}
-            <Tag colorScheme="yellow" fontWeight="semibold" fontSize="md">
-              Segurança
-              {/* {categoria?.data?.name} */}
-            </Tag>
-          </Text>
-        </Skeleton>
-      }
-    >
-      <HStack spacing={2}>
-        <RefreshButton
-          refresh={() =>
-            new Promise((resolve) => {
-              resolve(5);
-            })
-          }
-        />
-        <Button onClick={() => console.log('onOpen')}>
-          Novo Tipo de Problema
-        </Button>
-      </HStack>
-    </PageHeader>
+    <>
+      <PageHeader
+        title="Gerenciar Tipos de Problema"
+        subtitle={
+          <Skeleton h="16px" isLoaded={Boolean(!isLoading && categoryId)}>
+            <Text color="GrayText">
+              Da Categoria{' '}
+              <Tag colorScheme="yellow" fontWeight="semibold" fontSize="md">
+                {category?.name}
+              </Tag>
+            </Text>
+          </Skeleton>
+        }
+      >
+        <HStack spacing={2}>
+          <RefreshButton refresh={refetch} />
+          <Button onClick={onOpen}>Novo Tipo de Problema</Button>
+        </HStack>
+      </PageHeader>
 
-    //   <ListView<TipoProblema>
-    //     items={problemTypes?.data}
-    //     render={renderProblemTypeItem}
-    //     isLoading={isLoading || isValidating}
-    //   />
+      <ListView<ProblemType>
+        items={category?.problem_types}
+        render={renderProblemTypeItem}
+        isLoading={isLoading}
+      />
 
-    //   <ProblemTypeModal
-    //     isOpen={isOpen}
-    //     onClose={handleClose}
-    //     problemType={problemToEdit}
-    //     categoryId={category_id}
-    //     onSubmit={onSubmit}
-    //   />
-    // </>
+      <ProblemTypeModal
+        isOpen={isOpen}
+        onClose={handleClose}
+        problemType={problemTypeToEdit}
+        categoryId={categoryId ?? ''}
+      />
+    </>
   );
 }

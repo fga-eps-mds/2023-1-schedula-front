@@ -1,4 +1,4 @@
-export interface ProblemType {
+export interface ProblemTypeOption {
   id: string;
   name: string;
 }
@@ -15,9 +15,9 @@ export interface Issue {
     id: string;
     name: string;
     description: string;
-    problem_types: ProblemType[];
+    problem_types: ProblemTypeOption[];
   };
-  problem_types: ProblemType[];
+  problem_types: ProblemTypeOption[];
 }
 
 export interface PostCreateIssueParams {
@@ -43,9 +43,9 @@ export interface PostCreateIssueResponse {
     id: string;
     name: string;
     description: string;
-    problem_types: ProblemType[];
+    problem_types: ProblemTypeOption[];
   };
-  problem_types: ProblemType[];
+  problem_types: ProblemTypeOption[];
 }
 
 export interface PutUpdateIssueParams {
@@ -74,9 +74,9 @@ export interface PutUpdateIssueResponse {
     id: string;
     name: string;
     description: string;
-    problem_types: ProblemType[];
+    problem_types: ProblemTypeOption[];
   };
-  problem_types: ProblemType[];
+  problem_types: ProblemTypeOption[];
 }
 
 export interface DeleteIssueParams {

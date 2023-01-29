@@ -1,5 +1,5 @@
-interface TipoProblema {
-  id: number;
+export interface ProblemType {
+  id: string;
   name: string;
   description: string;
   category_id: number;
@@ -7,8 +7,6 @@ interface TipoProblema {
   updated_at: Date;
 }
 
-interface ProblemTypePayload {
+export interface ProblemTypePayload {
   name: string;
-  description: string;
-  category_id: number;
 }

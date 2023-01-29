@@ -24,9 +24,10 @@ import {
   IssuePayload,
   PostCreateIssueParams,
 } from '@/features/issues/types';
-import { useGetAllProblemCategories } from '@/features/problem-categories/api/get-all-problem-category';
+
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { getSelectOptions } from '@/utils/form-utils';
+import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 
 export function CreateIssueForm() {
   const [issue, setIssue] = useState<Issue>();

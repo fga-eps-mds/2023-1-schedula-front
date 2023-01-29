@@ -5,7 +5,7 @@ import { getSelectOptions } from '@/utils/form-utils';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { Issue, IssuePayload } from '@/features/issues/types';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
-import { useGetAllProblemCategories } from '@/features/problem-categories/api/get-all-problem-category';
+import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 
 interface IssueFormProps {
   issue?: Issue;

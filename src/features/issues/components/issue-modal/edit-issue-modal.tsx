@@ -7,7 +7,6 @@ import {
   PutUpdateIssueParams,
 } from '@/features/issues/types';
 import { usePutUpdateIssue } from '@/features/issues/api/put-update-issue';
-import { IssueForm } from '@/features/issues/components/issue-form/issue-form';
 
 interface IssueModalProps extends Partial<ModalProps> {
   issue?: Issue;
@@ -78,11 +77,11 @@ export function IssueModal({
       size="6xl"
       {...props}
     >
-      <IssueForm
+      {/* <IssueForm
         issue={issue}
         onSubmit={handleSubmit}
         isSubmitting={isUpdatingIssue}
-      />
+      /> */}
     </Modal>
   );
 }

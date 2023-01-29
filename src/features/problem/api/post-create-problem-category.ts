@@ -1,39 +1,37 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '@/config/lib/axios';
-import { PROBLEM_CATEGORIES_ENDPOINT } from '@/features/problem-categories/constants/requests';
-import {
-  PutUpdateProblemCategoriesParams,
-  PutUpdateProblemCategoriesResponse,
-} from '@/features/problem-categories/api/types';
-import { toast } from '@/utils/toast';
-import { PROBLEM_CATEGORIES_CACHE_KEYS } from '@/features/problem-categories/constants/cache';
-import { ApiError } from '@/config/lib/axios/types';
 
-function PutUpdateProblemCategory({
-  id,
-  data,
-}: PutUpdateProblemCategoriesParams) {
-  return api.put<PutUpdateProblemCategoriesResponse>(
-    `${PROBLEM_CATEGORIES_ENDPOINT}/problem-category/${id}`,
+import { toast } from '@/utils/toast';
+import { ApiError } from '@/config/lib/axios/types';
+import {
+  PostCreateProblemCategoryParams,
+  PostCreateProblemCategoryResponse,
+} from '@/features/problem/api/types';
+import { PROBLEM_CATEGORIES_ENDPOINT } from '@/features/problem/constants/requests';
+import { PROBLEM_CATEGORIES_CACHE_KEYS } from '@/features/problem/constants/cache';
+
+function postCreateProblemCategory(data: PostCreateProblemCategoryParams) {
+  return api.post<PostCreateProblemCategoryResponse>(
+    `${PROBLEM_CATEGORIES_ENDPOINT}/problem-category`,
     data
   );
 }
 
-export function usePutUpdateProblemCategory({
+export function usePostCreateProblemCategory({
   onSuccessCallBack,
 }: {
   onSuccessCallBack?: () => void;
 }) {
   const queryClient = useQueryClient();
 
-  return useMutation(PutUpdateProblemCategory, {
+  return useMutation(postCreateProblemCategory, {
     onSuccess() {
       queryClient.invalidateQueries([
         PROBLEM_CATEGORIES_CACHE_KEYS.allProblemCategories,
       ]);
 
-      toast.success('Categoria de problema atualizada com sucesso!');
+      toast.success('Categoria de problema criada com sucesso!');
 
       onSuccessCallBack?.();
     },
@@ -43,7 +41,7 @@ export function usePutUpdateProblemCategory({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar editar a categoria de problema.'
+        'Houve um problema ao tentar criar a categoria de problema.'
       );
     },
   });

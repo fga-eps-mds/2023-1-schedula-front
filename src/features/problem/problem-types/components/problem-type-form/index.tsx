@@ -2,13 +2,18 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button, VStack } from '@chakra-ui/react';
 
 import { Input } from '@/components/form-fields';
+import {
+  ProblemType,
+  ProblemTypePayload,
+} from '@/features/problem/problem-types/types';
 
-interface CategoriaFormProps {
-  defaultValues?: Category | undefined;
-  onSubmit: SubmitHandler<CategoryPayload> | SubmitHandler<ProblemTypePayload>;
+interface ProblemFormProps {
+  defaultValues?: ProblemType | undefined;
+  onSubmit: SubmitHandler<ProblemTypePayload>;
+  isSubmitting: boolean;
 }
 
-export function CategoriaForm({ defaultValues, onSubmit }: CategoriaFormProps) {
+export function ProblemForm({ defaultValues, onSubmit }: ProblemFormProps) {
   const {
     register,
     handleSubmit,
@@ -26,11 +31,6 @@ export function CategoriaForm({ defaultValues, onSubmit }: CategoriaFormProps) {
             required: 'Campo obrigatório',
           })}
           errors={errors?.name}
-        />
-        <Input
-          label="Descrição"
-          {...register('description')}
-          errors={errors?.description}
         />
         <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>
           Registrar
