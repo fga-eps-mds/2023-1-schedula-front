@@ -21,5 +21,19 @@ const getAllCities = async () =>
       return [] as GetAllCitiesResponse;
     });
 
+const getCity = async (cityId: string) =>
+  api
+    .get<City>(`${CITIES_ENDPOINT}/cities/${cityId}`)
+    .then((response) => response.data)
+    .catch(() => {
+      toast.error(
+        'Não foi possível carregar a cidade. Tente novamente mais tarde!'
+      );
+      return null;
+    });
+
 export const useGetAllCities = () =>
   useQuery([CITIES_CACHE_KEYS.allCities], getAllCities);
+
+export const useGetCity = (cityId: string) =>
+  useQuery([CITIES_CACHE_KEYS.city], () => getCity(cityId));

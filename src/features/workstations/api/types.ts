@@ -1,5 +1,3 @@
-import { DeleteWorkstationProps } from '@/features/workstations/types';
-
 export interface Workstation {
   id: string;
   name: string;

@@ -81,16 +81,15 @@ export function Router() {
               <ListaCategoria />
             </RequireAuth>
           }
-        >
-          <Route
-            path=":id"
-            element={
-              <RequireAuth>
-                <ListaProblemas />
-              </RequireAuth>
-            }
-          />
-        </Route>
+        />
+        <Route
+          path="categorias/:id"
+          element={
+            <RequireAuth>
+              <ListaProblemas />
+            </RequireAuth>
+          }
+        />
       </Route>
 
       {/* ROTAS PUBLICAS */}

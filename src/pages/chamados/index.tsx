@@ -1,96 +1,78 @@
-import { Button, HStack } from '@chakra-ui/react';
+import { Button, HStack, useDisclosure } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useCallback, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
+import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
+import { Issue } from '@/features/issues/types';
+import { useDeleteIssue } from '@/features/issues/api/delete-issue';
+import { ListView } from '@/components/list';
+import { IssueItem } from '@/features/issues/components/issue-item';
+import { IssueModal } from '@/features/issues/components/issue-modal/edit-issue-modal';
 
 export function Chamados() {
-  // const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    data: issues,
+    isLoading: isLoadingIssues,
+    refetch,
+  } = useGetAllIssues();
 
-  // const [chamadoToEdit, setChamadoToEdit] = useState<Chamado>()
+  const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
 
-  // const showEvents = router.query?.is_event
+  const [issueToEdit, setIssueToEdit] = useState<Issue>();
 
-  // const {
-  //   data: chamados,
-  //   isLoading,
-  //   isValidating,
-  //   mutate
-  // } = useRequest<Chamado[]>(
-  //   getChamados({
-  //     params: {
-  //       is_event: showEvents
-  //     }
-  //   })
-  // )
+  const onEdit = useCallback(
+    (issue: Issue) => {
+      setIssueToEdit(issue);
+      onOpen();
+    },
+    [onOpen]
+  );
 
-  // const onSubmit = useCallback(
-  //   (result: Result<ApiResponse<Chamado>>) => {
-  //     if (result.type === "error") {
-  //       toast.error(result.error.message)
+  const onDelete = useCallback(
+    (issueId: string) => {
+      deleteIssue({ issueId });
+    },
+    [deleteIssue]
+  );
 
-  //       return
-  //     }
+  const handleClose = useCallback(() => {
+    setIssueToEdit(undefined);
+    onClose();
+  }, [onClose]);
 
-  //     toast.success(result.value.message)
-  //     mutate()
-  //     setChamadoToEdit(undefined)
-  //   },
-  //   [mutate]
-  // )
-
-  // const handleEdit = useCallback(
-  //   (chamado: Chamado) => {
-  //     setChamadoToEdit(chamado)
-  //     onOpen()
-  //   },
-  //   [onOpen]
-  // )
-
-  // const handleClose = useCallback(() => {
-  //   setChamadoToEdit(undefined)
-  //   onClose()
-  // }, [onClose])
-
-  // const renderChamadoItem = useCallback(
-  //   (chamado: Chamado) => (
-  //     <ChamadoItem chamado={chamado} handleEdit={handleEdit} />
-  //   ),
-  //   [handleEdit]
-  // )
+  const renderIssueItem = useCallback(
+    (issue: Issue) => (
+      <IssueItem
+        issue={issue}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        isDeleting={isRemovingIssue}
+      />
+    ),
+    [onDelete, onEdit, isRemovingIssue]
+  );
 
   return (
     <>
-      {/* <PageHeader title={showEvents ? 'Eventos' : 'Chamados'}> */}
       <PageHeader title="Chamados">
         <HStack spacing={2}>
-          <RefreshButton
-            refresh={() =>
-              new Promise((resolve) => {
-                resolve(5);
-              })
-            }
-          />
+          <RefreshButton refresh={refetch} />
           <Link to="/chamados/registrar">
             <Button variant="primary">Novo Chamado</Button>
           </Link>
         </HStack>
       </PageHeader>
 
-      {/* <ListView<Chamado>
-        items={chamados?.data}
-        render={renderChamadoItem}
-        isLoading={isLoading || isValidating}
-      /> */}
-      <p>Em progresso! Será entregue nas próximas interações..</p>
+      <ListView<Issue>
+        items={issues}
+        render={renderIssueItem}
+        isLoading={isLoadingIssues}
+      />
 
-      {/* <ChamadoModal
-        isOpen={isOpen}
-        onClose={handleClose}
-        chamado={chamadoToEdit}
-        onSubmit={onSubmit}
-      /> */}
+      <IssueModal isOpen={isOpen} onClose={handleClose} issue={issueToEdit} />
     </>
   );
 }
