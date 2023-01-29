@@ -24,11 +24,12 @@ export function Login() {
 
   return (
     <Center
+      aria-label="form"
       bgGradient="linear(288.94deg, #F8B86D 0%, #F49320 90.96%)"
       h="100vh"
       color="white"
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} aria-label="form">
         <Box
           bg="white"
           borderRadius="10px"
