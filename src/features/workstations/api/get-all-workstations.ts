@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { toast } from 'utils/toast';
 import { api } from '@/config/lib/axios';
@@ -22,3 +22,11 @@ const getAllWorkstations = async () =>
 
 export const useGetAllWorkstations = () =>
   useQuery([WORKSTATIONS_CACHE_KEYS.allWorkstations], getAllWorkstations);
+
+export const useGetAllWorkstationsCache = () => {
+  const queryClient = useQueryClient();
+
+  return queryClient.getQueryState<GetAllWorkstationsResponse>([
+    WORKSTATIONS_CACHE_KEYS.allWorkstations,
+  ]);
+};

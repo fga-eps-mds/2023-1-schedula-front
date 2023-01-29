@@ -11,23 +11,25 @@ import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateIssue(data: PostCreateIssueParams) {
-  return api.post<PostCreateIssueResponse>(`${ISSUES_ENDPOINT}/issues`, data);
+  return api
+    .post<PostCreateIssueResponse>(`${ISSUES_ENDPOINT}/issues`, data)
+    .then((response) => response.data);
 }
 
 export function usePostCreateIssue({
   onSuccessCallBack,
 }: {
-  onSuccessCallBack?: () => void;
+  onSuccessCallBack?: (data: PostCreateIssueResponse) => void;
 }) {
   const queryClient = useQueryClient();
 
   return useMutation(postCreateIssue, {
-    onSuccess() {
+    onSuccess(data: PostCreateIssueResponse) {
       queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
 
       toast.success('Chamado criado com sucesso!');
 
-      onSuccessCallBack?.();
+      onSuccessCallBack?.(data);
     },
     onError(error: AxiosError<ApiError>) {
       const errorMessage = Array.isArray(error?.response?.data?.message)

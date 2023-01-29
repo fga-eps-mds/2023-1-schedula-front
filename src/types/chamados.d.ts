@@ -24,7 +24,9 @@ type ChamadoProblem = {
 interface ChamadoEvent {
   is_event: boolean;
   event_date?: Date;
-  alert_dates?: Date[];
+  alert_dates?: {
+    date: Date;
+  }[];
   description?: string;
 }
 

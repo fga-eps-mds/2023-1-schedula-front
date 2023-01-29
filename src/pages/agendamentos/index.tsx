@@ -1,92 +1,74 @@
-import { HStack } from '@chakra-ui/react';
+import { HStack, useDisclosure } from '@chakra-ui/react';
+import { useCallback, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
+import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
+import { ListView } from '@/components/list';
+import { Schedule } from '@/features/schedules/types';
+import { ScheduleItem } from '@/features/schedules/components/schedule-item';
+import { useDeleteSchedule } from '@/features/schedules/api/delete-schedule';
+import { ScheduleEditModal } from '@/features/schedules/components/schedule-edit-modal';
 
 export function Agendamentos() {
-  // const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | undefined>();
 
-  // const { isOpen, onOpen, onClose } = useDisclosure()
+  const { data: schedules, isLoading, refetch } = useGetAllSchedules();
 
-  // const [chamadoToEdit, setChamadoToEdit] = useState<Chamado>()
+  const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
+    useDeleteSchedule();
 
-  // const showEvents = router.query?.is_event
+  const onEdit = useCallback(
+    (schedule: Schedule) => {
+      setScheduleToEdit(schedule);
+      onOpen();
+    },
+    [onOpen]
+  );
 
-  // const {
-  //   data: chamados,
-  //   isLoading,
-  //   isValidating,
-  //   mutate
-  // } = useRequest<Chamado[]>(
-  //   getChamados({
-  //     params: {
-  //       is_event: showEvents
-  //     }
-  //   })
-  // )
+  const onDelete = useCallback(
+    (id: string) => {
+      deleteSchedule({ id });
+    },
+    [deleteSchedule]
+  );
 
-  // const onSubmit = useCallback(
-  //   (result: Result<ApiResponse<Chamado>>) => {
-  //     if (result.type === "error") {
-  //       toast.error(result.error.message)
+  const handleClose = useCallback(() => {
+    setScheduleToEdit(undefined);
+    onClose();
+  }, [onClose]);
 
-  //       return
-  //     }
-
-  //     toast.success(result.value.message)
-  //     mutate()
-  //     setChamadoToEdit(undefined)
-  //   },
-  //   [mutate]
-  // )
-
-  // const handleEdit = useCallback(
-  //   (chamado: Chamado) => {
-  //     setChamadoToEdit(chamado)
-  //     onOpen()
-  //   },
-  //   [onOpen]
-  // )
-
-  // const handleClose = useCallback(() => {
-  //   setChamadoToEdit(undefined)
-  //   onClose()
-  // }, [onClose])
-
-  // const renderChamadoItem = useCallback(
-  //   (chamado: Chamado) => (
-  //     <ChamadoItem chamado={chamado} handleEdit={handleEdit} />
-  //   ),
-  //   [handleEdit]
-  // )
+  const renderScheduleItem = useCallback(
+    (schedule: Schedule) => (
+      <ScheduleItem
+        schedule={schedule}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        isDeleting={isDeletingSchedule}
+      />
+    ),
+    [onEdit, onDelete, isDeletingSchedule]
+  );
 
   return (
     <>
-      {/* <PageHeader title={showEvents ? 'Eventos' : 'Chamados'}> */}
       <PageHeader title="Agendamentos">
         <HStack spacing={2}>
-          <RefreshButton
-            refresh={() =>
-              new Promise((resolve) => {
-                resolve(5);
-              })
-            }
-          />
+          <RefreshButton refresh={refetch} />
         </HStack>
       </PageHeader>
 
-      {/* <ListView<Chamado>
-        items={chamados?.data}
-        render={renderChamadoItem}
-        isLoading={isLoading || isValidating}
-      /> */}
-      <p>Em progresso! Será entregue nas próximas interações..</p>
+      <ListView<Schedule>
+        items={schedules}
+        render={renderScheduleItem}
+        isLoading={isLoading}
+      />
 
-      {/* <ChamadoModal
+      <ScheduleEditModal
         isOpen={isOpen}
         onClose={handleClose}
-        chamado={chamadoToEdit}
-        onSubmit={onSubmit}
-      /> */}
+        schedule={scheduleToEdit}
+      />
     </>
   );
 }
