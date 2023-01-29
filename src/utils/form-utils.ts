@@ -89,3 +89,15 @@ export const chamadosDefaultValues: ChamadoFormValues = {
     },
   ],
 };
+
+export const maskPhoneField = (value: string) => {
+  if (!value) return '';
+
+  return value
+    .replace(/\D/g, '')
+    .replace(/(\d{2})(\d)/, '($1) $2')
+    .replace(/(\d)(\d{4})$/, '$1-$2');
+};
+
+export const ipPatternRegex =
+  /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;

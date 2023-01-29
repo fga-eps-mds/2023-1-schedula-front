@@ -1,23 +1,32 @@
 interface Workstation {
-  id: number;
+  id: string;
   name: string;
-  adsl_vpn: boolean;
-  ip: string | null;
-  link: string | null;
-  city_id: number;
-  phones: string[];
-  regional: boolean;
-  regional_id: number;
-  active: boolean;
+  city: City;
+  phone: string;
+  ip: string;
+  gateway: string;
+  is_regional: boolean;
+  parent_workstation?: Workstation;
+  child_workstations?: Workstation[];
 }
 
-interface CreateWorkstationPayload {
+interface WorkstationPayload {
   name: string;
-  adsl_vpn: boolean;
-  ip: string | null;
-  link: string | null;
-  phones: string[];
-  regional: boolean;
-  city_id: number;
-  regional_id?: number;
+  city: { label: string; value: string };
+  phone: string;
+  ip: string;
+  gateway: string;
+  is_regional: boolean;
+  parent_workstation?: { label: string; value: string };
+  child_workstation?: { label: string; value: string }[];
+}
+
+interface DeleteWorkstationPayload {
+  workstationDeleteId?: string;
+  workstationsRealoc?: [
+    {
+      workstation?: { label: string; value: string };
+      workstationsToRealoc?: { label: string; value: string }[];
+    }
+  ];
 }

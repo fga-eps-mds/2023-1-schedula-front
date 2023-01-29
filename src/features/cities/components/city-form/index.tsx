@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from '@chakra-ui/react';
+import { Button, Flex, Text } from '@chakra-ui/react';
 import { Input } from '@/components/form-fields';
 import { City } from '@/features/cities/api/types';
 
@@ -29,19 +29,27 @@ export function CityForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        label="Nome"
-        {...register('name', { required: 'Campo obrigatório' })}
-        errors={errors?.name}
-        placeholder="Nome"
-      />
+      <Flex flexDir="column" gap="1rem">
+        {!isEditing ? (
+          <Text textAlign="center" fontWeight="bold">
+            Insira as informações para cadastrar uma nova cidade
+          </Text>
+        ) : null}
 
-      <Input
-        label="Estado"
-        {...register('state', { required: 'Campo obrigatórtio' })}
-        errors={errors?.name}
-        placeholder="Estado"
-      />
+        <Input
+          label="Nome"
+          {...register('name', { required: 'Campo obrigatório' })}
+          errors={errors?.name}
+          placeholder="Nome"
+        />
+
+        <Input
+          label="Estado"
+          {...register('state', { required: 'Campo obrigatórtio' })}
+          errors={errors?.name}
+          placeholder="Estado"
+        />
+      </Flex>
 
       <Button
         type="submit"

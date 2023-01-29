@@ -1,173 +1,142 @@
-import { Button, HStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Checkbox,
+  HStack,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
+import { useCallback, useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
+import { ListView } from '@/components/list';
+import { WorkstationModal } from '@/features/workstations/components/workstation-modal/workstation-modal';
+import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
+import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
+import { WorkstationItem } from '@/features/workstations/components/workstation-item';
+import { DeleteWorkstationModal } from '@/features/workstations/components/workstation-modal/delete-workstation-modal';
+import { DeleteWorkstationProps } from '@/features/workstations/types';
 
 export function Workstation() {
-  // const isCreateAuthorized = true;
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
+  const [filter, setFilter] = useState('');
+  const [selectedWorkstation, setSelectedWorkstation] = useState<Workstation>();
 
-  // const { filters, updateField } = useFilters(workstationFields);
+  const { data: workstations, isLoading, refetch } = useGetAllWorkstations();
 
-  // const {
-  //   data: workstations,
-  //   isLoading,
-  //   isValidating,
-  //   mutate,
-  // } = useRequest<Workstation[]>(
-  //   filters?.regional
-  //     ? getWorkstations({
-  //         params: {
-  //           regional_id: (filters?.regional as unknown as SelectOption)?.value,
-  //         },
-  //       })
-  //     : null,
-  //   {
-  //     revalidateIfStale: false,
-  //   }
-  // );
+  const filteredWorkstations =
+    filter === 'regional'
+      ? workstations?.filter((workstation) => workstation.is_regional)
+      : workstations;
 
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const [workstationToEdit, setWorkstationToEdit] = useState<Workstation>();
+  const {
+    mutate: deleteRegionalWorkstation,
+    isLoading: isDeletingRegionalWorkstation,
+  } = useDeleteWorkstation({ onSuccessCallBack: onCloseDelete });
 
-  // const refresh = useCallback(
-  //   (data?: Workstation[]) =>
-  //     mutate(
-  //       {
-  //         data: {
-  //           error: null,
-  //           message: '',
-  //           data: data ?? [],
-  //         },
-  //       } as AxiosResponse<ApiResponse<Workstation[]>>,
-  //       { revalidate: !data }
-  //     ),
-  //   [mutate]
-  // );
+  const onSubmitRegionalDelete = (values: DeleteWorkstationProps) => {
+    if (values) {
+      const formattedData = values.reallocatedWorkstations.map((item) => ({
+        destinationId: item.destination.value,
+        reallocatedId: item.id,
+      }));
 
-  // const onDelete = useCallback(
-  //   (result: Result<ApiResponse<null>>, { id }: Workstation) => {
-  //     if (result.type === 'success') {
-  //       toast.success(result.value?.message);
+      deleteRegionalWorkstation({
+        workstationId: selectedWorkstation?.id ?? '',
+        data: formattedData,
+      });
 
-  //       const newWorkstations = workstations?.data.filter(
-  //         (workstation) => workstation.id !== id
-  //       );
-  //       refresh(newWorkstations);
+      setSelectedWorkstation(undefined);
+    }
+  };
 
-  //       return;
-  //     }
+  const onEdit = useCallback(
+    (workstation: Workstation) => {
+      setSelectedWorkstation(workstation);
+      onOpenEdit();
+    },
+    [onOpenEdit]
+  );
 
-  //     toast.error(result.error?.message);
-  //   },
-  //   [refresh, workstations?.data]
-  // );
+  const onDelete = useCallback(
+    (workstation: Workstation) => {
+      setSelectedWorkstation(workstation);
+      onOpenDelete();
+    },
+    [onOpenDelete]
+  );
 
-  // const onEdit = useCallback(
-  //   (workstation: Workstation) => {
-  //     setWorkstationToEdit(workstation);
-  //     onOpen();
-  //   },
-  //   [onOpen]
-  // );
+  const handleClose = useCallback(() => {
+    setSelectedWorkstation(undefined);
+    onCloseEdit();
+  }, [onCloseEdit]);
 
-  // const onSubmit = useCallback(
-  //   (result: Result<ApiResponse<Workstation>>) => {
-  //     if (result.type === 'error') {
-  //       toast.error(result.error?.message);
+  const handleCloseDeleteModal = useCallback(() => {
+    setSelectedWorkstation(undefined);
+    onCloseDelete();
+  }, [onCloseDelete]);
 
-  //       return;
-  //     }
-
-  //     toast.success(result.value?.message);
-
-  //     const newWorkstations = workstationToEdit
-  //       ? workstations?.data.map((workstation) =>
-  //           workstation.id === workstationToEdit?.id
-  //             ? result.value?.data
-  //             : workstation
-  //         )
-  //       : [...(workstations?.data || []), result.value?.data];
-
-  //     refresh(newWorkstations);
-  //     setWorkstationToEdit(undefined);
-  //     onClose();
-  //   },
-  //   [onClose, refresh, workstationToEdit, workstations?.data]
-  // );
-
-  // const handleClose = useCallback(() => {
-  //   setWorkstationToEdit(undefined);
-  //   onClose();
-  // }, [onClose]);
-
-  // const renderWorkstationItem = useCallback(
-  //   (item: Workstation) => (
-  //     <WorkstationItem workstation={item} onEdit={onEdit} onDelete={onDelete} />
-  //   ),
-  //   [onDelete, onEdit]
-  // );
-
-  // const handleFilterChange = useCallback(
-  //   (values: Filters) =>
-  //     (
-  //       Object.entries(values) as [
-  //         keyof Filters,
-  //         (typeof values)[keyof Filters]
-  //       ][]
-  //     ).forEach(([field, value]) => {
-  //       updateField(field)(value);
-  //     }),
-  //   [updateField]
-  // );
+  const renderWorkstationItem = useCallback(
+    (work: Workstation) => (
+      <WorkstationItem
+        workstation={work}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        isDeletingRegionalWorkstation={isDeletingRegionalWorkstation}
+      />
+    ),
+    [onDelete, onEdit, isDeletingRegionalWorkstation]
+  );
 
   return (
     <>
       <PageHeader title="Gerenciar Postos de Trabalho">
         <HStack spacing={2}>
-          <RefreshButton
-            refresh={() =>
-              new Promise((resolve) => {
-                resolve(5);
-              })
-            }
-          />
-          <Button onClick={() => console.log('novo')}>
-            Novo Posto de Trabalho
-          </Button>
+          <RefreshButton refresh={refetch} />
+          <Button onClick={onOpenEdit}>Novo Posto de Trabalho</Button>
         </HStack>
       </PageHeader>
 
-      {/* <VStack align="stretch" spacing={6}>
+      <VStack align="stretch" spacing={6}>
         <Box width="50%" minWidth="300px">
-          <WorkstationsFilter onFilter={handleFilterChange} />
+          <Checkbox
+            size="md"
+            colorScheme="orange"
+            onChange={(e) => setFilter(e.target.checked ? 'regional' : '')}
+          >
+            Regionais
+          </Checkbox>
         </Box>
 
         <ListView<Workstation>
-          items={workstations?.data}
+          items={filteredWorkstations}
           render={renderWorkstationItem}
-          isLoading={isLoading || isValidating}
+          isLoading={isLoading}
         />
+      </VStack>
 
-        {workstations?.data?.length === 0 && (
-          <Heading size="md" textAlign="center">
-            Nenhum posto de trabalho encontrado
-          </Heading>
-        )}
-
-        {!filters?.regional && (
-          <Heading size="md" color="GrayText">
-            Selecione uma regional para visualizar os postos de trabalho
-          </Heading>
-        )}
-      </VStack> */}
-
-      <p>Em progresso! Será entregue nas próximas interações..</p>
-
-      {/* <WorkstationModal
-        isOpen={isOpen}
+      <WorkstationModal
+        isOpen={isOpenEdit}
         onClose={handleClose}
-        workstation={workstationToEdit}
-        onSubmit={onSubmit}
-      /> */}
+        workstation={selectedWorkstation}
+      />
+
+      <DeleteWorkstationModal
+        isOpen={isOpenDelete}
+        onClose={handleCloseDeleteModal}
+        workstation={selectedWorkstation}
+        onSubmit={onSubmitRegionalDelete}
+        isDeletingWorkstation={isDeletingRegionalWorkstation}
+      />
     </>
   );
 }
