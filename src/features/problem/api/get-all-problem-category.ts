@@ -7,7 +7,7 @@ import { PROBLEM_CATEGORIES_CACHE_KEYS } from '@/features/problem/constants/cach
 
 type GetAllProblemCategoriesResponse = Array<ProblemCategory>;
 
-const getAllProblemCategories = async () =>
+export const getAllProblemCategories = async () =>
   api
     .get<GetAllProblemCategoriesResponse>(
       `${PROBLEM_CATEGORIES_ENDPOINT}/problem-category`

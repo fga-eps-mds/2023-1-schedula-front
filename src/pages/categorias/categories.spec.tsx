@@ -2,53 +2,52 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { Cities } from '@/pages/cidades';
 import { theme } from '@/styles/theme';
+import ProblemCategories from '@/pages/categorias';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'intersection-observer';
-import { getAllCities } from '@/features/cities/api/get-all-cities';
+import { getAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 
-describe('Cities Page', () => {
+describe('Categories Page', () => {
   const queryClient = new QueryClient();
 
-  it('should have a button to register a new city', async () => {
+  it('should have a button to register a new problem category', async () => {
     const { findByText } = render(
       <BrowserRouter>
         <AuthProvider>
           <ChakraProvider resetCSS theme={theme}>
             <QueryClientProvider client={queryClient}>
-              <Cities />
+              <ProblemCategories />
             </QueryClientProvider>
           </ChakraProvider>
         </AuthProvider>
       </BrowserRouter>
     );
 
-    const btn = await findByText('Nova Cidade');
+    const btn = await findByText('Nova Categoria');
 
     expect(btn).toBeInTheDocument();
   });
 
-  it('should display a list of cities', async () => {
+  it('should have a list of all problem categories', async () => {
     const { findByText } = render(
       <BrowserRouter>
         <AuthProvider>
           <ChakraProvider resetCSS theme={theme}>
             <QueryClientProvider client={queryClient}>
-              <Cities />
+              <ProblemCategories />
             </QueryClientProvider>
           </ChakraProvider>
         </AuthProvider>
       </BrowserRouter>
     );
 
-    const cities = await getAllCities();
+    const categories = await getAllProblemCategories();
 
-    cities.forEach(async (c) => {
-      const card = await findByText(c.name);
-
+    categories.forEach(async (category) => {
+      const card = await findByText(category.name);
       expect(card).toBeInTheDocument();
     });
   });
