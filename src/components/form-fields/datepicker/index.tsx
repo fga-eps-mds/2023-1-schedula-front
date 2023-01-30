@@ -67,11 +67,9 @@ export function Datepicker<FormValues extends FieldValues>({
           timeInputLabel="Hora"
           fixedHeight
           customInput={<Input />}
-          // customTimeInput={<Input />}
           {...props}
         />
         <InputRightElement color="gray.500" pointerEvents="none" zIndex={-1}>
-          {/* <Icon as={FaBackspace} fontSize="lg" color="red" /> */}
           <Icon as={BsCalendar3} color="primary" fontSize="lg" />
         </InputRightElement>
       </InputGroup>

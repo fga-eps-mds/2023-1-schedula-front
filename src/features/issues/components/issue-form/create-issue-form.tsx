@@ -1,20 +1,17 @@
 import {
   Box,
   Button,
-  Flex,
   Grid,
   GridItem,
-  HStack,
   Icon,
   InputLeftElement,
   Text,
-  VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FormProvider } from 'react-hook-form/dist/useFormContext';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
-import InputMask from 'react-input-mask';
+import { useNavigate } from 'react-router-dom';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -26,18 +23,51 @@ import {
 } from '@/features/issues/types';
 
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
-import { getSelectOptions } from '@/utils/form-utils';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
+import { maskPhoneField } from '@/utils/form-utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { ScheduleModal } from '@/features/schedules/components/schedule-modal';
+
+interface Option {
+  label: string;
+  value: string;
+}
 
 export function CreateIssueForm() {
-  const [issue, setIssue] = useState<Issue>();
+  const navigate = useNavigate();
 
-  const { mutate: createIssue, isLoading: isUpdatingIssue } =
+  const { user } = useAuth();
+
+  const [createdIssue, setCreatedIssue] = useState<Issue>();
+
+  const cityRef = useRef<Option | null>(null);
+  const categoryRef = useRef<Option | null>(null);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    resetField,
+    formState: { errors },
+  } = useForm<IssuePayload>();
+
+  const { mutate: createIssue, isLoading: isCreatingIssue } =
     usePostCreateIssue({
-      onSuccessCallBack: () => {},
+      onSuccessCallBack(data) {
+        setCreatedIssue(data);
+      },
     });
 
   const { data: cities, isLoading: isLoadingCities } = useGetAllCities();
+
+  const { data: problem_categories, isLoading: isLoadingProblems } =
+    useGetAllProblemCategories();
+
+  const { data: workstations, isLoading: isLoadingWorkstations } =
+    useGetAllWorkstations();
 
   const citiesOptions = cities?.map((city) => {
     return {
@@ -46,50 +76,53 @@ export function CreateIssueForm() {
     };
   });
 
-  const { data: workstations, isLoading: isLoadingWorkstations } =
-    useGetAllWorkstations();
-
-  const workstationsOptions = workstations?.map((workstation) => ({
-    value: workstation?.id ?? '',
-    label: workstation?.name ?? '',
-  }));
-
-  const { data: problem_categories, isLoading: isLoadingProblems } =
-    useGetAllProblemCategories();
-
-  const problemCategorieOptions = problem_categories?.map((category) => {
+  const problemCategoriesOptions = problem_categories?.map((category) => {
     return {
       label: category?.name ?? '',
       value: category?.id ?? '',
     };
   });
 
-  const problemTypesOptions = (problem_id: string | undefined) => {
-    const problem_category = problem_categories?.find(
-      (category) => category.id === issue?.problem_category.id
-    );
-    return problem_category?.problem_types?.map((type) => {
-      return {
-        label: type?.name ?? '',
-        value: type?.id ?? '',
-      };
-    });
-  };
+  const city = watch('city_payload');
+  const category = watch('problem_category_payload');
+  const problemTypes = watch('problem_types_payload');
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IssuePayload>({
-    defaultValues: { ...issue },
-  });
+  const workstationsOptions = city
+    ? workstations
+        ?.filter((workstation) => workstation.city.id === city.value)
+        .map((workstation) => ({
+          value: workstation?.id ?? '',
+          label: workstation?.name ?? '',
+        }))
+    : [];
+
+  const problemTypesOptions = category
+    ? problem_categories
+        ?.filter((cat) => cat.id === category.value)
+        .map((category) => category.problem_types)[0]
+        .map((problemType) => ({
+          value: problemType?.id ?? '',
+          label: problemType?.name ?? '',
+        }))
+    : [];
+
+  useEffect(() => {
+    if (city !== cityRef.current) {
+      resetField('workstation_payload', { defaultValue: null });
+      cityRef.current = city;
+    }
+  }, [city, resetField]);
+
+  useEffect(() => {
+    if (category !== categoryRef.current) {
+      resetField('problem_types_payload', { defaultValue: null });
+      categoryRef.current = category;
+    }
+  }, [category, resetField]);
 
   const onSubmit = useCallback(
-    async ({
+    ({
       city_payload,
-      date,
-      email,
       phone,
       problem_category_payload,
       problem_types_payload,
@@ -100,84 +133,94 @@ export function CreateIssueForm() {
         requester,
         phone,
         city_id: city_payload?.value,
-        date,
-        email,
+        date: new Date().toISOString(),
         problem_category_id: problem_category_payload?.value,
-        problem_types_ids: problem_types_payload?.map((type) => type?.value),
+        problem_types_ids:
+          problem_types_payload?.map((type) => type?.value) ?? [],
         workstation_id: workstation_payload?.value,
+        email: user?.email ?? '',
       };
 
-      createIssue({
-        requester,
-        phone,
-        city_id: city_payload?.value,
-        date,
-        email,
-        problem_category_id: problem_category_payload?.value,
-        problem_types_ids: problem_types_payload?.map((type) => type?.value),
-        workstation_id: workstation_payload?.value,
-      });
+      createIssue(payload);
     },
-    [createIssue]
+    [createIssue, user?.email]
   );
   return (
-    <form id="create-issue-form" onSubmit={handleSubmit(onSubmit)}>
-      <Grid templateColumns="repeat(2, 1fr)" gap={8}>
-        <Input
-          label="Solicitante"
-          {...register('requester', {
-            required: 'Campo obrigatório',
-          })}
-          errors={errors?.requester}
-          leftElement={
-            <InputLeftElement>
-              <Icon as={BsPersonCircle} fontSize={20} />
-            </InputLeftElement>
-          }
-        />
+    <>
+      <form id="create-issue-form" onSubmit={handleSubmit(onSubmit)}>
+        <Grid templateColumns="repeat(2, 1fr)" gap={8}>
+          <Input
+            label="Solicitante"
+            {...register('requester', {
+              required: 'Campo obrigatório',
+            })}
+            errors={errors?.requester}
+            placeholder="Nome do solicitante"
+            leftElement={
+              <InputLeftElement>
+                <Icon as={BsPersonCircle} fontSize={20} />
+              </InputLeftElement>
+            }
+          />
 
-        <Input
-          label="Telefone"
-          placeholder="0000-0000"
-          {...register('phone', {
-            required: 'Campo obrigatório',
-          })}
-          errors={errors?.phone}
-          leftElement={
-            <InputLeftElement>
-              <Icon as={BsTelephoneFill} fontSize={20} />
-            </InputLeftElement>
-          }
-        />
+          <Controller
+            control={control}
+            name="phone"
+            defaultValue=""
+            rules={{
+              required: 'Campo obrigatório',
+              maxLength: {
+                value: 15,
+                message: 'Número inválido',
+              },
+            }}
+            render={({
+              field: { ref, value, onChange },
+              fieldState: { error },
+            }) => (
+              <Input
+                ref={ref}
+                label="Telefone"
+                placeholder="(00) 0000-0000"
+                value={value}
+                errors={error}
+                onChange={(e) => onChange(maskPhoneField(e.target.value))}
+                leftElement={
+                  <InputLeftElement>
+                    <Icon as={BsTelephoneFill} fontSize={20} />
+                  </InputLeftElement>
+                }
+              />
+            )}
+          />
 
-        <ControlledSelect
-          control={control}
-          name="city_payload"
-          id="city_payload"
-          options={getSelectOptions(citiesOptions, 'name', 'id')}
-          isLoading={isLoadingCities}
-          placeholder="Cidade"
-          label="Cidade"
-          rules={{ required: 'Campo obrigatório' }}
-        />
+          <ControlledSelect
+            control={control}
+            name="city_payload"
+            id="city_payload"
+            options={citiesOptions}
+            isLoading={isLoadingCities}
+            placeholder="Cidade"
+            label="Cidade"
+            rules={{ required: 'Campo obrigatório' }}
+          />
 
-        <ControlledSelect
-          control={control}
-          name="workstation_payload"
-          id="workstation_payload"
-          options={getSelectOptions(workstationsOptions, 'name', 'id')}
-          isLoading={isLoadingWorkstations}
-          placeholder="Posto de Trabalho"
-          label="Posto de Trabalho"
-          rules={{ required: 'Campo obrigatório' }}
-        />
+          <ControlledSelect
+            control={control}
+            name="workstation_payload"
+            id="workstation_payload"
+            options={workstationsOptions}
+            isLoading={isLoadingWorkstations}
+            placeholder="Posto de Trabalho"
+            label="Posto de Trabalho"
+            rules={{ required: 'Campo obrigatório' }}
+          />
 
-        <GridItem colSpan={2}>
           <ControlledSelect
             control={control}
             name="problem_category_payload"
             id="problem_category_payload"
-            options={getSelectOptions(problemCategorieOptions, 'name', 'id')}
+            options={problemCategoriesOptions}
             isLoading={isLoadingProblems}
             placeholder="Categoria do Problema"
             label="Categoria do Problema"
@@ -191,11 +234,7 @@ export function CreateIssueForm() {
             isMulti
             name="problem_types_payload"
             id="problem_types_payload"
-            options={getSelectOptions(
-              problemTypesOptions(issue?.problem_category?.id),
-              'name',
-              'id'
-            )}
+            options={problemTypesOptions}
             isLoading={isLoadingWorkstations}
             placeholder="Tipos de Problema"
             label="Tipos de Problema"
@@ -203,19 +242,53 @@ export function CreateIssueForm() {
               shouldUnregister: true,
             }}
           />
-        </GridItem>
-      </Grid>
 
-      <Button
-        type="submit"
-        form="create-issue-form"
-        width="100%"
-        size="lg"
-        mt={8}
-        boxShadow="xl"
-      >
-        Finalizar
-      </Button>
-    </form>
+          <GridItem colSpan={2} display="flex" justifyContent="space-between">
+            <Text color="gray" fontWeight="light" fontSize="12px">
+              Atenção: Caso seja necessário, você poderá gerar um agendamento
+              após registrar o chamado
+            </Text>
+            <Button disabled={!createdIssue} onClick={onOpen}>
+              Gerar Agendamento
+            </Button>
+          </GridItem>
+        </Grid>
+
+        {problemTypes && problemTypes?.length > 0 ? (
+          <Box shadow="lg" mt="2rem" borderRadius=".5rem">
+            <Box bg="#ffdab7" p="1rem" borderRadius=".5rem">
+              <Text fontWeight="bold">Rol de atendimento</Text>
+            </Box>
+            {problemTypes?.map((problem) => (
+              <Box key={problem.value} my="1rem" px="1rem" pt=".5rem" pb="1rem">
+                <Text>
+                  {category.label} - {problem.label}
+                </Text>
+              </Box>
+            ))}
+          </Box>
+        ) : null}
+
+        <Button
+          type="submit"
+          form="create-issue-form"
+          width="100%"
+          size="lg"
+          mt={8}
+          boxShadow="xl"
+          isLoading={isCreatingIssue}
+          {...(createdIssue && {
+            onClick: () => navigate('/chamados'),
+            bg: 'transparent',
+            border: '1px solid #F49320',
+            color: '#F49320',
+          })}
+        >
+          {!createdIssue ? 'Registrar Chamado' : 'Ir para os chamados'}
+        </Button>
+      </form>
+
+      <ScheduleModal issue={createdIssue} isOpen={isOpen} onClose={onClose} />
+    </>
   );
 }

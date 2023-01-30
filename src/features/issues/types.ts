@@ -10,7 +10,7 @@ export interface Issue {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: Date;
+  date: string;
   problem_category: {
     id: string;
     name: string;
@@ -26,7 +26,7 @@ export interface PostCreateIssueParams {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: Date;
+  date: string;
   problem_category_id: string;
   problem_types_ids: string[];
 }
@@ -38,7 +38,7 @@ export interface PostCreateIssueResponse {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: Date;
+  date: string;
   problem_category: {
     id: string;
     name: string;
@@ -89,8 +89,18 @@ export interface IssuePayload {
   phone: string;
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
-  email: string;
-  date: Date;
   problem_category_payload: { label: string; value: string };
-  problem_types_payload: { label: string; value: string }[];
+  problem_types_payload?: { label: string; value: string }[];
+}
+
+export interface PostCreateScheduleParams {
+  alerts: Date[];
+  description: string;
+  dateTime: Date;
+  issue_id: string;
+  status_e: string;
+}
+
+export interface PostCreateScheduleResponse {
+  id: string;
 }

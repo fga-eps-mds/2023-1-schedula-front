@@ -3,32 +3,33 @@ import { AxiosError } from 'axios';
 import { api } from '@/config/lib/axios';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
 import {
-  PutUpdateIssueParams,
-  PutUpdateIssueResponse,
+  PostCreateScheduleParams,
+  PostCreateScheduleResponse,
 } from '@/features/issues/types';
 import { toast } from '@/utils/toast';
-import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { ApiError } from '@/config/lib/axios/types';
+import { SCHEDULE_CACHE_KEYS } from '@/features/schedules/constants/cache';
 
-function putUpdateIssue({ issueId, data }: PutUpdateIssueParams) {
-  return api.put<PutUpdateIssueResponse>(
-    `${ISSUES_ENDPOINT}/issues/${issueId}`,
+async function postCreateSchedule(data: PostCreateScheduleParams) {
+  const response = await api.post<PostCreateScheduleResponse>(
+    `${ISSUES_ENDPOINT}/schedules`,
     data
   );
+  return response.data;
 }
 
-export function usePutUpdateIssue({
+export function usePostCreateSchedule({
   onSuccessCallBack,
 }: {
   onSuccessCallBack?: () => void;
 }) {
   const queryClient = useQueryClient();
 
-  return useMutation(putUpdateIssue, {
+  return useMutation(postCreateSchedule, {
     onSuccess() {
-      queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
+      queryClient.invalidateQueries([SCHEDULE_CACHE_KEYS.allSchedules]);
 
-      toast.success('Chamado atualizado com sucesso!');
+      toast.success('Agendamento criado com sucesso!');
 
       onSuccessCallBack?.();
     },
@@ -38,7 +39,7 @@ export function usePutUpdateIssue({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar editar o chamado.'
+        'Houve um problema ao tentar criar o agendamento.'
       );
     },
   });

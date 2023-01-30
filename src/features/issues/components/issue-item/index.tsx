@@ -10,28 +10,14 @@ import {
 import { formatDate } from '@/utils/format-date';
 import { Issue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
-import {
-  useGetAllCities,
-  useGetCity,
-} from '@/features/cities/api/get-all-cities';
-import { ItemActions } from '@/components/list-item/list-item-actions';
-import { EditButton } from '@/components/action-buttons/edit-button';
-import { DeleteButton } from '@/components/action-buttons/delete-button';
+import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 
 interface IssueItemProps {
   issue: Issue;
-  onEdit: (issue: Issue) => void;
-  onDelete: (issueId: string) => void;
-  isDeleting: boolean;
 }
 
-export function IssueItem({
-  issue,
-  onEdit,
-  onDelete,
-  isDeleting,
-}: IssueItemProps) {
-  const { data: cities, isLoading: isLoadingCities } = useGetAllCities();
+export function IssueItem({ issue }: IssueItemProps) {
+  const { data: cities } = useGetAllCities();
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
   });
@@ -70,9 +56,6 @@ export function IssueItem({
         description={
           <VStack align="stretch" spacing={2}>
             <HStack gap={4} mt={2} flexWrap="wrap">
-              <Tag variant="subtle" colorScheme="purple">
-                {issue?.problem_category?.name}
-              </Tag>
               {issue?.problem_types?.map((problem) => (
                 <HStack align="start" spacing={1} key={problem?.id}>
                   <Tag variant="subtle" colorScheme="gray">
@@ -112,20 +95,6 @@ export function IssueItem({
               <Text noOfLines={1}>{issue?.email}</Text>
             </Box>
           </HStack>
-
-          <ItemActions item={issue}>
-            <EditButton
-              onClick={onEdit}
-              label="Editar Chamado"
-              disabled={isDeleting}
-            />
-
-            <DeleteButton
-              onClick={() => onDelete(issue?.id)}
-              label="Deletar Chamado"
-              isLoading={isDeleting}
-            />
-          </ItemActions>
         </VStack>
       </Item>
     </Box>
