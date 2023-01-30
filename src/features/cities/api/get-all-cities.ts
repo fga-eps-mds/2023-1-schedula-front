@@ -9,7 +9,7 @@ import { City } from '@/features/cities/api/types';
 
 type GetAllCitiesResponse = Array<City>;
 
-const getAllCities = async () =>
+export const getAllCities = async () =>
   api
     .get<GetAllCitiesResponse>(`${CITIES_ENDPOINT}/cities`)
     .then((response) => response.data)
