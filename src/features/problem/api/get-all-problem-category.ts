@@ -5,7 +5,7 @@ import { ProblemCategory } from '@/features/problem/api/types';
 import { PROBLEM_CATEGORIES_ENDPOINT } from '@/features/problem/constants/requests';
 import { PROBLEM_CATEGORIES_CACHE_KEYS } from '@/features/problem/constants/cache';
 
-type GetAllProblemCategoriesResponse = Array<ProblemCategory>;
+export type GetAllProblemCategoriesResponse = Array<ProblemCategory>;
 
 export const getAllProblemCategories = async () =>
   api

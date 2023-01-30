@@ -8,10 +8,18 @@ import { theme } from '@/styles/theme';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'intersection-observer';
-import { getAllCities } from '@/features/cities/api/get-all-cities';
+import {
+  getAllCities,
+  GetAllCitiesResponse,
+} from '@/features/cities/api/get-all-cities';
 
 describe('Cities Page', () => {
   const queryClient = new QueryClient();
+  let cities: GetAllCitiesResponse;
+
+  beforeAll(async () => {
+    cities = await getAllCities();
+  });
 
   it('should have a button to register a new city', async () => {
     const { findByText } = render(
@@ -43,8 +51,6 @@ describe('Cities Page', () => {
         </AuthProvider>
       </BrowserRouter>
     );
-
-    const cities = await getAllCities();
 
     cities.forEach(async (c) => {
       const card = await findByText(c.name);
