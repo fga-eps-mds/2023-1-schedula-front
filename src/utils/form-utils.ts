@@ -32,41 +32,6 @@ export const formValuesToPayload = (
   })),
 });
 
-export const chamadoToFormValues = (chamado: Chamado): ChamadoFormValues => ({
-  ...chamado,
-  city_id: {
-    value: chamado.city_id,
-    label: chamado?.city?.name,
-  },
-  workstation_id: {
-    value: chamado.workstation_id,
-    label: chamado?.workstation?.name,
-  },
-  problems: chamado.problems.map((problem) => ({
-    ...problem,
-    event_date: problem.event_date ? new Date(problem.event_date) : undefined,
-    alert_dates: problem.alert_dates?.map?.((date) => new Date(date)) ?? [],
-    category_id: {
-      value: problem.category_id,
-      label: problem.category.name,
-    },
-    problem_id: [
-      {
-        value: problem.problem_id,
-        label: problem.problem.name,
-      },
-    ],
-    request_status: {
-      value: problem.request_status,
-      label: CHAMADO_STATUS[problem.request_status],
-    },
-    priority: {
-      value: problem.priority,
-      label: CHAMADO_PRIORITY[problem.priority],
-    },
-  })),
-});
-
 export const chamadosDefaultValues: ChamadoFormValues = {
   attendant_name: '',
   applicant_name: '',
