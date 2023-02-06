@@ -8,6 +8,7 @@ import { User } from '@/features/users/api/types';
 import { useDeleteRemoveUser } from '@/features/users/api/delete-remove-user';
 import { UserModal } from '@/features/users/components/user-modal';
 import { UserItem } from '@/features/users/components/user-item';
+import { Permission } from '@/components/permission';
 
 function Usuarios() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -56,7 +57,9 @@ function Usuarios() {
       <PageHeader title="Gerenciar Usuários">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpen}>Novo Usuário</Button>
+          <Permission allowedRoles={['ADMIN', 'BASIC']}>
+            <Button onClick={onOpen}>Novo Usuário</Button>
+          </Permission>
         </HStack>
       </PageHeader>
 

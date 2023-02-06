@@ -6,6 +6,7 @@ import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ActionButton } from '@/components/action-buttons';
 import { useDeleteWorkstation } from '@/features/workstations/api/delete-workstation';
+import { Permission } from '@/components/permission';
 
 interface WorkstationItemProps {
   workstation: Workstation;
@@ -61,31 +62,33 @@ export function WorkstationItem({
       }
       description={<Text>{workstation?.city.name}</Text>}
     >
-      <ItemActions item={workstation}>
-        <EditButton
-          onClick={onEdit}
-          label={workstation.name}
-          disabled={isDeletingWorkstation}
-        />
-
-        {isRegionalWithChildren ? (
-          <ActionButton
-            label={`Excluir ${workstation.name}`}
-            icon={<FaTrash />}
-            onClick={() => onDelete(workstation)}
-            color="red.500"
-            tabIndex={0}
-          />
-        ) : (
-          <DeleteButton
-            onClick={() =>
-              deleteWorkstation({ workstationId: workstation.id, data: [] })
-            }
+      <Permission allowedRoles={['ADMIN']}>
+        <ItemActions item={workstation}>
+          <EditButton
+            onClick={onEdit}
             label={workstation.name}
-            isLoading={isDeletingWorkstation || isDeletingRegionalWorkstation}
+            disabled={isDeletingWorkstation}
           />
-        )}
-      </ItemActions>
+
+          {isRegionalWithChildren ? (
+            <ActionButton
+              label={`Excluir ${workstation.name}`}
+              icon={<FaTrash />}
+              onClick={() => onDelete(workstation)}
+              color="red.500"
+              tabIndex={0}
+            />
+          ) : (
+            <DeleteButton
+              onClick={() =>
+                deleteWorkstation({ workstationId: workstation.id, data: [] })
+              }
+              label={workstation.name}
+              isLoading={isDeletingWorkstation || isDeletingRegionalWorkstation}
+            />
+          )}
+        </ItemActions>
+      </Permission>
     </Item>
   );
 }

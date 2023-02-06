@@ -17,6 +17,7 @@ import { ProblemType } from '@/features/problem/problem-types/types';
 import { ProblemTypeItem } from '@/features/problem/problem-types/components/problem-type-item';
 import { useGetProblemCategory } from '@/features/problem/api/get-problem-category';
 import { ListView } from '@/components/list';
+import { Permission } from '@/components/permission';
 
 export function ListaProblemas() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -82,7 +83,9 @@ export function ListaProblemas() {
       >
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpen}>Novo Tipo de Problema</Button>
+          <Permission allowedRoles={['ADMIN', 'BASIC']}>
+            <Button onClick={onOpen}>Novo Tipo de Problema</Button>
+          </Permission>
         </HStack>
       </PageHeader>
 

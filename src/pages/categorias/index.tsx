@@ -10,6 +10,7 @@ import { ProblemCategory } from '@/features/problem/api/types';
 import { CategoryItem } from '@/features/problem/problem-categories/components/category-item';
 import { CategoryModal } from '@/features/problem/problem-categories/components/category-modal/category-modal';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
+import { Permission } from '@/components/permission';
 
 function ProblemCategories() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,7 +61,9 @@ function ProblemCategories() {
       <PageHeader title="Categorias de problema">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpen}>Nova Categoria</Button>
+          <Permission allowedRoles={['ADMIN', 'BASIC']}>
+            <Button onClick={onOpen}>Nova Categoria</Button>
+          </Permission>
         </HStack>
       </PageHeader>
 

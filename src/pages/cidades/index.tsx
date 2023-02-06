@@ -8,6 +8,7 @@ import { CityModal } from '@/features/cities/components/city-modal/city-modal';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useDeleteCity } from '@/features/cities/api/delete-city';
 import { City } from '@/features/cities/api/types';
+import { Permission } from '@/components/permission';
 
 export function Cities() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,7 +56,9 @@ export function Cities() {
       <PageHeader title="Cidades Cadastradas">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpen}>Nova Cidade</Button>
+          <Permission allowedRoles={['ADMIN']}>
+            <Button onClick={onOpen}>Nova Cidade</Button>
+          </Permission>
         </HStack>
       </PageHeader>
 

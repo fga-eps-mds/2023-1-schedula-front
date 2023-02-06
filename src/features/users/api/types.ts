@@ -13,6 +13,7 @@ export interface GetUserInfoResponse {
   username: string;
   email: string;
   userId: string;
+  profile: 'ADMIN' | 'BASIC' | 'USER';
 }
 
 export interface PostCreateUserParams {

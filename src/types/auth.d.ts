@@ -8,7 +8,7 @@ type SignedUser = {
   name: string;
   token: string;
   email: string;
-  // role: string;
+  role: 'ADMIN' | 'BASIC' | 'USER';
   // permissions: Array<string>;
 };
 

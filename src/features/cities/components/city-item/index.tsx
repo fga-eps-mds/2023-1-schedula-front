@@ -3,6 +3,7 @@ import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
+import { Permission } from '@/components/permission';
 
 interface CityItemProps {
   city: City;
@@ -26,15 +27,21 @@ export function CityItem({
         </HStack>
       }
     >
-      <ItemActions item={city}>
-        <EditButton onClick={onEdit} label={city.name} disabled={isDeleting} />
+      <Permission allowedRoles={['ADMIN']}>
+        <ItemActions item={city}>
+          <EditButton
+            onClick={onEdit}
+            label={city.name}
+            disabled={isDeleting}
+          />
 
-        <DeleteButton
-          onClick={() => onDelete(city.id)}
-          label={city.name}
-          isLoading={isDeleting}
-        />
-      </ItemActions>
+          <DeleteButton
+            onClick={() => onDelete(city.id)}
+            label={city.name}
+            isLoading={isDeleting}
+          />
+        </ItemActions>
+      </Permission>
     </Item>
   );
 }
