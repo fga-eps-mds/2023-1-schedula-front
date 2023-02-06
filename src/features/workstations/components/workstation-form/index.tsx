@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Checkbox, Grid, GridItem } from '@chakra-ui/react';
+import { Button, Checkbox, Grid, GridItem, Text } from '@chakra-ui/react';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import {
   getSelectOptions,
@@ -43,6 +43,8 @@ export function WorkstationForm({
     'id'
   );
 
+  const [ipRangeInit, ipRangeEnd] = selectedWorkstation?.ip.split(' ~ ') ?? [];
+
   const {
     register,
     control,
@@ -63,7 +65,8 @@ export function WorkstationForm({
         value: selectedWorkstation?.city?.id ?? '',
       },
       gateway: selectedWorkstation?.gateway ?? '',
-      ip: selectedWorkstation?.ip ?? '',
+      ip_initial: ipRangeInit ?? '',
+      ip_end: ipRangeEnd ?? '',
       parent_workstation: {
         label: selectedWorkstation?.parent_workstation?.name ?? '',
         value: selectedWorkstation?.parent_workstation?.id ?? '',
@@ -150,9 +153,30 @@ export function WorkstationForm({
           )}
         />
 
+        <ControlledSelect
+          control={control}
+          name="city"
+          id="city"
+          options={getSelectOptions(cidades, 'name', 'id')}
+          isLoading={isLoadingCidades}
+          placeholder="Cidade"
+          label="Cidade"
+          defaultValue={defaultWorkstationCity(selectedWorkstation?.city)}
+          rules={{ required: 'Campo obrigatório' }}
+        />
+
+        <Text
+          fontWeight="bold"
+          mb="-1rem"
+          gridColumnEnd={3}
+          gridColumnStart={1}
+        >
+          Faixa de IP
+        </Text>
+
         <Controller
           control={control}
-          name="ip"
+          name="ip_initial"
           defaultValue=""
           rules={{
             required: 'Campo obrigatório',
@@ -167,33 +191,68 @@ export function WorkstationForm({
           }) => (
             <Input
               ref={ref}
-              label="IP"
+              label="Faixa - Início"
               errors={error}
               value={value}
-              placeholder="IP"
+              placeholder="0.0.0.0"
               onChange={(e) => onChange(e.target.value)}
             />
           )}
         />
 
-        <Input
-          label="Gateway"
-          {...register('gateway', { required: 'Campo obrigatórtio' })}
-          errors={errors?.gateway}
-          placeholder="Gateway"
+        <Controller
+          control={control}
+          name="ip_end"
+          defaultValue=""
+          rules={{
+            required: 'Campo obrigatório',
+            pattern: {
+              value: ipPatternRegex,
+              message: 'IP inválido',
+            },
+          }}
+          render={({
+            field: { ref, value, onChange },
+            fieldState: { error },
+          }) => (
+            <Input
+              ref={ref}
+              label="Faixa - Fim"
+              errors={error}
+              value={value}
+              placeholder="1.1.1.1"
+              onChange={(e) => onChange(e.target.value)}
+            />
+          )}
         />
 
-        <ControlledSelect
-          control={control}
-          name="city"
-          id="city"
-          options={getSelectOptions(cidades, 'name', 'id')}
-          isLoading={isLoadingCidades}
-          placeholder="Cidade"
-          label="Cidade"
-          defaultValue={defaultWorkstationCity(selectedWorkstation?.city)}
-          rules={{ required: 'Campo obrigatório' }}
-        />
+        <GridItem colSpan={2}>
+          <Controller
+            control={control}
+            name="gateway"
+            defaultValue=""
+            rules={{
+              required: 'Campo obrigatório',
+              pattern: {
+                value: ipPatternRegex,
+                message: 'Formato inválido',
+              },
+            }}
+            render={({
+              field: { ref, value, onChange },
+              fieldState: { error },
+            }) => (
+              <Input
+                ref={ref}
+                label="Gateway"
+                errors={error}
+                value={value}
+                placeholder="Gateway"
+                onChange={(e) => onChange(e.target.value)}
+              />
+            )}
+          />
+        </GridItem>
 
         {!isRegional ? (
           <GridItem colSpan={2}>

@@ -10,6 +10,7 @@ import { RequireAuth } from '@/config/routes/require-auth';
 import { DefaultLayout } from '@/components/layout/default-layout';
 import { RegistrarChamado } from '@/pages/chamados/registrar';
 import { Agendamentos } from '@/pages/agendamentos';
+import { ScheduleExport } from '@/pages/exportacao_agendamentos ';
 
 export function Router() {
   return (
@@ -46,6 +47,15 @@ export function Router() {
           element={
             <RequireAuth>
               <Agendamentos />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="exportar/agendamentos"
+          element={
+            <RequireAuth>
+              <ScheduleExport />
             </RequireAuth>
           }
         />

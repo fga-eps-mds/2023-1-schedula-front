@@ -31,10 +31,25 @@ export function ScheduleItem({
     ? new Date(schedule.dateTime)
     : new Date();
 
+  function getBadgeColor() {
+    switch (schedule.status.toLowerCase()) {
+      case 'não resolvido':
+        return 'gray';
+      case 'em andamento':
+        return 'blue';
+      case 'pendente':
+        return 'yellow';
+      case 'urgente':
+        return 'red';
+      default:
+        return 'green';
+    }
+  }
+
   return (
     <Box>
       <HStack spacing={2}>
-        <Badge colorScheme="blue" variant="outline">
+        <Badge colorScheme={getBadgeColor()} variant="outline">
           {schedule.status}
         </Badge>
         <Spacer />

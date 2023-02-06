@@ -14,7 +14,8 @@ interface WorkstationPayload {
   name: string;
   city: { label: string; value: string };
   phone: string;
-  ip: string;
+  ip_initial: string;
+  ip_end: string;
   gateway: string;
   is_regional: boolean;
   parent_workstation?: { label: string; value: string };
