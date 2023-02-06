@@ -33,7 +33,7 @@ export function ScheduleModal({
         dateTime: event_date ?? new Date(),
         description: description ?? '',
         issue_id: issue?.id ?? '',
-        status_e: 'PROGRESS',
+        status_e: 'NOT_RESOLVED',
       });
     },
     [createSchedule, issue?.id]

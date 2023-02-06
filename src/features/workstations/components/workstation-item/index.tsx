@@ -46,7 +46,7 @@ export function WorkstationItem({
                 openDelay={350}
               >
                 <Badge colorScheme="orange" variant="outline">
-                  IP: {workstation?.ip}
+                  Faixa de IP: {workstation?.ip}
                 </Badge>
               </Tooltip>
               <Badge colorScheme="orange" variant="solid">
