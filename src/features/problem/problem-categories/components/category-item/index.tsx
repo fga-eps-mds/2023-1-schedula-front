@@ -6,6 +6,7 @@ import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { AddButton } from '@/components/action-buttons/add-button';
+import { Permission } from '@/components/permission';
 
 interface CategoryItemProps {
   category: Category;
@@ -44,18 +45,19 @@ export function CategoryItem({
           label="Tipos de Problema"
           aria-label="Add"
         />
+        <Permission allowedRoles={['ADMIN']}>
+          <EditButton
+            onClick={onEdit}
+            label={category.name}
+            disabled={isDeleting}
+          />
 
-        <EditButton
-          onClick={onEdit}
-          label={category.name}
-          disabled={isDeleting}
-        />
-
-        <DeleteButton
-          onClick={() => onDelete(category.id)}
-          label={category.name}
-          isLoading={isDeleting}
-        />
+          <DeleteButton
+            onClick={() => onDelete(category.id)}
+            label={category.name}
+            isLoading={isDeleting}
+          />
+        </Permission>
       </ItemActions>
     </Item>
   );

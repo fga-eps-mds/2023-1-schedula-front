@@ -13,6 +13,7 @@ import { Schedule } from '@/features/schedules/types';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
+import { Permission } from '@/components/permission';
 
 interface ScheduleItemProps {
   schedule: Schedule;
@@ -100,17 +101,24 @@ export function ScheduleItem({
       >
         <VStack>
           <ItemActions item={schedule}>
-            <EditButton
-              onClick={onEdit}
-              label="Agendamento"
-              disabled={isDeleting}
-            />
+            <Permission
+              allowedRoles={['ADMIN', 'BASIC']}
+              allowCreatedByUserEmail={schedule.issue.email}
+            >
+              <EditButton
+                onClick={onEdit}
+                label="Agendamento"
+                disabled={isDeleting}
+              />
+            </Permission>
 
-            <DeleteButton
-              onClick={() => onDelete(schedule?.id)}
-              label="Agendamento"
-              isLoading={isDeleting}
-            />
+            <Permission allowedRoles={['ADMIN']}>
+              <DeleteButton
+                onClick={() => onDelete(schedule?.id)}
+                label="Agendamento"
+                isLoading={isDeleting}
+              />
+            </Permission>
           </ItemActions>
           <HStack
             alignItems="start"

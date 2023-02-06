@@ -16,6 +16,7 @@ import { useDeleteWorkstation } from '@/features/workstations/api/delete-worksta
 import { WorkstationItem } from '@/features/workstations/components/workstation-item';
 import { DeleteWorkstationModal } from '@/features/workstations/components/workstation-modal/delete-workstation-modal';
 import { DeleteWorkstationProps } from '@/features/workstations/types';
+import { Permission } from '@/components/permission';
 
 export function Workstation() {
   const {
@@ -102,7 +103,9 @@ export function Workstation() {
       <PageHeader title="Gerenciar Postos de Trabalho">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpenEdit}>Novo Posto de Trabalho</Button>
+          <Permission allowedRoles={['ADMIN', 'BASIC']}>
+            <Button onClick={onOpenEdit}>Novo Posto de Trabalho</Button>
+          </Permission>
         </HStack>
       </PageHeader>
 

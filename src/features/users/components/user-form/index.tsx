@@ -21,6 +21,8 @@ export function UserForm({
   isSubmitting,
 }: UserFormProps) {
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
+  const blockProfileEdit =
+    defaultValues?.profile && defaultValues.profile !== 'ADMIN';
 
   const {
     register,
@@ -88,6 +90,7 @@ export function UserForm({
         />
 
         <ControlledSelect
+          isDisabled={blockProfileEdit}
           label="Perfil"
           control={control}
           name="profile"

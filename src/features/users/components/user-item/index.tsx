@@ -5,6 +5,7 @@ import { User } from '@/features/users/api/types';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ItemActions } from '@/components/list-item/list-item-actions';
+import { Permission } from '@/components/permission';
 
 export function RoleBadge(role: Access) {
   switch (role) {
@@ -49,14 +50,25 @@ export function UserItem({
       }
     >
       <ItemActions item={user}>
-        <EditButton onClick={onEdit} label={user.name} disabled={isDeleting} />
+        <Permission
+          allowedRoles={['ADMIN', 'BASIC']}
+          allowCreatedByUserEmail={user.email}
+        >
+          <EditButton
+            onClick={onEdit}
+            label={user.name}
+            disabled={isDeleting}
+          />
+        </Permission>
 
-        <DeleteButton
-          onClick={() => onDelete(user.id)}
-          label={user.name}
-          isLoading={isDeleting}
-          data-testid="deleteButton"
-        />
+        <Permission allowedRoles={['ADMIN', 'BASIC']}>
+          <DeleteButton
+            onClick={() => onDelete(user.id)}
+            label={user.name}
+            isLoading={isDeleting}
+            data-testid="deleteButton"
+          />
+        </Permission>
       </ItemActions>
     </Item>
   );
