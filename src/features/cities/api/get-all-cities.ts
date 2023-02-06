@@ -7,9 +7,9 @@ import { CITIES_CACHE_KEYS } from '@/features/cities/constants/cache';
 import { CITIES_ENDPOINT } from '@/features/cities/constants/requests';
 import { City } from '@/features/cities/api/types';
 
-type GetAllCitiesResponse = Array<City>;
+export type GetAllCitiesResponse = Array<City>;
 
-const getAllCities = async () =>
+export const getAllCities = async () =>
   api
     .get<GetAllCitiesResponse>(`${CITIES_ENDPOINT}/cities`)
     .then((response) => response.data)
