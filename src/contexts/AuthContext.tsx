@@ -16,7 +16,6 @@ interface AuthContextData {
   signIn(credentials: SignInCredentials): Promise<void>;
   isAuthenticated: boolean;
   user: SignedUser | null;
-  userRole: 'ADMIN' | 'BASIC' | 'USER';
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -36,7 +35,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return JSON.parse(loadedUser);
   });
   const isAuthenticated = !!user?.token;
-  const userRole = user?.role ?? 'USER';
 
   const signIn = useCallback(
     async ({ username, password }: SignInCredentials) => {
@@ -70,11 +68,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
             email,
             id,
             token,
-            role: profile,
+            profile,
           })
         );
 
-        setUser({ name, email, id, token, role: profile });
+        setUser({ name, email, id, token, profile });
 
         api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
@@ -105,9 +103,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       signOut,
       isAuthenticated,
       user,
-      userRole,
     }),
-    [signIn, signOut, isAuthenticated, user, userRole]
+    [signIn, signOut, isAuthenticated, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

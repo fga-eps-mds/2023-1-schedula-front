@@ -13,9 +13,10 @@ export function Permission({
   allowCreatedByUserEmail,
   children,
 }: PermissionProps) {
-  const { userRole, user } = useAuth();
+  const { user } = useAuth();
   const isCreatedBySelf = user?.email === allowCreatedByUserEmail ?? false;
-  const isAuthorized = allowedRoles.includes(userRole);
+  const role = user?.profile ?? 'USER';
+  const isAuthorized = allowedRoles.includes(role);
 
   if (!isAuthorized) {
     return null;
