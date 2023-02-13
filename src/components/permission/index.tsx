@@ -17,12 +17,13 @@ export function Permission({
   const isCreatedBySelf = user?.email === allowCreatedByUserEmail ?? false;
   const role = user?.profile ?? 'USER';
   const isAuthorized = allowedRoles.includes(role);
+  const isAdmin = role === 'ADMIN';
 
   if (!isAuthorized) {
     return null;
   }
 
-  if (!!allowCreatedByUserEmail && !isCreatedBySelf) {
+  if (!!allowCreatedByUserEmail && !isCreatedBySelf && !isAdmin) {
     return null;
   }
 
