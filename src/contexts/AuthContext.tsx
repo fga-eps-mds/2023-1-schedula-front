@@ -40,7 +40,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     async ({ username, password }: SignInCredentials) => {
       try {
         const response = await api.post<AuthResponse>(
-          'https://schedula-user.herokuapp.com/auth',
+          `${import.meta.env.VITE_PUBLIC_GESTOR_DE_USUARIOS_URL}/auth`,
           {
             username,
             password,
