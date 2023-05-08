@@ -1,13 +1,10 @@
 name: Generate Metrics Release
 
 on:
-  release:
-    types: [published]
-  pull_request_review:
-    types: [submitted]
-    branches:
-      - main
-      - develop
+  push:
+    branches: [main, develop]
+    tags:
+      - "v*"
 
 jobs:
   send-release:
@@ -26,16 +23,16 @@ jobs:
           node-version: 16.x
 
       - name: Create Metrics SonarCloud
-        run: python metrics/sonar-metrics.py -X ${{ github.event.repository.name }} ${{ steps.previoustag.outputs.tag }}
+        run: python metrics/sonar-metrics.py ${{ github.event.repository.name }} ${{ github.ref_name }}
 
       - name: Commit Metrics SonarCloud File
         run: |
           git config --global user.email "${{ secrets.USER_EMAIL }}"
           git config --global user.name "${{ secrets.USER_USERNAME }}"
-          git clone --single-branch --branch main "https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/fga-eps-mds/2022-2-Schedula-Doc" docs
-          mkdir -p docs/analytics-raw-data
-          cp -R fga-eps-mds*.json docs/analytics-raw-data
-          cd docs
+          git clone --single-branch --branch main "https://x-access-token:${{ secrets.PERSONAL_TOKEN }}@github.com/fga-eps-mds/2023-1-Schedula-Doc" doc
+          mkdir -p doc/analytics-raw-data
+          cp -R fga-eps-mds*.json doc/analytics-raw-data
+          cd doc
           git add .
           git commit -m "Métricas SonarCloud - ${{ github.event.repository.name }} ${{ github.ref_name }}"
           git push
