@@ -41,16 +41,14 @@ function Usuarios() {
   }, [onClose]);
 
   const renderUserItem = useCallback(
-    (user: User) => {
-      return (
-        <UserItem
-          user={user}
-          onEdit={() => onEdit(user)}
-          onDelete={() => onDelete(user.id)}
-          isDeleting={isRemovingUser}
-        />
-      );
-    },
+    (user: User) => (
+      <UserItem
+        user={user}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        isDeleting={isRemovingUser}
+      />
+    ),
     [onDelete, onEdit, isRemovingUser]
   );
 
