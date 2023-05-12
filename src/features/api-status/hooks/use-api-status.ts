@@ -1,6 +1,7 @@
 import { useGetUsersApiStatus } from '@/features/api-status/api/get-users-api-status';
 import { useGetScheduleApiStatus } from '@/features/api-status/api/get-schedule-api-status';
 import { useGetLocationsApiStatus } from '@/features/api-status/api/get-location-api-status';
+import { useGetTutorialsApiStatus } from '@/features/api-status/api/get-tutorial-api-status';
 
 export function useAPIStatus() {
   const {
@@ -15,6 +16,10 @@ export function useAPIStatus() {
     isError: locationServiceUnavailable,
     isLoading: isLoadingLocalidadesStatus,
   } = useGetLocationsApiStatus();
+  const {
+    isError: tutorialServiceUnavailable,
+    isLoading: isLoadingTutoriaisStatus,
+  } = useGetTutorialsApiStatus();
 
   return {
     usuariosStatus: userServiceUnavailable,
@@ -23,5 +28,7 @@ export function useAPIStatus() {
     isLoadingChamadosStatus,
     localidadesStatus: locationServiceUnavailable,
     isLoadingLocalidadesStatus,
+    tutoriaisStatus: tutorialServiceUnavailable,
+    isLoadingTutoriaisStatus,
   };
 }
