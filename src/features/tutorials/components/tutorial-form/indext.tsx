@@ -12,6 +12,7 @@ export function TutorialForm() {
         <Button type="submit" size="lg" width="100%">
           Criar Tutorial
         </Button>
+        <Button type="submit">Cancelar</Button>
       </GridItem>
     </form>
   );
