@@ -11,6 +11,7 @@ import { DefaultLayout } from '@/components/layout/default-layout';
 import { RegistrarChamado } from '@/pages/chamados/registrar';
 import { Agendamentos } from '@/pages/agendamentos';
 import { ScheduleExport } from '@/pages/exportacao_agendamentos';
+import { Tutoriais } from '@/pages/tutoriais';
 
 export function Router() {
   return (
@@ -97,6 +98,14 @@ export function Router() {
           element={
             <RequireAuth>
               <ListaProblemas />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="tutoriais"
+          element={
+            <RequireAuth>
+              <Tutoriais />
             </RequireAuth>
           }
         />
