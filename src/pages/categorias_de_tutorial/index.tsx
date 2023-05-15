@@ -38,8 +38,9 @@ export function CategoriasTutorial() {
   const onDelete = useCallback(
     (categoryTutorialId: string) => {
       deleteCategoryTutorial({ categoryTutorialId });
+      refetch();
     },
-    [deleteCategoryTutorial]
+    [deleteCategoryTutorial, refetch]
   );
 
   const handleClose = useCallback(() => {

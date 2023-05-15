@@ -32,10 +32,9 @@ export function CategoryTutorialModal({
   });
 
   const handleSubmit = useCallback(
-    async ({ name, state }: CategoryTutorialPayload) => {
+    async ({ name }: CategoryTutorialPayload) => {
       const payload: PostCreateCategoryTutorialParams = {
         name,
-        state,
       };
 
       if (categoryTutorial?.id) {

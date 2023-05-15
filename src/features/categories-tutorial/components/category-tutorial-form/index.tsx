@@ -42,13 +42,6 @@ export function CategoryTutorialForm({
           errors={errors?.name}
           placeholder="Nome"
         />
-
-        <Input
-          label="Estado"
-          {...register('state', { required: 'Campo obrigatórtio' })}
-          errors={errors?.name}
-          placeholder="Estado"
-        />
       </Flex>
 
       <Button
@@ -58,7 +51,7 @@ export function CategoryTutorialForm({
         mt={8}
         isLoading={isSubmitting}
       >
-        {isEditing ? 'Salvar' : 'Criar cidade'}
+        {isEditing ? 'Salvar' : 'Criar categoria'}
       </Button>
     </form>
   );

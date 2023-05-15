@@ -12,7 +12,7 @@ export type GetAllCategoryTutorialResponse = Array<CategoryTutorial>;
 export const getAllCategoryTutorial = async () =>
   api
     .get<GetAllCategoryTutorialResponse>(
-      `${CATEGORIES_TUTORIAL_ENDPOINT}/cities`
+      `${CATEGORIES_TUTORIAL_ENDPOINT}/categories`
     )
     .then((response) => response.data)
     .catch((err) => {
@@ -26,7 +26,7 @@ export const getAllCategoryTutorial = async () =>
 const getCategoryTutorial = async (categoryTutorialId: string) =>
   api
     .get<CategoryTutorial>(
-      `${CATEGORIES_TUTORIAL_ENDPOINT}/cities/${categoryTutorialId}`
+      `${CATEGORIES_TUTORIAL_ENDPOINT}/categories/${categoryTutorialId}`
     )
     .then((response) => response.data)
     .catch(() => {

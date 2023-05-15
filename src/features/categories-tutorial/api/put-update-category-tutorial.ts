@@ -15,7 +15,7 @@ function putUpdateCategoryTutorial({
   data,
 }: PutUpdateCategoryTutorialParams) {
   return api.put<PutUpdateCategoryTutorialResponse>(
-    `${CATEGORIES_TUTORIAL_ENDPOINT}/cities/${categoryTutorialId}`,
+    `${CATEGORIES_TUTORIAL_ENDPOINT}/categories/${categoryTutorialId}`,
     data
   );
 }

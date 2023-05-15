@@ -1,10 +1,8 @@
-export interface City {
+export interface CategoryTutorial {
   id: string;
   name: string;
-  state: string;
 }
 
-export interface CityPayload {
+export interface CategoryTutorialPayload {
   name: string;
-  state: string;
 }

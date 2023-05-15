@@ -11,7 +11,6 @@ import { CategoryTutorialForm } from '.';
 const categoryTutorial: CategoryTutorial = {
   id: '1',
   name: 'Goiânia',
-  state: 'Goiás',
 };
 
 describe('CategoryTutorialForm', () => {
@@ -25,7 +24,6 @@ describe('CategoryTutorialForm', () => {
     );
 
     expect(screen.getByLabelText('Nome')).toHaveValue('Goiânia');
-    expect(screen.getByLabelText('Estado')).toHaveValue('Goiás');
   });
 
   it('should be able to update a city', async () => {
@@ -55,10 +53,6 @@ describe('CategoryTutorialForm', () => {
       fireEvent.change(screen.getByLabelText('Nome'), {
         target: { value: 'Goiânia' },
       });
-      fireEvent.change(screen.getByLabelText('Estado'), {
-        target: { value: 'Goiás' },
-      });
-
       screen.getByText('Criar categoria').click();
     });
 

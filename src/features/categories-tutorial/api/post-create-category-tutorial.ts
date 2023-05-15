@@ -12,7 +12,7 @@ import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateCategoryTutorial(data: PostCreateCategoryTutorialParams) {
   return api.post<PostCreateCategoryTutorialResponse>(
-    `${CATEGORIES_TUTORIAL_ENDPOINT}/cities`,
+    `${CATEGORIES_TUTORIAL_ENDPOINT}/categories`,
     data
   );
 }

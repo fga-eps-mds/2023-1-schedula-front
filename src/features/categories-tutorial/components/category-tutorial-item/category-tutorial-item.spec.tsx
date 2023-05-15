@@ -6,7 +6,6 @@ import { useAuth } from '@/contexts/AuthContext';
 const mockedCategoryTutorial: CategoryTutorial = {
   id: '1',
   name: 'Goiânia',
-  state: 'Goiás',
 };
 
 const mockedOnEditFunction = vi.fn(() => {});

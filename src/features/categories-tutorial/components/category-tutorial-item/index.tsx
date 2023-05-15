@@ -19,14 +19,7 @@ export function CategoryTutorialItem({
   isDeleting,
 }: CategoryTutorialItemProps) {
   return (
-    <Item
-      title={`${categoryTutorial?.name}`}
-      description={
-        <HStack spacing={2} mt={2.5}>
-          <p>{categoryTutorial?.state}</p>
-        </HStack>
-      }
-    >
+    <Item title={`${categoryTutorial?.name}`}>
       <Permission allowedRoles={['ADMIN']}>
         <ItemActions item={categoryTutorial}>
           <EditButton

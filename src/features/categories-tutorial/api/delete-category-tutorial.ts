@@ -9,7 +9,7 @@ function deleteCategoryTutorial({
   categoryTutorialId,
 }: DeleteCategoryTutorialParams) {
   return api.delete<boolean>(
-    `${CATEGORIES_TUTORIAL_ENDPOINT}/cities/${categoryTutorialId}`
+    `${CATEGORIES_TUTORIAL_ENDPOINT}/categories/${categoryTutorialId}`
   );
 }
 
@@ -19,7 +19,6 @@ export function useDeleteCategoryTutorial() {
   return useMutation(deleteCategoryTutorial, {
     onSuccess() {
       toast.success('Categoria removida com sucesso!');
-
       queryClient.invalidateQueries([
         CATEGORIES_TUTORIAL_CACHE_KEYS.allCategoriesTutorial,
       ]);
