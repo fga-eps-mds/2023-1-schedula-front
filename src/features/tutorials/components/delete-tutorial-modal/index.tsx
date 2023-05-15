@@ -9,6 +9,7 @@ import {
   UserFormValues,
 } from '@/features/users/components/user-form';
 import { TutorialForm } from '../tutorial-form/indext';
+import { DeleteTutorialForm } from '../tutorial-delete-form';
 
 interface UserModalProps extends Partial<ModalProps> {
   user?: User | undefined;
@@ -16,7 +17,11 @@ interface UserModalProps extends Partial<ModalProps> {
   onClose: () => void;
 }
 
-export function TutorialModal({ onClose, user, ...props }: UserModalProps) {
+export function DeleteTutorialModal({
+  onClose,
+  user,
+  ...props
+}: UserModalProps) {
   const { mutate: createUser, isLoading: isCreatingUser } = usePostCreateUser({
     onSuccessCallBack: onClose,
   });
@@ -56,8 +61,8 @@ export function TutorialModal({ onClose, user, ...props }: UserModalProps) {
   );
 
   return (
-    <Modal size="2xl" title="Criar tutorial" onClose={onClose} {...props}>
-      <TutorialForm />
+    <Modal size="2xl" title="Atenção" onClose={onClose} {...props}>
+      <DeleteTutorialForm />
     </Modal>
   );
 }
