@@ -56,12 +56,7 @@ export function TutorialModal({ onClose, user, ...props }: UserModalProps) {
   );
 
   return (
-    <Modal
-      size="2xl"
-      title={`${user ? 'Editar' : 'Novo'} Usuário`}
-      onClose={onClose}
-      {...props}
-    >
+    <Modal size="2xl" title="Criar tutorial" onClose={onClose} {...props}>
       <TutorialForm />
     </Modal>
   );
