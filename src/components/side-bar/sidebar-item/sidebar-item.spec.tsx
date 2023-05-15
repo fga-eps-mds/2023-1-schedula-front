@@ -8,6 +8,7 @@ describe('Sidebar-item', () => {
     label: 'mock label',
     pathname: 'mock_pathname',
     icon: FiAlertCircle,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   };
 
   it('should display correct route name', async () => {
