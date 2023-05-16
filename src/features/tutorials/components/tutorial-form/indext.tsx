@@ -1,5 +1,6 @@
 import { Button, Select, Grid } from '@chakra-ui/react';
-import { ControlledSelect, Input } from '@/components/form-fields';
+import { Input } from '@/components/form-fields';
+import { InputFile } from '../tutorial-file';
 
 export function TutorialForm() {
   return (
@@ -9,8 +10,8 @@ export function TutorialForm() {
         placeholder="Digite o nome do tutorial"
         errors={undefined}
       />
-      <div>
-        <span>Categoria</span>
+      <div style={{ marginTop: '10px' }}>
+        <span style={{ fontWeight: '500' }}>Categoria</span>
         <Select
           className="select"
           placeholder="Selecione a Categoria"
@@ -22,13 +23,7 @@ export function TutorialForm() {
           <option value="Redefinição de senha">Redefinição de senha</option>
         </Select>
       </div>
-
-      <Input
-        label="Adicione o arquivo"
-        type="file"
-        errors={undefined}
-        style={{ marginTop: 3 }}
-      />
+      <InputFile />
 
       <Grid templateColumns="1fr 0fr" style={{ marginTop: 12 }}>
         <Button type="submit" size="lg" width="45%">
