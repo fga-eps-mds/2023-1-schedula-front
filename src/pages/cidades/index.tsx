@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Button, HStack, useDisclosure } from '@chakra-ui/react';
 import { CityItem } from '@/features/cities/components/city-item';
 import { PageHeader } from '@/components/page-header';
@@ -12,17 +12,17 @@ import { Permission } from '@/components/permission';
 
 export function Cities() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const isCreateAuthorized = true;
   const [cityToEdit, setCityToEdit] = useState<City>();
+  const [modalClosed, setModalClosed] = useState(false); // Novo estado para controlar o fechamento da modal
 
   const { data: cities, isLoading, refetch } = useGetAllCities();
-
   const { mutate: deleteCity, isLoading: isRemovingCity } = useDeleteCity();
 
   const onEdit = useCallback(
     (city: City) => {
       setCityToEdit(city);
       onOpen();
+      console.log('abrindo modal');
     },
     [onOpen]
   );
@@ -37,6 +37,8 @@ export function Cities() {
   const handleClose = useCallback(() => {
     setCityToEdit(undefined);
     onClose();
+    console.log('fechando modal');
+    setModalClosed(true);
   }, [onClose]);
 
   const renderCityItem = useCallback(
@@ -50,6 +52,16 @@ export function Cities() {
     ),
     [onDelete, onEdit, isRemovingCity]
   );
+  useEffect(() => {
+    if (modalClosed) {
+      const timeout = setTimeout(() => {
+        refetch?.().finally(() => setModalClosed(false));
+      }, 2000);
+
+      console.log('atualizando dados');
+      return () => clearTimeout(timeout);
+    }
+  }, [modalClosed, refetch]);
 
   return (
     <>
