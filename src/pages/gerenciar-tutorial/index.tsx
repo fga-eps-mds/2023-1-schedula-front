@@ -1,11 +1,12 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/components/page-header';
 import { TutorialModal } from '@/features/tutorials/components/tutorial-modal';
 import { Input } from '@/components/form-fields';
 import { DeleteTutorialModal } from '@/features/tutorials/components/delete-tutorial-modal';
 
-export function Tutoriais() {
+export function GerenciarTutoriais() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenDelete,
@@ -18,10 +19,15 @@ export function Tutoriais() {
     onCloseDelete();
   }, [onClose, onCloseDelete]);
 
+  const navigate = useNavigate();
+
   return (
     <>
-      <PageHeader title="Tutoriais">
-        <Button onClick={onOpen}>Criar Tutorial</Button>
+      <PageHeader title="Gerenciar tutoriais">
+        <Button onClick={() => navigate('/tutoriais')}> Ver tutoriais </Button>
+        <Button onClick={onOpen} style={{ marginLeft: '450px' }}>
+          Criar Tutorial
+        </Button>
       </PageHeader>
 
       <Input label="" errors={undefined} placeholder="Buscar Tutorial" />

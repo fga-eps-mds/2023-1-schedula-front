@@ -4,7 +4,11 @@ import { ControlledSelect, Input } from '@/components/form-fields';
 export function TutorialForm() {
   return (
     <form>
-      <Input label="Nome do tutorial" errors={undefined} />
+      <Input
+        label="Nome do tutorial"
+        placeholder="Digite o nome do tutorial"
+        errors={undefined}
+      />
       <div>
         <span>Categoria</span>
         <Select
