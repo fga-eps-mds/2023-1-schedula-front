@@ -22,7 +22,6 @@ export function Cities() {
     (city: City) => {
       setCityToEdit(city);
       onOpen();
-      console.log('abrindo modal');
     },
     [onOpen]
   );
@@ -30,6 +29,7 @@ export function Cities() {
   const onDelete = useCallback(
     (cityId: string) => {
       deleteCity({ cityId });
+      setModalClosed(true);
     },
     [deleteCity]
   );
@@ -37,7 +37,6 @@ export function Cities() {
   const handleClose = useCallback(() => {
     setCityToEdit(undefined);
     onClose();
-    console.log('fechando modal');
     setModalClosed(true);
   }, [onClose]);
 
@@ -58,7 +57,6 @@ export function Cities() {
         refetch?.().finally(() => setModalClosed(false));
       }, 2000);
 
-      console.log('atualizando dados');
       return () => clearTimeout(timeout);
     }
   }, [modalClosed, refetch]);
