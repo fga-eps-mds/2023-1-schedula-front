@@ -12,7 +12,7 @@ import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateTutorial(data: PostCreateTutorialParams) {
   return api.post<PostCreateTutorialResponse>(
-    `${TUTORIAL_ENDPOINT}/cities`,
+    `${TUTORIAL_ENDPOINT}/tutorials`,
     data
   );
 }
@@ -28,7 +28,7 @@ export function usePostCreateTutorial({
     onSuccess() {
       queryClient.invalidateQueries([TUTORIALS_CACHE_KEYS.allTutorials]);
 
-      toast.success('Cidade criada com sucesso!');
+      toast.success('Tutorial criado com sucesso!');
 
       onSuccessCallBack?.();
     },
@@ -38,7 +38,7 @@ export function usePostCreateTutorial({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar criar a cidade.'
+        'Houve um problema ao tentar criar o tutorial.'
       );
     },
   });

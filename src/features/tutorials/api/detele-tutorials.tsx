@@ -6,7 +6,7 @@ import { TUTORIALS_CACHE_KEYS } from '@/features/tutorials/constants/cache';
 import { DeleteTutorialParams } from '@/features/tutorials/api/types';
 
 function deleteTutorial({ tutorialId }: DeleteTutorialParams) {
-  return api.delete<boolean>(`${TUTORIAL_ENDPOINT}/cities/${tutorialId}`);
+  return api.delete<boolean>(`${TUTORIAL_ENDPOINT}/tutorials/${tutorialId}`);
 }
 
 export function useDeleteTutorial() {
@@ -14,13 +14,13 @@ export function useDeleteTutorial() {
 
   return useMutation(deleteTutorial, {
     onSuccess() {
-      toast.success('Cidade removida com sucesso!');
+      toast.success('Tutorial removido com sucesso!');
 
       queryClient.invalidateQueries([TUTORIALS_CACHE_KEYS.allTutorials]);
     },
     onError() {
       toast.error(
-        'Não foi possível remover a cidade. Tente novamente mais tarde!'
+        'Não foi possível remover o tutorial. Tente novamente mais tarde!'
       );
     },
   });
