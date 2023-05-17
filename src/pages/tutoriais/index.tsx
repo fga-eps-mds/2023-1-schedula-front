@@ -3,11 +3,16 @@ import {
   Button,
   HStack,
   useDisclosure,
-  Input,
-  Select,
   Grid,
   GridItem,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+  Box,
 } from '@chakra-ui/react';
+import { Props, Select } from 'chakra-react-select';
+import { FaSearch, FaTags } from 'react-icons/fa';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { ListView } from '@/components/list';
@@ -21,6 +26,7 @@ import {
 
 export function Tutoriais() {
   const { data: tutorials, isLoading, refetch } = useGetAllTutorials();
+
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
     tutorials || []
   );
@@ -67,23 +73,17 @@ export function Tutoriais() {
         tutorial.name.toLowerCase().includes(searchText)
       );
       setFilteredTutorials(filteredTutorials || []);
+      setSelectedState('');
     },
     [tutorials]
   );
 
   const handleStateChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedState = event.target.value;
-      setSelectedState(selectedState);
+    (selectedOption: Props<any>['value']) => {
+      setSelectedState(selectedOption?.value || '');
     },
     []
   );
-
-  const uniqueCategories = new Set(
-    tutorials?.map((tutorial) => tutorial.state)
-  );
-
-  console.log(uniqueCategories);
 
   useEffect(() => {
     let updatedTutorials = tutorials || [];
@@ -95,30 +95,42 @@ export function Tutoriais() {
     setFilteredTutorials(updatedTutorials);
   }, [tutorials, selectedState]);
 
+  const uniqueStates = new Set(tutorials?.map((tutorial) => tutorial.state));
+
+  const options = [...uniqueStates].map((state) => ({
+    label: state,
+    value: state,
+  }));
+
   return (
     <>
       <PageHeader title="Tutoriais" />
 
-      <Grid templateColumns="repeat(2, 1fr)" gap={8}>
-        <Input
-          placeholder="Pesquisar tutoriais"
-          onChange={handleSearch}
-          marginBottom="4"
-        />
+      <Grid templateColumns="repeat(2, 1fr)" gap={8} marginBottom="4">
+        <InputGroup>
+          <InputLeftElement pointerEvents="none">
+            <Icon as={FaSearch} boxSize={4} color="gray.400" />
+          </InputLeftElement>
+          <Input
+            placeholder="Pesquisar tutoriais"
+            onChange={handleSearch}
+            _placeholder={{ color: 'gray.400' }}
+          />
+        </InputGroup>
 
         <Select
-          placeholder="Filtrar por estado"
+          placeholder={
+            <Box display="flex" alignItems="center">
+              <Icon as={FaTags} boxSize={4} mr={2} />
+              Filtrar por categoria
+            </Box>
+          }
           onChange={handleStateChange}
           value={selectedState}
+          options={options}
           chakraStyles={chakraStyles}
-          marginBottom="4"
-        >
-          {[...uniqueCategories].map((state) => (
-            <option key={state} value={state}>
-              {state}
-            </option>
-          ))}
-        </Select>
+          components={customComponents}
+        />
       </Grid>
 
       <ListView<Tutorial>
