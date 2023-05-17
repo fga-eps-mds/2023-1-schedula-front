@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { invert } from 'lodash';
 import { GrDocumentPdf } from 'react-icons/gr';
 
 export function InputFile() {
@@ -44,7 +45,11 @@ export function InputFile() {
                   <Text fontWeight="light">Adicione um arquivo</Text>
                   <GrDocumentPdf
                     size="40"
-                    style={{ alignContent: 'center', marginLeft: '50px' }}
+                    style={{
+                      alignContent: 'center',
+                      marginLeft: '50px',
+                      filter: 'invert(0.6)',
+                    }}
                   />
                 </Stack>
               </Stack>
@@ -58,7 +63,7 @@ export function InputFile() {
               left="0"
               opacity="0"
               aria-hidden="true"
-              accept="image/*"
+              accept=".pdf"
             />
           </Box>
         </Box>
