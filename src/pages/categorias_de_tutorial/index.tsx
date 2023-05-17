@@ -7,7 +7,10 @@ import {
   Select,
   Grid,
   GridItem,
+  Tooltip,
 } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { IoArrowBackCircleOutline } from 'react-icons/all';
 import { CategoryTutorialItem } from '@/features/categories-tutorial/components/category-tutorial-item';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
@@ -25,7 +28,7 @@ import {
 export function CategoriasTutorial() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedState, setSelectedState] = useState<string>('');
-
+  const navigate = useNavigate();
   const [categoryTutorialToEdit, setCategoryTutorialToEdit] =
     useState<CategoryTutorial>();
 
@@ -98,6 +101,21 @@ export function CategoriasTutorial() {
     <>
       <PageHeader title="Categorias de Tutoriais">
         <HStack spacing={2}>
+          <Tooltip
+            label="Voltar para Tutoriais"
+            placement="top"
+            color="white"
+            bg="gray"
+          >
+            <span>
+              {' '}
+              <IoArrowBackCircleOutline
+                style={{ cursor: 'pointer' }}
+                size={35}
+                onClick={() => navigate('/tutoriais')}
+              />
+            </span>
+          </Tooltip>
           <RefreshButton refresh={refetch} />
           <Permission allowedRoles={['ADMIN']}>
             <Button onClick={onOpen}>Criar categoria</Button>
