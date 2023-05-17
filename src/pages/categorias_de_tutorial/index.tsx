@@ -1,5 +1,13 @@
-import { useCallback, useState } from 'react';
-import { Button, HStack, useDisclosure } from '@chakra-ui/react';
+import { useCallback, useState, useEffect } from 'react';
+import {
+  Button,
+  HStack,
+  useDisclosure,
+  Input,
+  Select,
+  Grid,
+  GridItem,
+} from '@chakra-ui/react';
 import { CategoryTutorialItem } from '@/features/categories-tutorial/components/category-tutorial-item';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
@@ -9,9 +17,14 @@ import { useGetAllCategoryTutorial } from '@/features/categories-tutorial/api/ge
 import { useDeleteCategoryTutorial } from '@/features/categories-tutorial/api/delete-category-tutorial';
 import { CategoryTutorial } from '@/features/categories-tutorial/api/types';
 import { Permission } from '@/components/permission';
+import {
+  chakraStyles,
+  customComponents,
+} from '@/components/form-fields/controlled-select/styles';
 
 export function CategoriasTutorial() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedState, setSelectedState] = useState<string>('');
 
   const [categoryTutorialToEdit, setCategoryTutorialToEdit] =
     useState<CategoryTutorial>();
@@ -21,6 +34,10 @@ export function CategoriasTutorial() {
     isLoading,
     refetch,
   } = useGetAllCategoryTutorial();
+
+  const [filteredCategoriesTutorial, setFilteredCategoriesTutorial] = useState<
+    CategoryTutorial[]
+  >(categoriesTutorial || []);
 
   const {
     mutate: deleteCategoryTutorial,
@@ -60,9 +77,26 @@ export function CategoriasTutorial() {
     [onDelete, onEdit, isRemovingCategoryTutorial]
   );
 
+  const handleSearch = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const searchText = event.target.value.toLowerCase();
+      const filteredCategoriesTutorial = categoriesTutorial?.filter(
+        (categoryTutorial) =>
+          categoryTutorial.name.toLowerCase().includes(searchText)
+      );
+      setFilteredCategoriesTutorial(filteredCategoriesTutorial || []);
+    },
+    [categoriesTutorial]
+  );
+
+  useEffect(() => {
+    const updatedCategoriesTutorial = categoriesTutorial || [];
+    setFilteredCategoriesTutorial(updatedCategoriesTutorial);
+  }, [categoriesTutorial]);
+
   return (
     <>
-      <PageHeader title="Categorias de Tutorial">
+      <PageHeader title="Categorias de Tutoriais">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
           <Permission allowedRoles={['ADMIN']}>
@@ -71,8 +105,16 @@ export function CategoriasTutorial() {
         </HStack>
       </PageHeader>
 
+      <Grid templateColumns="repeat(2, 1fr)" gap={8}>
+        <Input
+          placeholder="Pesquisar Categorias"
+          onChange={handleSearch}
+          marginBottom="4"
+        />
+      </Grid>
+
       <ListView<CategoryTutorial>
-        items={categoriesTutorial}
+        items={filteredCategoriesTutorial}
         render={renderCategoryTutorialItem}
         isLoading={isLoading}
       />
