@@ -1,35 +1,31 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '@/config/lib/axios';
-import { TUTORIAL_ENDPOINT } from '@/features/tutorials/constants/requests';
-import {
-  PostCreateTutorialParams,
-  PostCreateTutorialResponse,
-} from '@/features/tutorials/api/types';
-import { TUTORIALS_CACHE_KEYS } from '@/features/tutorials/constants/cache';
+import { PutUpdateTutorialParams, PutUpdateTutorialResponse } from './types';
 import { toast } from '@/utils/toast';
+import { TUTORIALS_CACHE_KEYS } from '../constants/cache';
 import { ApiError } from '@/config/lib/axios/types';
+import { TUTORIAL_ENDPOINT } from '@/features/tutorials/constants/requests';
 
-function postCreateTutorial(data: PostCreateTutorialParams) {
-  console.log('axios', data);
-  return api.post<PostCreateTutorialResponse>(
-    `${TUTORIAL_ENDPOINT}/tutorials`,
+function putUpdateTutorial({ tutorialId, data }: PutUpdateTutorialParams) {
+  return api.put<PutUpdateTutorialResponse>(
+    `${TUTORIAL_ENDPOINT}/tutorials/${tutorialId}`,
     data
   );
 }
 
-export function usePostCreateTutorial({
+export function usePutUpdateTutorial({
   onSuccessCallBack,
 }: {
   onSuccessCallBack?: () => void;
 }) {
   const queryClient = useQueryClient();
 
-  return useMutation(postCreateTutorial, {
+  return useMutation(putUpdateTutorial, {
     onSuccess() {
       queryClient.invalidateQueries([TUTORIALS_CACHE_KEYS.allTutorials]);
 
-      toast.success('Tutorial criado com sucesso!');
+      toast.success('Tutorial atualizado com sucesso!');
 
       onSuccessCallBack?.();
     },
@@ -39,7 +35,7 @@ export function usePostCreateTutorial({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar criar o tutorial.'
+        'Houve um problema ao tentar editar o tutorial.'
       );
     },
   });

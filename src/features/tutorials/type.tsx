@@ -9,5 +9,5 @@ export interface Tutorial {
 export interface TutorialPayload {
   name: string;
   file: any;
-  category: string;
+  category_id: string;
 }

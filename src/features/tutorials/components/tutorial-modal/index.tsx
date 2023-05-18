@@ -1,63 +1,60 @@
 import { useCallback } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { Modal } from '@/components/modal';
-import { PostCreateUserParams, User } from '@/features/users/api/types';
-import { usePostCreateUser } from '@/features/users/api/post-create-user';
-import { usePutUpdateUser } from '@/features/users/api/put-update-user';
-import {
-  UserForm,
-  UserFormValues,
-} from '@/features/users/components/user-form';
-import { TutorialForm } from '../tutorial-form/indext';
 
-interface UserModalProps extends Partial<ModalProps> {
-  user?: User | undefined;
+import { TutorialForm } from '../tutorial-form/indext';
+import { Tutorial, TutorialPayload } from '../../type';
+import { usePostCreateTutorial } from '../../api/post-create-tutorial';
+import { usePutUpdateTutorial } from '../../api/put-update-tutorials';
+import { PostCreateTutorialParams } from '../../api/types';
+
+interface TutorialModalProps extends Partial<ModalProps> {
+  tutorial?: Tutorial;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function TutorialModal({ onClose, user, ...props }: UserModalProps) {
-  const { mutate: createUser, isLoading: isCreatingUser } = usePostCreateUser({
-    onSuccessCallBack: onClose,
-  });
-
-  const { mutate: updateUser, isLoading: isUpdatingUser } = usePutUpdateUser({
-    onSuccessCallBack: onClose,
-  });
+export function TutorialModal({
+  onClose,
+  tutorial,
+  ...props
+}: TutorialModalProps) {
+  const { mutate: createTutorial, isLoading: isCreatingTutorial } =
+    usePostCreateTutorial({
+      onSuccessCallBack: onClose,
+    });
+  const { mutate: updateTutorial, isLoading: isUpdatingTutorial } =
+    usePutUpdateTutorial({
+      onSuccessCallBack: onClose,
+    });
 
   const handleSubmit = useCallback(
-    async ({
-      name,
-      email,
-      position,
-      profile,
-      username,
-      password,
-    }: UserFormValues) => {
-      const payload: PostCreateUserParams = {
+    async ({ name, category_id, file }: TutorialPayload) => {
+      const payload: PostCreateTutorialParams = {
         name,
-        username,
-        email,
-        position,
-        profile: profile?.value,
-        password,
+        category_id,
+        file,
       };
-
-      if (user?.id) {
-        updateUser({
-          userId: user.id,
+      console.log('payload', payload);
+      if (tutorial?.id) {
+        updateTutorial({
+          tutorialId: tutorial.id,
           data: payload,
         });
       } else {
-        createUser(payload);
+        createTutorial(payload);
       }
     },
-    [createUser, updateUser, user?.id]
+    [createTutorial, updateTutorial, tutorial?.id]
   );
 
   return (
     <Modal size="2xl" title="Criar tutorial" onClose={onClose} {...props}>
-      <TutorialForm />
+      <TutorialForm
+        defaultValues={tutorial}
+        onSubmit={handleSubmit}
+        isSubmitting={isCreatingTutorial || isUpdatingTutorial}
+      />
     </Modal>
   );
 }

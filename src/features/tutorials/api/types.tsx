@@ -3,14 +3,16 @@ export interface Tutorial {
   name: string;
   filename: string;
   data: any;
-  category: string;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface PostCreateTutorialParams {
   name: string;
-  filename: string;
-  data: any;
-  category: string;
+  file: any;
+  category_id: string;
 }
 
 export interface PostCreateTutorialResponse {
@@ -18,21 +20,30 @@ export interface PostCreateTutorialResponse {
   name: string;
   filename: string;
   data: any;
-  category: string;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface PutUpdateTutorialParams {
   tutorialId: string;
   data: {
     name: string;
-    state: string;
+    file: any;
+    category_id: string;
   };
 }
 
 export interface PutUpdateTutorialResponse {
   id: string;
   name: string;
-  state: string;
+  filename: string;
+  data: any;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface DeleteTutorialParams {

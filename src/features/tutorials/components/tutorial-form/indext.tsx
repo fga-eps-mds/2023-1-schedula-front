@@ -1,6 +1,8 @@
 import { Button, Select, Grid } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useEffect, useMemo, useState } from 'react';
+import { result } from 'lodash';
+import axios from 'axios';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import { InputFile } from '../tutorial-file';
 import { TutorialFileCard } from '../tutorial-file-card';
@@ -17,24 +19,7 @@ export function TutorialForm({
   onSubmit,
   isSubmitting,
 }: TutorialFromProps) {
-  /* const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<UserFormValues>({
-    defaultValues: {
-      ...defaultValues,
-      profile: {
-        label: defaultValues?.profile
-          ? USER_ACCESS[defaultValues.profile]
-          : USER_ACCESS.USER,
-        value: defaultValues ? defaultValues.profile : 'BASIC',
-      },
-      password: '',
-    },
-  }); */
+  const [fileContent, setFileContent] = useState<string | null>();
 
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
 
@@ -42,45 +27,38 @@ export function TutorialForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TutorialPayload>({
+  } = useForm({
     defaultValues: {
       ...defaultValues,
     },
   });
 
-  /* const receiveFile = () => {
-    const id = document.getElementById('id').value;
+  const onSubmitFile = (data) => {
+    console.log(data);
 
     const formData = new FormData();
-    formData.append('id', id);
+    formData.append('name', data.name);
+    formData.append('category_id', data.category_id);
+    formData.append('file', data.file[0]);
 
-    // Get file id using XMLHttpRequest
-    const xhr = new XMLHttpRequest();
+    console.log(formData);
 
-    xhr.open('GET', 'http://localhost:3004/categories/');
-    xhr.send();
-    console.log(xhr.response);
-  }; */
+    console.log(formData.get('file'));
 
-  const filepicker = document.getElementById('file-picker');
-  const [filename, setFileName] = useState();
+    // Create a TutorialPayload object
+    // const tutorialPayload: TutorialPayload = {
+    //   name: data.name,
+    //   category_id: data.category_id,
+    //   file: formData.get('file')
+    // };
 
-  /* filepicker?.addEventListener('change', (e) => {
-    const files = e.target.files;
+    // onSubmit(tutorialPayload);
 
-    for (const file of files) {
-        setFileName(file.name)
-    }
-
-  })
-
-  useEffect(() => {
-    console.log(filename)
-  }, [filename])
- */
+    axios.post('http://localhost:3004/tutorials', formData);
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmitFile)} encType="multipart/form-data">
       <Input
         label="Nome do tutorial"
         {...register('name', { required: 'Campo obrigatório' })}
@@ -90,39 +68,19 @@ export function TutorialForm({
 
       <Input
         label="ID do tutorial"
-        {...register('category', { required: 'Campo obrigatório' })}
+        {...register('category_id', { required: 'Campo obrigatório' })}
         placeholder="Digite o id do tutorial"
         errors={errors?.name}
       />
 
-      {/* <div style={{ marginTop: '10px' }}>
-        <span style={{ fontWeight: '500' }}>Categoria</span>
-        <Select
-          className="select"
-          placeholder="Selecione a Categoria"
-          style={{ marginTop: 8 }}
-        >
-          <option value="Criação de ponto de rede">
-            Criação de ponto de rede
-          </option>
-          <option value="Redefinição de senha">Redefinição de senha</option>
-        </Select>
-      </div> */}
-
-      {/* <InputFile 
-        {...register('file', { required: 'Campo obrigatório'})}
-      /> */}
-
-      {/* <Input
-        id='file-picker'
-        label='Selecione o arquivo'
+      <Input
+        label="Arquivo do tutorial"
+        type="file"
+        // Call handleFile function when a file is selected before uploading
+        {...register('file', { required: 'Campo obrigatório' })}
+        placeholder="Selecione o arquivo do tutorial"
         errors={errors?.name}
-        type='file'
-        {...register('file', {required: 'Campo Obrigatório'})}
-      /> */}
-      <input type="file" id="file-picker" {...register('file')} />
-
-      <TutorialFileCard filename={filename} />
+      />
 
       <Grid templateColumns="1fr 0fr" style={{ marginTop: 12 }}>
         <Button size="lg" width="45%">
