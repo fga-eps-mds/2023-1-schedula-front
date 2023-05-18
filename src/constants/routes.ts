@@ -10,7 +10,7 @@ export interface IRoute {
   label: string;
   pathname: string;
   icon?: IconType;
-  allowedUsersPath: Array<'ADMIN' | 'BASIC' | 'USER'>;
+  allowedUsersPath: string[];
 }
 
 export const routes: IRoute[] = [
