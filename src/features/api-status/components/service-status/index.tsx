@@ -22,14 +22,17 @@ export function ServicesStatus({ isOpen, onClose }: ServicesStatusProps) {
     usuariosStatus,
     chamadosStatus,
     localidadesStatus,
+    tutoriaisStatus,
     isLoadingChamadosStatus,
     isLoadingUsuariosStatus,
     isLoadingLocalidadesStatus,
+    isLoadingTutoriaisStatus,
   } = useAPIStatus();
   const {
     isLoadingUserVersion,
     isLoadingChamadosVersion,
     isLoadingLocalidadesVersion,
+    isLoadingTutoriaisVersion,
     apiVersions,
   } = useReleaseData();
 
@@ -63,6 +66,14 @@ export function ServicesStatus({ isOpen, onClose }: ServicesStatusProps) {
               version={apiVersions?.localidades}
               isLoadingStatus={isLoadingLocalidadesStatus}
               isLoadingVersion={isLoadingLocalidadesVersion}
+            />
+
+            <StatusLine
+              serviceName="Tutoriais"
+              status={tutoriaisStatus}
+              version={apiVersions?.tutoriais}
+              isLoadingStatus={isLoadingTutoriaisStatus}
+              isLoadingVersion={isLoadingTutoriaisVersion}
             />
           </VStack>
         </DrawerBody>
