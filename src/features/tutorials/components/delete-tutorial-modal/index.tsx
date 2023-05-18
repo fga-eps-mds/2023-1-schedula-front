@@ -11,7 +11,7 @@ import {
 import { TutorialForm } from '../tutorial-form/indext';
 import { DeleteTutorialForm } from '../tutorial-delete-form';
 
-interface UserModalProps extends Partial<ModalProps> {
+interface TutorialModalProps extends Partial<ModalProps> {
   user?: User | undefined;
   isOpen: boolean;
   onClose: () => void;
@@ -21,45 +21,7 @@ export function DeleteTutorialModal({
   onClose,
   user,
   ...props
-}: UserModalProps) {
-  const { mutate: createUser, isLoading: isCreatingUser } = usePostCreateUser({
-    onSuccessCallBack: onClose,
-  });
-
-  const { mutate: updateUser, isLoading: isUpdatingUser } = usePutUpdateUser({
-    onSuccessCallBack: onClose,
-  });
-
-  const handleSubmit = useCallback(
-    async ({
-      name,
-      email,
-      position,
-      profile,
-      username,
-      password,
-    }: UserFormValues) => {
-      const payload: PostCreateUserParams = {
-        name,
-        username,
-        email,
-        position,
-        profile: profile?.value,
-        password,
-      };
-
-      if (user?.id) {
-        updateUser({
-          userId: user.id,
-          data: payload,
-        });
-      } else {
-        createUser(payload);
-      }
-    },
-    [createUser, updateUser, user?.id]
-  );
-
+}: TutorialModalProps) {
   return (
     <Modal size="2xl" title="Atenção" onClose={onClose} {...props}>
       <DeleteTutorialForm />

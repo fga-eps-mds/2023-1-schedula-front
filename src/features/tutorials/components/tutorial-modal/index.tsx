@@ -35,8 +35,7 @@ export function TutorialModal({
         category_id,
         file,
       };
-      console.log('payload', payload);
-      if (tutorial?.id) {
+      if (tutorial?.id && tutorial !== undefined) {
         updateTutorial({
           tutorialId: tutorial.id,
           data: payload,
@@ -45,11 +44,16 @@ export function TutorialModal({
         createTutorial(payload);
       }
     },
-    [createTutorial, updateTutorial, tutorial?.id]
+    [createTutorial, updateTutorial, tutorial]
   );
 
   return (
-    <Modal size="2xl" title="Criar tutorial" onClose={onClose} {...props}>
+    <Modal
+      title={`${tutorial ? 'Editar' : 'Criar'} Tutorial`}
+      size="2xl"
+      onClose={onClose}
+      {...props}
+    >
       <TutorialForm
         defaultValues={tutorial}
         onSubmit={handleSubmit}

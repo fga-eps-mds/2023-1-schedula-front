@@ -29,9 +29,9 @@ export interface PostCreateTutorialResponse {
 export interface PutUpdateTutorialParams {
   tutorialId: string;
   data: {
-    name: string;
-    file: any;
-    category_id: string;
+    name?: string;
+    file?: any;
+    category_id?: string;
   };
 }
 

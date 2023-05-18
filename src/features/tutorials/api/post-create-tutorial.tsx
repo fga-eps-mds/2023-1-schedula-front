@@ -11,10 +11,14 @@ import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateTutorial(data: PostCreateTutorialParams) {
-  console.log('axios', data);
+  const form = new FormData();
+  form.append('name', data.name);
+  form.append('category_id', data.category_id);
+  form.append('file', data.file[0]);
+
   return api.post<PostCreateTutorialResponse>(
     `${TUTORIAL_ENDPOINT}/tutorials`,
-    data
+    form
   );
 }
 

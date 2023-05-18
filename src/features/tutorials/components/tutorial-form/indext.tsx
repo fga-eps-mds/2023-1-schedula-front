@@ -9,7 +9,7 @@ import { TutorialFileCard } from '../tutorial-file-card';
 import { Tutorial, TutorialPayload } from '../../type';
 
 interface TutorialFromProps {
-  defaultValues?: Tutorial;
+  defaultValues?: TutorialPayload;
   onSubmit: (data: TutorialPayload) => void;
   isSubmitting: boolean;
 }
@@ -19,8 +19,6 @@ export function TutorialForm({
   onSubmit,
   isSubmitting,
 }: TutorialFromProps) {
-  const [fileContent, setFileContent] = useState<string | null>();
-
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
 
   const {
@@ -33,32 +31,8 @@ export function TutorialForm({
     },
   });
 
-  const onSubmitFile = (data) => {
-    console.log(data);
-
-    const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('category_id', data.category_id);
-    formData.append('file', data.file[0]);
-
-    console.log(formData);
-
-    console.log(formData.get('file'));
-
-    // Create a TutorialPayload object
-    // const tutorialPayload: TutorialPayload = {
-    //   name: data.name,
-    //   category_id: data.category_id,
-    //   file: formData.get('file')
-    // };
-
-    // onSubmit(tutorialPayload);
-
-    axios.post('http://localhost:3004/tutorials', formData);
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmitFile)} encType="multipart/form-data">
+    <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
       <Input
         label="Nome do tutorial"
         {...register('name', { required: 'Campo obrigatório' })}
@@ -67,11 +41,22 @@ export function TutorialForm({
       />
 
       <Input
-        label="ID do tutorial"
+        label="ID da categoria"
         {...register('category_id', { required: 'Campo obrigatório' })}
-        placeholder="Digite o id do tutorial"
+        placeholder="Digite o id da categoria"
         errors={errors?.name}
       />
+
+      {/* <ControlledSelect
+        control={control}
+        name="city_payload"
+        id="city_payload"
+        options={citiesOptions}
+        isLoading={isLoadingCities}
+        placeholder="Cidade"
+        label="Cidade"
+        rules={{ required: 'Campo obrigatório' }}
+      /> */}
 
       <Input
         label="Arquivo do tutorial"

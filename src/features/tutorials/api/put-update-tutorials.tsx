@@ -8,9 +8,14 @@ import { ApiError } from '@/config/lib/axios/types';
 import { TUTORIAL_ENDPOINT } from '@/features/tutorials/constants/requests';
 
 function putUpdateTutorial({ tutorialId, data }: PutUpdateTutorialParams) {
+  const form = new FormData();
+  form.append('name', data.name);
+  form.append('category_id', data.category_id);
+  form.append('file', data.file[0]);
+
   return api.put<PutUpdateTutorialResponse>(
     `${TUTORIAL_ENDPOINT}/tutorials/${tutorialId}`,
-    data
+    form
   );
 }
 

@@ -1,9 +1,12 @@
 export interface Tutorial {
-  id: string;
+  id?: string;
   name: string;
-  filename: string;
-  data: any;
-  category: string;
+  filename?: string;
+  data?: any;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface TutorialPayload {

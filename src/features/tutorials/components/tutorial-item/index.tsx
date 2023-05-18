@@ -24,7 +24,7 @@ export function TutorialItem({
       title={`${tutorial?.name}`}
       description={
         <HStack spacing={2} mt={2.5}>
-          <p>{tutorial?.filename}</p>
+          <p>{tutorial?.category.name}</p>
         </HStack>
       }
     >

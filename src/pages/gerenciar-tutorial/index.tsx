@@ -12,21 +12,17 @@ import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { TutorialItem } from '@/features/tutorials/components/tutorial-item';
 import { Tutorial } from '@/features/tutorials/type';
 import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
+import { Permission } from '@/components/permission';
 
 export function GerenciarTutoriais() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenDelete,
-    onOpen: onOpenDelete,
-    onClose: onCloseDelete,
-  } = useDisclosure();
-
-  const handleCloseModal = useCallback(() => {
-    onClose();
-    onCloseDelete();
-  }, [onClose, onCloseDelete]);
 
   const [tutorialToEdit, setTutorialToEdit] = useState<Tutorial>();
+
+  // Clear tutorial to edit when modal is closed
+  if (!isOpen && tutorialToEdit) {
+    setTutorialToEdit(undefined);
+  }
 
   const navigate = useNavigate();
 
@@ -55,8 +51,8 @@ export function GerenciarTutoriais() {
       return (
         <TutorialItem
           tutorial={tutorial}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          onEdit={() => onEdit(tutorial)}
+          onDelete={() => onDelete(tutorial.id)}
           isDeleting={isRemovingTutorial}
         />
       );
@@ -83,15 +79,17 @@ export function GerenciarTutoriais() {
             </span>
           </Tooltip>
           <RefreshButton refresh={refetch} />
-          <Button onClick={onOpen} style={{ marginLeft: '40px' }}>
-            Criar Tutorial
-          </Button>
+          <Permission allowedRoles={['ADMIN']}>
+            <Button onClick={onOpen} style={{ marginLeft: '40px' }}>
+              Criar Tutorial
+            </Button>
+          </Permission>
         </HStack>
       </PageHeader>
 
       <Input label="" errors={undefined} placeholder="Buscar Tutorial" />
 
-      <div
+      {/* <div
         style={{
           display: 'flex',
           justifyContent: 'flex-end',
@@ -99,14 +97,18 @@ export function GerenciarTutoriais() {
           marginBottom: 20,
         }}
       >
-        <Button onClick={onOpenDelete} width="10%">
+        <Button onClick={onDelete} width="10%">
           Excluir Tutorial
         </Button>
-      </div>
+      </div> */}
 
-      <DeleteTutorialModal isOpen={isOpenDelete} onClose={onCloseDelete} />
+      {/* <DeleteTutorialModal isOpen={isOpenDelete} onClose={onCloseDelete} /> */}
 
-      <TutorialModal isOpen={isOpen} onClose={onClose} />
+      <TutorialModal
+        isOpen={isOpen}
+        onClose={onClose}
+        tutorial={tutorialToEdit}
+      />
 
       <ListView<Tutorial>
         items={tutorials}
