@@ -8,13 +8,17 @@ export interface Tutorial {
 
 export interface PostCreateTutorialParams {
   name: string;
-  state: string;
+  filename: string;
+  data: any;
+  category: string;
 }
 
 export interface PostCreateTutorialResponse {
   id: string;
   name: string;
-  state: string;
+  filename: string;
+  data: any;
+  category: string;
 }
 
 export interface PutUpdateTutorialParams {

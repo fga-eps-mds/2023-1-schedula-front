@@ -1,11 +1,22 @@
 import { Button, Select, Grid } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import { InputFile } from '../tutorial-file';
-import { UserFormValues } from '@/features/users/components/user-form';
 import { TutorialFileCard } from '../tutorial-file-card';
+import { Tutorial, TutorialPayload } from '../../type';
 
-export function TutorialForm() {
+interface TutorialFromProps {
+  defaultValues?: Tutorial;
+  onSubmit: (data: TutorialPayload) => void;
+  isSubmitting: boolean;
+}
+
+export function TutorialForm({
+  defaultValues,
+  onSubmit,
+  isSubmitting,
+}: TutorialFromProps) {
   /* const {
     register,
     control,
@@ -25,7 +36,19 @@ export function TutorialForm() {
     },
   }); */
 
-  const receiveFile = () => {
+  const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TutorialPayload>({
+    defaultValues: {
+      ...defaultValues,
+    },
+  });
+
+  /* const receiveFile = () => {
     const id = document.getElementById('id').value;
 
     const formData = new FormData();
@@ -37,19 +60,42 @@ export function TutorialForm() {
     xhr.open('GET', 'http://localhost:3004/categories/');
     xhr.send();
     console.log(xhr.response);
-  };
+  }; */
+
+  const filepicker = document.getElementById('file-picker');
+  const [filename, setFileName] = useState();
+
+  /* filepicker?.addEventListener('change', (e) => {
+    const files = e.target.files;
+
+    for (const file of files) {
+        setFileName(file.name)
+    }
+
+  })
+
+  useEffect(() => {
+    console.log(filename)
+  }, [filename])
+ */
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Input
         label="Nome do tutorial"
+        {...register('name', { required: 'Campo obrigatório' })}
         placeholder="Digite o nome do tutorial"
-        errors={undefined}
+        errors={errors?.name}
       />
 
-      {/* <Button id='id' onClick={receiveFile}>Teste</Button> */}
+      <Input
+        label="ID do tutorial"
+        {...register('category', { required: 'Campo obrigatório' })}
+        placeholder="Digite o id do tutorial"
+        errors={errors?.name}
+      />
 
-      <div style={{ marginTop: '10px' }}>
+      {/* <div style={{ marginTop: '10px' }}>
         <span style={{ fontWeight: '500' }}>Categoria</span>
         <Select
           className="select"
@@ -61,17 +107,29 @@ export function TutorialForm() {
           </option>
           <option value="Redefinição de senha">Redefinição de senha</option>
         </Select>
-      </div>
-      <InputFile />
+      </div> */}
 
-      <TutorialFileCard />
+      {/* <InputFile 
+        {...register('file', { required: 'Campo obrigatório'})}
+      /> */}
+
+      {/* <Input
+        id='file-picker'
+        label='Selecione o arquivo'
+        errors={errors?.name}
+        type='file'
+        {...register('file', {required: 'Campo Obrigatório'})}
+      /> */}
+      <input type="file" id="file-picker" {...register('file')} />
+
+      <TutorialFileCard filename={filename} />
 
       <Grid templateColumns="1fr 0fr" style={{ marginTop: 12 }}>
-        <Button type="submit" size="lg" width="45%">
-          Criar Tutorial
-        </Button>
-        <Button type="submit" size="lg" width="45%">
+        <Button size="lg" width="45%">
           Cancelar
+        </Button>
+        <Button type="submit" size="lg" width="45%" isLoading={isSubmitting}>
+          {isEditing ? 'Salvar' : 'Criar Tutorial'}
         </Button>
       </Grid>
     </form>

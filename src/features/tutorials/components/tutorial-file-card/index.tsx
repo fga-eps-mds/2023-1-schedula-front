@@ -1,6 +1,12 @@
+import {
+  ReactElement,
+  JSXElementConstructor,
+  ReactFragment,
+  ReactPortal,
+} from 'react';
 import { GrDocumentPdf } from 'react-icons/gr';
 
-export function TutorialFileCard() {
+export function TutorialFileCard(/* props: { filename?: string } */) {
   return (
     <div
       style={{ borderBottom: '2px solid rgb(255,255,255)', borderRadius: 1 }}
@@ -15,7 +21,7 @@ export function TutorialFileCard() {
             filter: 'invert(1)',
           }}
         />
-        Arquivo.pdf
+        {/* {props.filename ? `${props.filename}` : 'Selecione um Arquivo'} */}
       </p>
     </div>
   );
