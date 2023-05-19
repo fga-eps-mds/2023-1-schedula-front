@@ -1,7 +1,7 @@
 import { Button, Select, Grid, Center, position } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useEffect, useMemo, useState } from 'react';
-import { result } from 'lodash';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { result, set } from 'lodash';
 import axios from 'axios';
 import { GrDocumentPdf } from 'react-icons/gr';
 import { NonceProvider } from 'chakra-react-select';
@@ -22,7 +22,7 @@ export function TutorialForm({
   isSubmitting,
 }: TutorialFromProps) {
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
-
+  let nomeArquivo;
   const {
     register,
     handleSubmit,
@@ -34,16 +34,32 @@ export function TutorialForm({
   });
 
   const [fileName, setFileName] = useState(null);
+  const inputRef = useRef();
 
-  // const filepicker = document.getElementById("fileinput");
+  // const file = (document.getElementById('myfiles') as HTMLInputElement);
+  // const message = (document.getElementById("message") as HTMLParagraphElement);
+  // console.log(document.getElementById('myfiles'));
 
-  // console.log(filepicker)
-
-  // filepicker?.addEventListener('change', (event) => {
-  //   const files = event.target.files[0];
-  //   console.log(files)
-
+  // file?.addEventListener('input', () => {
+  //   if (file?.files?.length > 0) {
+  //     let fileName = file?.files[0].name;
+  //     console.log(file);
+  //   }
   // })
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+  const handleDrop = (event) => {
+    event.preventDefault();
+    // console.log(event.dataTransfer.files[0]);
+    setFileName(event.dataTransfer.files[0]);
+  };
+
+  if (fileName) {
+    nomeArquivo = fileName.name;
+    console.log(nomeArquivo);
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
@@ -60,23 +76,13 @@ export function TutorialForm({
         placeholder="Digite o id da categoria"
         errors={errors?.name}
       />
-
-      {/* <ControlledSelect
-        control={control}
-        name="city_payload"
-        id="city_payload"
-        options={citiesOptions}
-        isLoading={isLoadingCities}
-        placeholder="Cidade"
-        label="Cidade"
-        rules={{ required: 'Campo obrigatório' }}
-      /> */}
-
       <div
         style={{
           paddingTop: 20,
           paddingBottom: 20,
         }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
         <span
           aria-controls="input"
@@ -100,7 +106,9 @@ export function TutorialForm({
             }}
           />
 
-          <span>Selecione um arquivo...</span>
+          <span style={{ color: '#dbdada' }}>
+            Arraste e solte um arquivo...
+          </span>
         </span>
 
         <Input
@@ -109,68 +117,45 @@ export function TutorialForm({
           type="file"
           // Call handleFile function when a file is selected before uploading
           {...register('file', { required: 'Campo obrigatório' })}
-          placeholder="Selecione o arquivo do tutorial"
+          placeholder="Escolha um arquivo e jogue"
           errors={errors?.name}
-          style={{ display: 'none' }}
+          onChange={(event) => setFileName(event.target.files[0])}
+          hidden
+          // ref={inputRef}
         />
-
-        <input type="file" id="fileTest" />
+        {/* <button
+          type="button"
+          onClick={() => inputRef.current.click()}
+          style={{ marginTop: 20 }}> Escolha os arquivos</button> */}
       </div>
 
-      <TutorialFileCard /* filename={fileName} */ />
-
-      {/* <div
-        style={{
-          marginTop: 20,
-          border: '2px dotted white', 
-          borderRadius: 6,
-          paddingTop: 80,
-          paddingBottom: 80,
-          textAlign: 'center'
-      
-        }}
-      >
-        <div style={{display:"flex", justifyContent: 'center'}}>
-          <GrDocumentPdf
-              size="40"
+      {nomeArquivo && (
+        <div
+          style={{
+            borderBottom: '2px solid rgb(255,255,255)',
+            borderRadius: 1,
+          }}
+        >
+          <p style={{ marginBottom: 10, display: 'flex' }}>
+            <GrDocumentPdf
+              size={25}
               style={{
-                alignContent: 'center',
-                filter: 'invert(0.6)',
+                display: 'inline',
+                marginRight: 15,
+                marginLeft: 5,
+                filter: 'invert(1)',
               }}
             />
+            <span>{nomeArquivo}</span>
+          </p>
         </div>
+      )}
 
-          
-
-        <p>Adicione um Arquivo</p>
-
-
-        
-
-        <div style={{}}>
-          <Input
-          id='file__input'
-          label=""
-          type="file"
-          // Call handleFile function when a file is selected before uploading
-          {...register('file', { required: 'Campo obrigatório' })}
-          placeholder="Selecione o arquivo do tutorial"
-          errors={errors?.name}
-          />
-        </div>
-
-        
-
-      </div> */}
-
-      <Grid templateColumns="1fr 0fr" style={{ marginTop: 12 }}>
-        <Button size="lg" width="45%">
-          Cancelar
-        </Button>
-        <Button type="submit" size="lg" width="45%" isLoading={isSubmitting}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 15 }}>
+        <Button type="submit" size="lg" width="80%" isLoading={isSubmitting}>
           {isEditing ? 'Salvar' : 'Criar Tutorial'}
         </Button>
-      </Grid>
+      </div>
     </form>
   );
 }

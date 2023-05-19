@@ -69,11 +69,9 @@ export function GerenciarTutoriais() {
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const searchText = event.target.value.toLowerCase();
-      console.log(searchText);
       const filteredTutorials = tutorials?.filter((tutorial) =>
         tutorial.name.toLowerCase().includes(searchText)
       );
-      console.log(filteredTutorials);
       setFilteredTutorials(filteredTutorials || []);
       // setSelectedState('');
     },
@@ -87,9 +85,7 @@ export function GerenciarTutoriais() {
       const filteredTutorials = tutorials?.filter((tutorial) =>
         tutorial.category.name.toLowerCase().includes(searchText)
       );
-      console.log(filteredTutorials);
       setFilteredTutorials(filteredTutorials || []);
-      console.log(setFilteredTutorials);
     },
     [tutorials]
   );
@@ -176,7 +172,7 @@ export function GerenciarTutoriais() {
       />
 
       <ListView<Tutorial>
-        items={filteredTutorials}
+        items={filteredTutorials.length === 0 ? tutorials : filteredTutorials}
         render={renderTutorialItem}
         isLoading={isLoading}
       />
