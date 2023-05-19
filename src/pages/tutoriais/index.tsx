@@ -12,7 +12,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { Props, Select } from 'chakra-react-select';
-import { FaSearch, FaTags } from 'react-icons/fa';
+import { FaSearch, FaTags, FaDownload } from 'react-icons/fa';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { ListView } from '@/components/list';
@@ -23,6 +23,7 @@ import {
   chakraStyles,
   customComponents,
 } from '@/components/form-fields/controlled-select/styles';
+import { FaTimes } from 'react-icons/fa';
 
 export function Tutoriais() {
   const { data: tutorials, isLoading, refetch } = useGetAllTutorials();
@@ -61,6 +62,7 @@ export function Tutoriais() {
         onEdit={onEdit}
         onDelete={onDelete}
         isDeleting={isRemovingTutorial}
+        
       />
     ),
     [onDelete, onEdit, isRemovingTutorial]
@@ -85,6 +87,11 @@ export function Tutoriais() {
     []
   );
 
+  const resetFilter = useCallback(() => {    {/* Redefinindo o filtro e limpando a categoria selecionada */}
+    setFilteredTutorials(tutorials || []);   
+    setSelectedState('');
+  }, [tutorials]);
+
   useEffect(() => {
     let updatedTutorials = tutorials || [];
     if (selectedState) {
@@ -102,7 +109,10 @@ export function Tutoriais() {
     value: state,
   }));
 
+
   return (
+
+
     <>
       <PageHeader title="Tutoriais" />
 
@@ -118,20 +128,39 @@ export function Tutoriais() {
           />
         </InputGroup>
 
-        <Select
+       <Select
           placeholder={
             <Box display="flex" alignItems="center">
-              <Icon as={FaTags} boxSize={4} mr={2} />
-              Filtrar por categoria
-            </Box>
+            <Icon as={FaTags} boxSize={4} mr={2} />
+            {selectedState ? (
+              <>
+                {selectedState}
+                <Button
+                  variant="ghost"
+                  colorScheme="gray"
+                  size="xs"
+                  onClick={resetFilter}
+                  marginLeft="390" 
+                >
+                  <Icon as={FaTimes} boxSize={4} />
+                </Button>
+              </>
+            ) : (
+              "Filtrar por categoria"
+            )}
+          </Box>
+                   
           }
           onChange={handleStateChange}
           value={selectedState}
           options={options}
           chakraStyles={chakraStyles}
           components={customComponents}
+
+          
         />
       </Grid>
+
 
       <ListView<Tutorial>
         items={filteredTutorials}
