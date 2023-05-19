@@ -4,9 +4,7 @@ import {
   HStack,
   useDisclosure,
   Input,
-  Select,
   Grid,
-  GridItem,
   Tooltip,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -20,14 +18,9 @@ import { useGetAllCategoryTutorial } from '@/features/categories-tutorial/api/ge
 import { useDeleteCategoryTutorial } from '@/features/categories-tutorial/api/delete-category-tutorial';
 import { CategoryTutorial } from '@/features/categories-tutorial/api/types';
 import { Permission } from '@/components/permission';
-import {
-  chakraStyles,
-  customComponents,
-} from '@/components/form-fields/controlled-select/styles';
 
 export function CategoriasTutorial() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedState, setSelectedState] = useState<string>('');
   const navigate = useNavigate();
   const [categoryTutorialToEdit, setCategoryTutorialToEdit] =
     useState<CategoryTutorial>();

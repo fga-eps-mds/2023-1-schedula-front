@@ -1,9 +1,8 @@
-    interface CategoryTutorial {
-        id: string;
-        name: string;
-    }
-  
-    interface CategoryTutorialPayload {
-        name: string;
-    }
-  
+interface CategoryTutorial {
+  id: string;
+  name: string;
+}
+
+interface CategoryTutorialPayload {
+  name: string;
+}
