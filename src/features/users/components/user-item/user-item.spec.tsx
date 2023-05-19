@@ -10,6 +10,7 @@ const mockedUser: User = {
   username: 'testuser',
   position: 'abc',
   profile: 'BASIC',
+  cpf: '111.320.544-00',
   createdAt: '31/02/1990',
   updatedAt: '32/02/1990',
 };
