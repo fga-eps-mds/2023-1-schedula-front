@@ -12,7 +12,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { Props, Select } from 'chakra-react-select';
-import { FaSearch, FaTags, FaDownload } from 'react-icons/fa';
+import { FaSearch, FaTags,  } from 'react-icons/fa';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { ListView } from '@/components/list';
@@ -127,7 +127,7 @@ export function Tutoriais() {
             _placeholder={{ color: 'gray.400' }}
           />
         </InputGroup>
-
+        
        <Select
           placeholder={
             <Box display="flex" alignItems="center">
