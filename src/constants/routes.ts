@@ -5,6 +5,7 @@ import { FiMapPin } from 'react-icons/fi';
 import { MdOutlineViewAgenda } from 'react-icons/md';
 import { RiCalendarEventLine } from 'react-icons/ri';
 import { AiOutlineExport } from 'react-icons/ai';
+import { TbBulb } from 'react-icons/tb';
 
 export interface IRoute {
   label: string;
@@ -60,6 +61,12 @@ export const routes: IRoute[] = [
     label: 'Usuários',
     pathname: '/usuarios',
     icon: FaUsersCog,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
+  },
+  {
+    label: 'Tutoriais',
+    pathname: '/tutoriais',
+    icon: TbBulb,
     allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
 ];
