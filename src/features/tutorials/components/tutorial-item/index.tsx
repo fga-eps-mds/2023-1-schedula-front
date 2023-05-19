@@ -4,6 +4,7 @@ import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
+import { HiDownload } from 'react-icons/hi';
 
 interface TutorialItemProps {
   tutorial: Tutorial;
@@ -18,15 +19,29 @@ export function TutorialItem({
   onDelete,
   isDeleting,
 }: TutorialItemProps) {
+  
+  const openFile = (tutorial) => {
+    const blob = new Blob([tutorial.data.data], { type: "application/pdf" });
+    const file = new File([blob], tutorial.filename);
+    console.log(file);
+     // Crie uma URL temporária para o arquivo
+     const fileURL = URL.createObjectURL(file);
+
+     // Abra o arquivo em uma nova aba
+     window.open(fileURL, '_blank');
+  } 
+
   return (
-    <Item
-      title={`${tutorial?.name}`}
-      description={
-        <HStack spacing={2} mt={2.5}>
-          <p>{tutorial?.state}</p>
-        </HStack>
-      }
-    >
+    <div onClick={() => openFile(tutorial)}>
+
+      <Item
+        title={`${tutorial?.name}`}
+        description={
+          <HStack spacing={2} mt={2.5}>
+            <p>{tutorial?.category.name}</p>
+          </HStack>
+        }
+      >
       <Permission allowedRoles={['ADMIN']}>
         <ItemActions item={tutorial}>
           <EditButton
@@ -43,5 +58,6 @@ export function TutorialItem({
         </ItemActions>
       </Permission>
     </Item>
+    </div>
   );
 }

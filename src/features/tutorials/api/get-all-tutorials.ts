@@ -13,7 +13,7 @@ export type GetAllTutorialsResponse = Array<Tutorial>;
 
 export const getAllTutorials = async () =>
   api
-    .get<GetAllTutorialsResponse>(`${TUTORIALS_ENDPOINT}/cities`)
+    .get<GetAllTutorialsResponse>(`${TUTORIALS_ENDPOINT}/tutorials`)
     .then((response) => response.data)
     .catch((err) => {
       const errMessage =
@@ -25,7 +25,7 @@ export const getAllTutorials = async () =>
 
 const getTutorial = async (tutorialId: string) =>
   api
-    .get<Tutorial>(`${TUTORIALS_ENDPOINT}/cities/${tutorialId}`)
+    .get<Tutorial>(`${TUTORIALS_ENDPOINT}/tutorials/${tutorialId}`)
     .then((response) => response.data)
     .catch(() => {
       toast.error(
