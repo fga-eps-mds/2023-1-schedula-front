@@ -8,7 +8,7 @@ import {
   UserForm,
   UserFormValues,
 } from '@/features/users/components/user-form';
-import { TutorialForm } from '../tutorial-form/indext';
+import { TutorialForm } from '../tutorial-form';
 import { DeleteTutorialForm } from '../tutorial-delete-form';
 
 interface TutorialModalProps extends Partial<ModalProps> {

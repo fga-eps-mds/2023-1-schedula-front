@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { Modal } from '@/components/modal';
-
-import { TutorialForm } from '../tutorial-form/indext';
+import { TutorialForm } from '../tutorial-form';
 import { Tutorial, TutorialPayload } from '../../type';
 import { usePostCreateTutorial } from '../../api/post-create-tutorial';
 import { usePutUpdateTutorial } from '../../api/put-update-tutorials';

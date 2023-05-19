@@ -4,11 +4,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { result, set } from 'lodash';
 import axios from 'axios';
 import { GrDocumentPdf } from 'react-icons/gr';
-import { NonceProvider } from 'chakra-react-select';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import { InputFile } from '../tutorial-file';
 import { TutorialFileCard } from '../tutorial-file-card';
 import { Tutorial, TutorialPayload } from '../../type';
+import { useGetAllCategoryTutorial } from '@/features/categories-tutorial/api/get-all-categories-tutorial';
 
 interface TutorialFromProps {
   defaultValues?: TutorialPayload;
@@ -26,6 +26,7 @@ export function TutorialForm({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -33,19 +34,20 @@ export function TutorialForm({
     },
   });
 
+  const { data: categories, isLoading: isLoadingCategories } =
+    useGetAllCategoryTutorial();
+
+  const categoryOptions = categories?.map((category) => ({
+    label: category?.name,
+    value: category?.id,
+  }));
+
+  console.log(categoryOptions);
+
+  // const category = watch('CategoryTutorialPayload');
+
   const [fileName, setFileName] = useState(null);
   const inputRef = useRef();
-
-  // const file = (document.getElementById('myfiles') as HTMLInputElement);
-  // const message = (document.getElementById("message") as HTMLParagraphElement);
-  // console.log(document.getElementById('myfiles'));
-
-  // file?.addEventListener('input', () => {
-  //   if (file?.files?.length > 0) {
-  //     let fileName = file?.files[0].name;
-  //     console.log(file);
-  //   }
-  // })
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -70,12 +72,23 @@ export function TutorialForm({
         errors={errors?.name}
       />
 
-      <Input
+      {/* <Input
         label="ID da categoria"
         {...register('category_id', { required: 'Campo obrigatório' })}
         placeholder="Digite o id da categoria"
         errors={errors?.name}
+      /> */}
+
+      <ControlledSelect
+        control={control}
+        name="category_id"
+        id="category_id"
+        options={categoryOptions}
+        isLoading={isLoadingCategories}
+        placeholder="Categoria"
+        label="Categoria"
       />
+
       <div
         style={{
           paddingTop: 20,
@@ -105,13 +118,31 @@ export function TutorialForm({
               filter: 'invert(0.6)',
             }}
           />
-
+          <Input
+            id="fileinput"
+            label=""
+            type="file"
+            // Call handleFile function when a file is selected before uploading
+            {...register('file', { required: 'Campo obrigatório' })}
+            placeholder="Escolha um arquivo e jogue"
+            errors={errors?.name}
+            onChange={(event) => setFileName(event.target.files[0])}
+            style={{
+              opacity: 0,
+              position: 'absolute',
+              zIndex: 1,
+              width: '575px',
+              height: '170px',
+              bottom: '-70px',
+            }}
+          />
           <span style={{ color: '#dbdada' }}>
             Arraste e solte um arquivo...
           </span>
         </span>
+      </div>
 
-        <Input
+      {/* <Input
           id="fileinput"
           label=""
           type="file"
@@ -119,15 +150,8 @@ export function TutorialForm({
           {...register('file', { required: 'Campo obrigatório' })}
           placeholder="Escolha um arquivo e jogue"
           errors={errors?.name}
-          onChange={(event) => setFileName(event.target.files[0])}
-          hidden
           // ref={inputRef}
-        />
-        {/* <button
-          type="button"
-          onClick={() => inputRef.current.click()}
-          style={{ marginTop: 20 }}> Escolha os arquivos</button> */}
-      </div>
+        /> */}
 
       {nomeArquivo && (
         <div
