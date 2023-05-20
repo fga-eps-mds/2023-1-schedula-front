@@ -1,4 +1,7 @@
 export interface Tutorial {
+  title: any;
+  category: any;
+  categoria: string;
   id: string;
   name: string;
   state: string;

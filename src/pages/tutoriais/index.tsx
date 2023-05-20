@@ -96,13 +96,13 @@ export function Tutoriais() {
     let updatedTutorials = tutorials || [];
     if (selectedState) {
       updatedTutorials = updatedTutorials.filter(
-        (tutorial) => tutorial.state === selectedState
+        (tutorial) => tutorial.category.name === selectedState
       );
     }
     setFilteredTutorials(updatedTutorials);
   }, [tutorials, selectedState]);
 
-  const uniqueStates = new Set(tutorials?.map((tutorial) => tutorial.state));
+  const uniqueStates = new Set(tutorials?.map((tutorial) => tutorial.category.name));
 
   const options = [...uniqueStates].map((state) => ({
     label: state,
