@@ -1,4 +1,4 @@
-import { HStack } from '@chakra-ui/react';
+import { HStack, IconButton, Button } from '@chakra-ui/react';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
@@ -32,8 +32,7 @@ export function TutorialItem({
   } 
 
   return (
-    <div onClick={() => openFile(tutorial)}>
-
+    <div>
       <Item
         title={`${tutorial?.name}`}
         description={
@@ -42,8 +41,35 @@ export function TutorialItem({
           </HStack>
         }
       >
+        <IconButton
+          aria-label="Invisible Button"
+          icon={null}
+          onClick={() => openFile(tutorial)}
+          variant="ghost"
+          display="block"
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={0}
+          right={0}
+          width="100%"
+          opacity={0}
+          zIndex={1}
+        />
+
       <Permission allowedRoles={['ADMIN']}>
         <ItemActions item={tutorial}>
+          <Button
+            leftIcon={<HiDownload />}
+            onClick={() => openFile(tutorial)}
+            variant="outline"
+            colorScheme="orange"
+            color="black"
+            borderColor="transparent"
+            borderWidth={0}
+          >
+            Download
+          </Button>
           <EditButton
             onClick={onEdit}
             label={tutorial.name}
