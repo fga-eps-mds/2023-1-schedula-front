@@ -17,7 +17,7 @@ interface IssueItemProps {
 }
 
 export function IssueItem({ issue }: IssueItemProps) {
-  const { data: cities } = useGetAllCities();
+  const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
   });

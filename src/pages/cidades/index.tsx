@@ -13,9 +13,10 @@ import { Permission } from '@/components/permission';
 export function Cities() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [cityToEdit, setCityToEdit] = useState<City>();
-  const [modalClosed, setModalClosed] = useState(false); // Novo estado para controlar o fechamento da modal
+  const [modalClosed, setModalClosed] = useState(false);
 
-  const { data: cities, isLoading, refetch } = useGetAllCities();
+  const [aux, setAux] = useState(0);
+  const { data: cities, isLoading, refetch } = useGetAllCities(aux);
   const { mutate: deleteCity, isLoading: isRemovingCity } = useDeleteCity();
 
   const onEdit = useCallback(
@@ -29,7 +30,7 @@ export function Cities() {
   const onDelete = useCallback(
     (cityId: string) => {
       deleteCity({ cityId });
-      setModalClosed(true);
+      setModalClosed((prevModalClosed) => !prevModalClosed);
     },
     [deleteCity]
   );
@@ -37,7 +38,7 @@ export function Cities() {
   const handleClose = useCallback(() => {
     setCityToEdit(undefined);
     onClose();
-    setModalClosed(true);
+    setModalClosed((prevModalClosed) => !prevModalClosed);
   }, [onClose]);
 
   const renderCityItem = useCallback(
@@ -51,14 +52,20 @@ export function Cities() {
     ),
     [onDelete, onEdit, isRemovingCity]
   );
-  useEffect(() => {
-    if (modalClosed) {
-      const timeout = setTimeout(() => {
-        refetch?.().finally(() => setModalClosed(false));
-      }, 2000);
 
-      return () => clearTimeout(timeout);
-    }
+  useEffect(() => {
+    let i = 0;
+    setAux(i);
+    const interval = setInterval(() => {
+      refetch?.();
+      if (i >= 3) {
+        setAux(i - i);
+        clearInterval(interval);
+      }
+      i += 1;
+      setAux(i);
+    }, 1000);
+    return () => clearInterval(interval);
   }, [modalClosed, refetch]);
 
   return (

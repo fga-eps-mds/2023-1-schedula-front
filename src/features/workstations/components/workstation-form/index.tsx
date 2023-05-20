@@ -26,7 +26,7 @@ export function WorkstationForm({
     [selectedWorkstation]
   );
 
-  const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities();
+  const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities(0);
 
   const { data: workstations, isLoading: isLoadingWorkstations } =
     useGetAllWorkstations();
