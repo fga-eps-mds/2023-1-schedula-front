@@ -41,8 +41,40 @@ export function TutorialItem({
           </HStack>
         }
       >
+
+        <Permission allowedRoles={['BASIC' || 'USER']}>
         <IconButton
-          aria-label="Invisible Button"
+          aria-label="Download Tutorial"
+          icon={null}
+          onClick={() => openFile(tutorial)}
+          variant="ghost"
+          display="block"
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={0}
+          right={0}
+          width="100%"
+          height="100%"
+          opacity={0}
+        />
+          <Button
+            leftIcon={<HiDownload />}
+            onClick={() => openFile(tutorial)}
+            variant="outline"
+            colorScheme="orange"
+            color="black"
+            borderColor="transparent"
+            borderWidth={0}
+            marginTop="20px"
+          >
+            Download
+          </Button>
+        </Permission>
+
+      <Permission allowedRoles={['ADMIN']}>
+      <IconButton
+          aria-label="Download Tutorial"
           icon={null}
           onClick={() => openFile(tutorial)}
           variant="ghost"
@@ -55,24 +87,7 @@ export function TutorialItem({
           width="90%"
           height="100%"
           opacity={0}
-          zIndex={1}
         />
-
-        <Permission allowedRoles={['BASIC' || 'USER']}>
-          <Button
-            leftIcon={<HiDownload />}
-            onClick={() => openFile(tutorial)}
-            variant="outline"
-            colorScheme="orange"
-            color="black"
-            borderColor="transparent"
-            borderWidth={0}
-          >
-            Download
-          </Button>
-        </Permission>
-
-      <Permission allowedRoles={['ADMIN']}>
         <ItemActions item={tutorial}>
           <Button
             leftIcon={<HiDownload />}
