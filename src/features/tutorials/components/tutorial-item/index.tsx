@@ -52,7 +52,8 @@ export function TutorialItem({
           bottom={0}
           left={0}
           right={0}
-          width="100%"
+          width="90%"
+          height="100%"
           opacity={0}
           zIndex={1}
         />
