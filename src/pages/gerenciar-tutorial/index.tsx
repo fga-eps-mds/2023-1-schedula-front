@@ -6,14 +6,15 @@ import {
   Icon,
   InputGroup,
   InputLeftElement,
-  Select,
+  SelectField,
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
-import { FaSearch, FaTags } from 'react-icons/fa';
+import { FaSearch, FaTags, FaTimes } from 'react-icons/fa';
+import { Props, Select } from 'chakra-react-select';
 import { PageHeader } from '@/components/page-header';
 import { TutorialModal } from '@/features/tutorials/components/tutorial-modal';
 import { Input } from '@/components/form-fields';
@@ -104,6 +105,39 @@ export function GerenciarTutoriais() {
     [onDelete, onEdit, isRemovingTutorial]
   );
 
+  const [selectedState, setSelectedState] = useState<string>('');
+
+  useEffect(() => {
+    let updatedTutorials = tutorials || [];
+    if (selectedState) {
+      updatedTutorials = updatedTutorials.filter(
+        (tutorial) => tutorial.category.name === selectedState
+      );
+    }
+    setFilteredTutorials(updatedTutorials);
+  }, [tutorials, selectedState]);
+
+  const handleStateChange = useCallback(
+    (selectedOption: Props<any>['value']) => {
+      setSelectedState(selectedOption?.value || '');
+    },
+    []
+  );
+
+  const uniqueStates = new Set(
+    tutorials?.map((tutorial) => tutorial.category.name)
+  );
+
+  const options = [...uniqueStates].map((state) => ({
+    label: state,
+    value: state,
+  }));
+
+  const resetFilter = useCallback(() => {
+    setFilteredTutorials(tutorials || []);
+    setSelectedState('');
+  }, [tutorials]);
+
   return (
     <>
       <PageHeader title="Gerenciar tutoriais">
@@ -135,19 +169,49 @@ export function GerenciarTutoriais() {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Icon as={FaSearch} boxSize={4} color="gray.400" marginRight={3} />
           <Input
+            height="2.4rem"
             placeholder="Pesquisar tutoriais"
             onChange={handleSearch}
             _placeholder={{ color: 'gray.400' }}
           />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Icon as={FaSearch} boxSize={4} color="gray.400" marginRight={3} />
-          <Input
+        {/*  <Icon as={FaSearch} boxSize={4} color="gray.400" marginRight={3} /> */}
+
+        <div style={{ alignItems: 'center', marginTop: 7 }}>
+          <Select
+            placeholder={
+              <Box display="flex" alignItems="center">
+                <Icon as={FaTags} boxSize={4} mr={2} />
+                {selectedState ? (
+                  <>
+                    {selectedState}
+                    <Button
+                      variant="ghost"
+                      colorScheme="gray"
+                      size="xs"
+                      onClick={resetFilter}
+                    >
+                      <Icon as={FaTimes} boxSize={4} />
+                    </Button>
+                  </>
+                ) : (
+                  'Filtrar por categoria'
+                )}
+              </Box>
+            }
+            onChange={handleStateChange}
+            value={selectedState}
+            options={options}
+            chakraStyles={chakraStyles}
+            components={customComponents}
+          />
+        </div>
+
+        {/* <Input
             placeholder="Pesquisar Categorias"
             onChange={handleSearchCategory}
             _placeholder={{ color: 'gray.400' }}
-          />
-        </div>
+          /> */}
       </Grid>
 
       {/* <div
