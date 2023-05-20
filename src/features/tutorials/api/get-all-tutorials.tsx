@@ -11,23 +11,23 @@ export type GetAllTutorialsResponse = Array<Tutorial>;
 
 export const getAllTutorials = async () =>
   api
-    .get<GetAllTutorialsResponse>(`${TUTORIAL_ENDPOINT}/cities`)
+    .get<GetAllTutorialsResponse>(`${TUTORIAL_ENDPOINT}/tutorials`)
     .then((response) => response.data)
     .catch((err) => {
       const errMessage =
         err?.response?.data?.message ??
-        'Não foi possível carregar as cidades. Tente novamente mais tarde!';
+        'Não foi possível carregar os tutoriais. Tente novamente mais tarde!';
       toast.error(errMessage);
       return [] as GetAllTutorialsResponse;
     });
 
 const getTutorial = async (tutorialId: string) =>
   api
-    .get<Tutorial>(`${TUTORIAL_ENDPOINT}/cities/${tutorialId}`)
+    .get<Tutorial>(`${TUTORIAL_ENDPOINT}/tutorials/${tutorialId}`)
     .then((response) => response.data)
     .catch(() => {
       toast.error(
-        'Não foi possível carregar a cidade. Tente novamente mais tarde!'
+        'Não foi possível carregar o tutorial. Tente novamente mais tarde!'
       );
       return null;
     });

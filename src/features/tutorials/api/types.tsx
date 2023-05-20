@@ -1,32 +1,49 @@
 export interface Tutorial {
   id: string;
   name: string;
-  state: string;
+  filename: string;
+  data: any;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface PostCreateTutorialParams {
   name: string;
-  state: string;
+  file: any;
+  category_id: string;
 }
 
 export interface PostCreateTutorialResponse {
   id: string;
   name: string;
-  state: string;
+  filename: string;
+  data: any;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface PutUpdateTutorialParams {
   tutorialId: string;
   data: {
-    name: string;
-    state: string;
+    name?: string;
+    file?: any;
+    category_id?: string;
   };
 }
 
 export interface PutUpdateTutorialResponse {
   id: string;
   name: string;
-  state: string;
+  filename: string;
+  data: any;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface DeleteTutorialParams {

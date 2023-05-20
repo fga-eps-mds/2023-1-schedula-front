@@ -3,10 +3,7 @@ export interface Tutorial {
   name: string;
   filename?: string;
   data?: any;
-  category: {
-    id: string;
-    name: string;
-  };
+  category_id: string;
 }
 
 export interface TutorialPayload {
