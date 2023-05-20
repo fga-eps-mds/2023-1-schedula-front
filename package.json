@@ -35,6 +35,7 @@
     "express": "^4.18.2",
     "express-history-api-fallback": "^2.2.1",
     "express-static-gzip": "^2.1.7",
+    "file-saver": "^2.0.5",
     "framer-motion": "^6",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.28",
