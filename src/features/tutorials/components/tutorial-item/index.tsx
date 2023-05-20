@@ -57,6 +57,20 @@ export function TutorialItem({
           zIndex={1}
         />
 
+        <Permission allowedRoles={['BASIC' || 'USER']}>
+          <Button
+            leftIcon={<HiDownload />}
+            onClick={() => openFile(tutorial)}
+            variant="outline"
+            colorScheme="orange"
+            color="black"
+            borderColor="transparent"
+            borderWidth={0}
+          >
+            Download
+          </Button>
+        </Permission>
+
       <Permission allowedRoles={['ADMIN']}>
         <ItemActions item={tutorial}>
           <Button
