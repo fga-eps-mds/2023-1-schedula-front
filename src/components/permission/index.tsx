@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface PermissionProps {
-  allowedRoles: Array<'ADMIN' | 'BASIC' | 'USER'>;
+  allowedRoles: string[];
   allowCreatedByUserEmail?: string;
   children: ReactNode;
 }
