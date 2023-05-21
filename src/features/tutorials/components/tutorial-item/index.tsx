@@ -16,6 +16,14 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     const file = new File([blob], tutorial.filename);
     saveAs(file, tutorial.filename);
+
+    const fileUrl = URL.createObjectURL(blob);
+    return fileUrl;
+  };
+
+  const handleOpenFile = (tutorial: Tutorial) => {
+    const fileUrl = openFile(tutorial);
+    window.open(fileUrl, '_blank');
   };
 
   return (
@@ -31,7 +39,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
         <Permission allowedRoles={['BASIC' || 'USER']}>
           <IconButton
             aria-label="Download Tutorial"
-            onClick={() => openFile(tutorial)}
+            onClick={() => handleOpenFile(tutorial)}
             variant="ghost"
             display="block"
             position="absolute"
@@ -46,7 +54,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
           <Button
             aria-label="Download Tutorial"
             leftIcon={<HiDownload />}
-            onClick={() => openFile(tutorial)}
+            onClick={() => handleOpenFile(tutorial)}
             variant="outline"
             colorScheme="orange"
             color="black"
@@ -61,7 +69,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
         <Permission allowedRoles={['ADMIN']}>
           <IconButton
             aria-label="Download Tutorial"
-            onClick={() => openFile(tutorial)}
+            onClick={() => handleOpenFile(tutorial)}
             variant="ghost"
             display="block"
             position="absolute"
@@ -77,7 +85,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
             <Button
               aria-label="Download Tutorial"
               leftIcon={<HiDownload />}
-              onClick={() => openFile(tutorial)}
+              onClick={() => handleOpenFile(tutorial)}
               variant="outline"
               colorScheme="orange"
               color="black"
