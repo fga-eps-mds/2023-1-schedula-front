@@ -37,7 +37,11 @@ export function TutorialItem({
           />
 
           <DeleteButton
-            onClick={() => onDelete(tutorial.id)}
+            onClick={() => {
+              if (tutorial.id) {
+                onDelete(tutorial.id);
+              }
+            }}
             label={tutorial.name}
             isLoading={isDeleting}
           />

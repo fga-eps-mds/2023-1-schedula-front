@@ -4,6 +4,7 @@ import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
+import { CategoryTutorial } from '../../types';
 
 interface CategoryTutorialItemProps {
   categoryTutorial: CategoryTutorial;

@@ -4,13 +4,10 @@ import {
   Grid,
   HStack,
   Icon,
-  InputGroup,
-  InputLeftElement,
-  SelectField,
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
 import { FaSearch, FaTags, FaTimes } from 'react-icons/fa';
@@ -18,7 +15,6 @@ import { Props, Select } from 'chakra-react-select';
 import { PageHeader } from '@/components/page-header';
 import { TutorialModal } from '@/features/tutorials/components/tutorial-modal';
 import { Input } from '@/components/form-fields';
-import { DeleteTutorialModal } from '@/features/tutorials/components/delete-tutorial-modal';
 import { ListView } from '@/components/list';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
@@ -97,7 +93,11 @@ export function GerenciarTutoriais() {
         <TutorialItem
           tutorial={tutorial}
           onEdit={() => onEdit(tutorial)}
-          onDelete={() => onDelete(tutorial.id)}
+          onDelete={() => {
+            if (tutorial.id) {
+              onDelete(tutorial.id);
+            }
+          }}
           isDeleting={isRemovingTutorial}
         />
       );
@@ -173,6 +173,8 @@ export function GerenciarTutoriais() {
             placeholder="Pesquisar tutoriais"
             onChange={handleSearch}
             _placeholder={{ color: 'gray.400' }}
+            label=""
+            errors={undefined}
           />
         </div>
         {/*  <Icon as={FaSearch} boxSize={4} color="gray.400" marginRight={3} /> */}

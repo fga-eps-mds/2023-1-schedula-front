@@ -12,7 +12,9 @@ export interface Tutorial {
 export interface PostCreateTutorialParams {
   name: string;
   file: any;
-  category_id: string;
+  category_id: {
+    value: string;
+  };
 }
 
 export interface PostCreateTutorialResponse {
@@ -29,9 +31,11 @@ export interface PostCreateTutorialResponse {
 export interface PutUpdateTutorialParams {
   tutorialId: string;
   data: {
-    name?: string;
+    name: string;
     file?: any;
-    category_id?: string;
+    category_id: {
+      value: string;
+    };
   };
 }
 

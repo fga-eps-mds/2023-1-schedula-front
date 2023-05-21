@@ -1,13 +1,9 @@
-import { Button, Select, Grid, Center, position } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { result, set } from 'lodash';
-import axios from 'axios';
+import { useMemo, useRef, useState } from 'react';
 import { GrDocumentPdf } from 'react-icons/gr';
 import { ControlledSelect, Input } from '@/components/form-fields';
-import { InputFile } from '../tutorial-file';
-import { TutorialFileCard } from '../tutorial-file-card';
-import { Tutorial, TutorialPayload } from '../../type';
+import { TutorialPayload, File } from '../../type';
 import { useGetAllCategoryTutorial } from '@/features/categories-tutorial/api/get-all-categories-tutorial';
 
 interface TutorialFromProps {
@@ -42,17 +38,13 @@ export function TutorialForm({
     value: category?.id,
   }));
 
-  console.log(categoryOptions);
-
-  // const category = watch('CategoryTutorialPayload');
-
-  const [fileName, setFileName] = useState(null);
+  const [fileName, setFileName] = useState<File>();
   const inputRef = useRef();
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event: any) => {
     event.preventDefault();
   };
-  const handleDrop = (event) => {
+  const handleDrop = (event: any) => {
     event.preventDefault();
     // console.log(event.dataTransfer.files[0]);
     setFileName(event.dataTransfer.files[0]);
@@ -60,7 +52,6 @@ export function TutorialForm({
 
   if (fileName) {
     nomeArquivo = fileName.name;
-    console.log(nomeArquivo);
   }
 
   return (
@@ -126,7 +117,12 @@ export function TutorialForm({
             {...register('file', { required: 'Campo obrigatório' })}
             placeholder="Escolha um arquivo e jogue"
             errors={errors?.name}
-            onChange={(event) => setFileName(event.target.files[0])}
+            onChange={(event) => {
+              const { files } = event.target;
+              if (files) {
+                setFileName(files[0]);
+              }
+            }}
             style={{
               opacity: 0,
               position: 'absolute',

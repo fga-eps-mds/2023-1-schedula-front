@@ -1,6 +1,6 @@
 export interface Tutorial {
   id?: string;
-  name: string;
+  name?: string;
   filename?: string;
   data?: any;
   category: {
@@ -10,7 +10,13 @@ export interface Tutorial {
 }
 
 export interface TutorialPayload {
+  name?: string;
+  file?: any;
+  category_id?: {
+    value: string;
+  };
+}
+
+export interface File {
   name: string;
-  file: any;
-  category_id: string;
 }

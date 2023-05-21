@@ -29,6 +29,9 @@ export function TutorialModal({
 
   const handleSubmit = useCallback(
     async ({ name, category_id, file }: TutorialPayload) => {
+      if (!name || !category_id) {
+        return;
+      }
       const payload: PostCreateTutorialParams = {
         name,
         category_id,
