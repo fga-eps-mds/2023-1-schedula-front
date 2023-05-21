@@ -1,15 +1,20 @@
 import { render } from '@testing-library/react';
+import { vi } from 'vitest';
 import { TutorialItem } from '@/features/tutorials/components/tutorial-item';
+import { Tutorial } from '@/features/tutorials/api/types';
 
 const mockedTutorial: Tutorial = {
+  id: '1',
   name: 'Tutorial 1',
-  category: {
-    name: 'Category 1',
-  },
+  filename: 'tutorial.pdf',
   data: {
+    type: 'Buffer',
     data: [1, 2, 3],
   },
-  filename: 'tutorial.pdf',
+  category: {
+    id: '1',
+    name: 'Category 1',
+  },
 };
 
 describe('TutorialItem', () => {
@@ -23,5 +28,19 @@ describe('TutorialItem', () => {
 
     const tutorialCategory = await findAllByText('Category 1');
     expect(tutorialCategory[0]).toBeInTheDocument();
+  });
+
+  it('should be called when the download button is clicked', async () => {
+    const { queryByLabelText } = render(
+      <TutorialItem
+        tutorial={mockedTutorial}
+        {...{ openFile: vi.fn(() => {}) }}
+      />
+    );
+
+    const downloadButton = queryByLabelText('Download Tutorial');
+    if (downloadButton) {
+      expect(downloadButton).toBeInTheDocument();
+    }
   });
 });

@@ -4,13 +4,14 @@ import { saveAs } from 'file-saver';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
+import { Tutorial } from '@/features/tutorials/api/types';
 
 interface TutorialItemProps {
   tutorial: Tutorial;
 }
 
 export function TutorialItem({ tutorial }: TutorialItemProps) {
-  const openFile = (tutorial) => {
+  const openFile = (tutorial: Tutorial) => {
     const byteArray = new Uint8Array(tutorial.data.data);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     const file = new File([blob], tutorial.filename);
@@ -30,7 +31,6 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
         <Permission allowedRoles={['BASIC' || 'USER']}>
           <IconButton
             aria-label="Download Tutorial"
-            icon={null}
             onClick={() => openFile(tutorial)}
             variant="ghost"
             display="block"
@@ -61,7 +61,6 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
         <Permission allowedRoles={['ADMIN']}>
           <IconButton
             aria-label="Download Tutorial"
-            icon={null}
             onClick={() => openFile(tutorial)}
             variant="ghost"
             display="block"
