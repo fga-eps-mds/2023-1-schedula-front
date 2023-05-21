@@ -1,23 +1,20 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  HStack,
-  useDisclosure,
   Grid,
-  GridItem,
   Input,
   InputGroup,
   InputLeftElement,
   Icon,
-  Box,
+  Flex,
 } from '@chakra-ui/react';
 import { Props, Select } from 'chakra-react-select';
-import { FaSearch, FaTags, FaTimes } from 'react-icons/fa';
+import { FaSearch, FaTags } from 'react-icons/fa';
+import { CloseIcon } from '@chakra-ui/icons';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { ListView } from '@/components/list';
 import { TutorialItem } from '@/features/tutorials/components/tutorial-item';
-import { useDeleteTutorial } from '@/features/tutorials/api/delete-tutorial';
 import { Tutorial } from '@/features/tutorials/api/types';
 import {
   chakraStyles,
@@ -25,45 +22,16 @@ import {
 } from '@/components/form-fields/controlled-select/styles';
 
 export function Tutoriais() {
-  const { data: tutorials, isLoading, refetch } = useGetAllTutorials();
+  const { data: tutorials, isLoading } = useGetAllTutorials();
 
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
     tutorials || []
   );
-  const [selectedState, setSelectedState] = useState<string>('');
-
-  const { mutate: deleteTutorial, isLoading: isRemovingTutorial } =
-    useDeleteTutorial();
-
-  const [tutorialToEdit, setTutorialToEdit] = useState<Tutorial>();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const onEdit = useCallback(
-    (tutorial: Tutorial) => {
-      setTutorialToEdit(tutorial);
-      onOpen();
-    },
-    [onOpen]
-  );
-
-  const onDelete = useCallback(
-    (tutorialId: string) => {
-      deleteTutorial({ tutorialId });
-    },
-    [deleteTutorial]
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const renderTutorialItem = useCallback(
-    (tutorial: Tutorial) => (
-      <TutorialItem
-        tutorial={tutorial}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        isDeleting={isRemovingTutorial}
-      />
-    ),
-    [onDelete, onEdit, isRemovingTutorial]
+    (tutorial: Tutorial) => <TutorialItem tutorial={tutorial} />,
+    []
   );
 
   const handleSearch = useCallback(
@@ -73,41 +41,64 @@ export function Tutoriais() {
         tutorial.name.toLowerCase().includes(searchText)
       );
       setFilteredTutorials(filteredTutorials || []);
-      setSelectedState('');
+      setSelectedCategory('');
     },
     [tutorials]
   );
 
-  const handleStateChange = useCallback(
-    (selectedOption: Props<any>['value']) => {
-      setSelectedState(selectedOption?.value || '');
-    },
-    []
-  );
-
-  const resetFilter = useCallback(() => {
+  const handleResetFilters = useCallback(() => {
     setFilteredTutorials(tutorials || []);
-    setSelectedState('');
+    setSelectedCategory('');
   }, [tutorials]);
+
+  const handleCategoryChange = useCallback(
+    (selectedOption: Props<any>['value']) => {
+      if (selectedOption?.value === '') {
+        handleResetFilters();
+      } else {
+        setSelectedCategory(selectedOption?.value || '');
+      }
+    },
+    [handleResetFilters]
+  );
 
   useEffect(() => {
     let updatedTutorials = tutorials || [];
-    if (selectedState) {
+    if (selectedCategory) {
       updatedTutorials = updatedTutorials.filter(
-        (tutorial) => tutorial.category.name === selectedState
+        (tutorial) => tutorial.category.name === selectedCategory
       );
     }
     setFilteredTutorials(updatedTutorials);
-  }, [tutorials, selectedState]);
+  }, [tutorials, selectedCategory, handleResetFilters]);
 
-  const uniqueStates = new Set(
-    tutorials?.map((tutorial) => tutorial.category.name)
-  );
+  const resetButton = selectedCategory ? (
+    <Button
+      variant="link"
+      colorScheme="gray"
+      size="xs"
+      onClick={handleResetFilters}
+      marginLeft={2}
+    >
+      <CloseIcon boxSize={3} />
+    </Button>
+  ) : null;
 
-  const options = [...uniqueStates].map((state) => ({
-    label: state,
-    value: state,
-  }));
+  const options = useMemo(() => {
+    const uniqueCategories = new Set(
+      tutorials?.map((tutorial) => tutorial.category.name)
+    );
+
+    const allCategoriesOption = { label: 'Todas as categorias', value: '' };
+    const categoryOptions = [...uniqueCategories].map((category) => ({
+      label: category,
+      value: category,
+    }));
+
+    return selectedCategory
+      ? [allCategoriesOption, ...categoryOptions]
+      : categoryOptions;
+  }, [tutorials, selectedCategory]);
 
   return (
     <>
@@ -126,32 +117,16 @@ export function Tutoriais() {
         </InputGroup>
 
         <Select
+          aria-label="Filtrar por categoria"
           placeholder={
-            <Box display="flex" alignItems="center">
+            <Flex alignItems="center">
               <Icon as={FaTags} boxSize={4} mr={2} />
-              {selectedState ? (
-                <>
-                   <Button
-                    variant="ghost"
-                    colorScheme="gray"
-                    size="xs"
-                    onClick={resetFilter}
-                  position="relative"                    
-                  
-                  >
-                    <Icon as={FaTimes} boxSize={4} position="absolute" marginLeft="778" />
-                    
-                  </Button>
-                  {selectedState}
-               
-                </>
-              ) : (
-                'Filtrar por categoria'
-              )}
-            </Box>
+              Filtrar por categoria
+              {resetButton}
+            </Flex>
           }
-          onChange={handleStateChange}
-          value={selectedState}
+          onChange={handleCategoryChange}
+          value={selectedCategory}
           options={options}
           chakraStyles={chakraStyles}
           components={customComponents}

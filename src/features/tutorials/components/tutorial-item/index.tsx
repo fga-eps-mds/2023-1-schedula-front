@@ -1,33 +1,19 @@
 import { HStack, IconButton, Button } from '@chakra-ui/react';
 import { HiDownload } from 'react-icons/hi';
 import { saveAs } from 'file-saver';
-import { DeleteButton } from '@/components/action-buttons/delete-button';
-import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
 
 interface TutorialItemProps {
   tutorial: Tutorial;
-  onEdit: (tutorial: Tutorial) => void;
-  onDelete: (tutorialId: string) => void;
-  isDeleting: boolean;
 }
 
-export function TutorialItem({
-  tutorial,
-  onEdit,
-  onDelete,
-  isDeleting,
-}: TutorialItemProps) {
+export function TutorialItem({ tutorial }: TutorialItemProps) {
   const openFile = (tutorial) => {
     const byteArray = new Uint8Array(tutorial.data.data);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
     const file = new File([blob], tutorial.filename);
-
-    console.log(file);
-
-    // Salvando o arquivo
     saveAs(file, tutorial.filename);
   };
 
@@ -58,6 +44,7 @@ export function TutorialItem({
             opacity={0}
           />
           <Button
+            aria-label="Download Tutorial"
             leftIcon={<HiDownload />}
             onClick={() => openFile(tutorial)}
             variant="outline"
@@ -89,6 +76,7 @@ export function TutorialItem({
           />
           <ItemActions item={tutorial}>
             <Button
+              aria-label="Download Tutorial"
               leftIcon={<HiDownload />}
               onClick={() => openFile(tutorial)}
               variant="outline"
@@ -99,17 +87,6 @@ export function TutorialItem({
             >
               Download
             </Button>
-            <EditButton
-              onClick={onEdit}
-              label={tutorial.name}
-              disabled={isDeleting}
-            />
-
-            <DeleteButton
-              onClick={() => onDelete(tutorial.id)}
-              label={tutorial.name}
-              isLoading={isDeleting}
-            />
           </ItemActions>
         </Permission>
       </Item>
