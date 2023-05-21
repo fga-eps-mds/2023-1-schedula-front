@@ -9,7 +9,7 @@ import { City } from '@/features/cities/api/types';
 
 export type GetAllCitiesResponse = Array<City>;
 
-export const getAllCities = async () =>
+export const getAllCities = async (count: number) =>
   api
     .get<GetAllCitiesResponse>(`${CITIES_ENDPOINT}/cities`)
     .then((response) => response.data)
@@ -17,7 +17,9 @@ export const getAllCities = async () =>
       const errMessage =
         err?.response?.data?.message ??
         'Não foi possível carregar as cidades. Tente novamente mais tarde!';
-      toast.error(errMessage);
+      if (count === 1) {
+        toast.error(errMessage);
+      }
       return [] as GetAllCitiesResponse;
     });
 
@@ -32,8 +34,8 @@ const getCity = async (cityId: string) =>
       return null;
     });
 
-export const useGetAllCities = () =>
-  useQuery([CITIES_CACHE_KEYS.allCities], getAllCities);
+export const useGetAllCities = (count: number) =>
+  useQuery([CITIES_CACHE_KEYS.allCities], () => getAllCities(count));
 
 export const useGetCity = (cityId: string) =>
   useQuery([CITIES_CACHE_KEYS.city], () => getCity(cityId));

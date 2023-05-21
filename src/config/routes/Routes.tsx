@@ -12,6 +12,7 @@ import { RegistrarChamado } from '@/pages/chamados/registrar';
 import { Agendamentos } from '@/pages/agendamentos';
 import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
+import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 
 export function Router() {
   return (
@@ -106,6 +107,14 @@ export function Router() {
           element={
             <RequireAuth>
               <Tutoriais />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="tutoriais/categorias_de_tutorial"
+          element={
+            <RequireAuth>
+              <CategoriasTutorial />
             </RequireAuth>
           }
         />

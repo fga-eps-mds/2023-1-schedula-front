@@ -26,7 +26,7 @@ export function WorkstationForm({
     [selectedWorkstation]
   );
 
-  const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities();
+  const { data: cidades, isLoading: isLoadingCidades } = useGetAllCities(0);
 
   const { data: workstations, isLoading: isLoadingWorkstations } =
     useGetAllWorkstations();
@@ -73,10 +73,12 @@ export function WorkstationForm({
       },
       phone: selectedWorkstation?.phone ?? '',
       is_regional: selectedWorkstation?.is_regional ?? false,
+      vpn: selectedWorkstation?.vpn ?? false,
     },
   });
 
   const isRegional = watch('is_regional');
+  const checkedVpn = watch('vpn');
 
   const defaultChildWorkstations = selectedWorkstation?.child_workstations?.map(
     (workstation) => ({
@@ -179,7 +181,6 @@ export function WorkstationForm({
           name="ip_initial"
           defaultValue=""
           rules={{
-            required: 'Campo obrigatório',
             pattern: {
               value: ipPatternRegex,
               message: 'IP inválido',
@@ -205,7 +206,6 @@ export function WorkstationForm({
           name="ip_end"
           defaultValue=""
           rules={{
-            required: 'Campo obrigatório',
             pattern: {
               value: ipPatternRegex,
               message: 'IP inválido',
@@ -226,33 +226,52 @@ export function WorkstationForm({
           )}
         />
 
-        <GridItem colSpan={2}>
-          <Controller
-            control={control}
-            name="gateway"
-            defaultValue=""
-            rules={{
-              required: 'Campo obrigatório',
-              pattern: {
-                value: ipPatternRegex,
-                message: 'Formato inválido',
-              },
-            }}
-            render={({
-              field: { ref, value, onChange },
-              fieldState: { error },
-            }) => (
-              <Input
-                ref={ref}
-                label="Gateway"
-                errors={error}
-                value={value}
-                placeholder="Gateway"
-                onChange={(e) => onChange(e.target.value)}
-              />
-            )}
-          />
-        </GridItem>
+        <Controller
+          control={control}
+          name="vpn"
+          render={({ field: { value, onChange } }) => (
+            <Checkbox
+              size="md"
+              width="full"
+              colorScheme="orange"
+              onChange={onChange}
+              checked={value}
+              isChecked={value}
+            >
+              VPN
+            </Checkbox>
+          )}
+        />
+
+        {!checkedVpn ? (
+          <GridItem colSpan={2}>
+            <Controller
+              control={control}
+              name="gateway"
+              defaultValue=""
+              rules={{
+                required: 'Campo obrigatório',
+                pattern: {
+                  value: ipPatternRegex,
+                  message: 'Formato inválido',
+                },
+              }}
+              render={({
+                field: { ref, value, onChange },
+                fieldState: { error },
+              }) => (
+                <Input
+                  ref={ref}
+                  label="Gateway"
+                  errors={error}
+                  value={value}
+                  placeholder="Gateway"
+                  onChange={(e) => onChange(e.target.value)}
+                />
+              )}
+            />
+          </GridItem>
+        ) : null}
 
         {!isRegional ? (
           <GridItem colSpan={2}>

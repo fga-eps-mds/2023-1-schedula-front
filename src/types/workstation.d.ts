@@ -3,6 +3,7 @@ interface Workstation {
   name: string;
   city: City;
   phone: string;
+  vpn: boolean;
   ip: string;
   gateway: string;
   is_regional: boolean;
@@ -14,6 +15,7 @@ interface WorkstationPayload {
   name: string;
   city: { label: string; value: string };
   phone: string;
+  vpn: boolean;
   ip_initial: string;
   ip_end: string;
   gateway: string;
