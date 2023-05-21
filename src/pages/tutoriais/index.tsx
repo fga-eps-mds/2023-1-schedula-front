@@ -131,16 +131,19 @@ export function Tutoriais() {
               <Icon as={FaTags} boxSize={4} mr={2} />
               {selectedState ? (
                 <>
-                  {selectedState}
-                  <Button
+                   <Button
                     variant="ghost"
                     colorScheme="gray"
                     size="xs"
                     onClick={resetFilter}
-                    marginLeft="2"
+                  position="relative"                    
+                  
                   >
-                    <Icon as={FaTimes} boxSize={4} />
+                    <Icon as={FaTimes} boxSize={4} position="absolute" marginLeft="778" />
+                    
                   </Button>
+                  {selectedState}
+               
                 </>
               ) : (
                 'Filtrar por categoria'
