@@ -137,7 +137,7 @@ export function Tutoriais() {
                     colorScheme="gray"
                     size="xs"
                     onClick={resetFilter}
-                    marginLeft="390"
+                    marginLeft="2"
                   >
                     <Icon as={FaTimes} boxSize={4} />
                   </Button>
