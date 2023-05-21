@@ -4,11 +4,14 @@ import {
   HStack,
   useDisclosure,
   Input,
-  Grid,
+  Icon,
   Tooltip,
+  InputGroup,
+  InputLeftElement,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/all';
+import { FaSearch } from 'react-icons/fa';
 import { CategoryTutorialItem } from '@/features/categories-tutorial/components/category-tutorial-item';
 import { PageHeader } from '@/components/page-header';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
@@ -116,13 +119,16 @@ export function CategoriasTutorial() {
         </HStack>
       </PageHeader>
 
-      <Grid templateColumns="repeat(2, 1fr)" gap={8}>
+      <InputGroup marginBottom="4">
+        <InputLeftElement pointerEvents="none">
+          <Icon as={FaSearch} boxSize={4} color="gray.400" />
+        </InputLeftElement>
         <Input
           placeholder="Pesquisar Categorias"
           onChange={handleSearch}
-          marginBottom="4"
+          _placeholder={{ color: 'gray.400' }}
         />
-      </Grid>
+      </InputGroup>
 
       <ListView<CategoryTutorial>
         items={filteredCategoriesTutorial}
