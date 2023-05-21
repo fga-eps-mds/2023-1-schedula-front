@@ -10,7 +10,7 @@ import { CategoryTutorialForm } from '.';
 
 const categoryTutorial: CategoryTutorial = {
   id: '1',
-  name: 'Goiânia',
+  name: 'Rede',
 };
 
 describe('CategoryTutorialForm', () => {
@@ -23,10 +23,10 @@ describe('CategoryTutorialForm', () => {
       />
     );
 
-    expect(screen.getByLabelText('Nome')).toHaveValue('Goiânia');
+    expect(screen.getByLabelText('Nome')).toHaveValue('Rede');
   });
 
-  it('should be able to update a city', async () => {
+  it('should be able to update a category', async () => {
     const handleSubmit = vi.fn();
     render(
       <CategoryTutorialForm
@@ -51,7 +51,7 @@ describe('CategoryTutorialForm', () => {
 
     await act(async () => {
       fireEvent.change(screen.getByLabelText('Nome'), {
-        target: { value: 'Goiânia' },
+        target: { value: 'Rede' },
       });
       screen.getByText('Criar categoria').click();
     });
