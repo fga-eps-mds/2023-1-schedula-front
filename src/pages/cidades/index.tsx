@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Button, HStack, useDisclosure } from '@chakra-ui/react';
 import { CityItem } from '@/features/cities/components/city-item';
 import { PageHeader } from '@/components/page-header';
@@ -12,11 +12,11 @@ import { Permission } from '@/components/permission';
 
 export function Cities() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const isCreateAuthorized = true;
   const [cityToEdit, setCityToEdit] = useState<City>();
+  const [modalClosed, setModalClosed] = useState(false);
 
-  const { data: cities, isLoading, refetch } = useGetAllCities();
-
+  const [aux, setAux] = useState(0);
+  const { data: cities, isLoading, refetch } = useGetAllCities(aux);
   const { mutate: deleteCity, isLoading: isRemovingCity } = useDeleteCity();
 
   const onEdit = useCallback(
@@ -30,6 +30,7 @@ export function Cities() {
   const onDelete = useCallback(
     (cityId: string) => {
       deleteCity({ cityId });
+      setModalClosed((prevModalClosed) => !prevModalClosed);
     },
     [deleteCity]
   );
@@ -37,6 +38,7 @@ export function Cities() {
   const handleClose = useCallback(() => {
     setCityToEdit(undefined);
     onClose();
+    setModalClosed((prevModalClosed) => !prevModalClosed);
   }, [onClose]);
 
   const renderCityItem = useCallback(
@@ -50,6 +52,21 @@ export function Cities() {
     ),
     [onDelete, onEdit, isRemovingCity]
   );
+
+  useEffect(() => {
+    let i = 0;
+    setAux(i);
+    const interval = setInterval(() => {
+      refetch?.();
+      if (i >= 3) {
+        setAux(i - i);
+        clearInterval(interval);
+      }
+      i += 1;
+      setAux(i);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [modalClosed, refetch]);
 
   return (
     <>

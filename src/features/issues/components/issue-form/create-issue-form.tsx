@@ -61,7 +61,7 @@ export function CreateIssueForm() {
       },
     });
 
-  const { data: cities, isLoading: isLoadingCities } = useGetAllCities();
+  const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
 
   const { data: problem_categories, isLoading: isLoadingProblems } =
     useGetAllProblemCategories();
