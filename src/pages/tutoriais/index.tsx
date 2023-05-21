@@ -1,3 +1,4 @@
+import { useNavigate, Link } from 'react-router-dom';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import {
   Button,
@@ -100,9 +101,18 @@ export function Tutoriais() {
       : categoryOptions;
   }, [tutorials, selectedCategory]);
 
+  const navigate = useNavigate();
+
   return (
     <>
-      <PageHeader title="Tutoriais" />
+      <PageHeader title="Tutoriais">
+        <Button
+          variant="primary"
+          onClick={() => navigate('categorias_de_tutorial')}
+        >
+          Gerenciamento de categorias
+        </Button>
+      </PageHeader>
 
       <Grid templateColumns="repeat(2, 1fr)" gap={8} marginBottom="4">
         <InputGroup>
