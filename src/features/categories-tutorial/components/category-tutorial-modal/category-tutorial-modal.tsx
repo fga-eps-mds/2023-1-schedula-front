@@ -5,6 +5,7 @@ import { usePutUpdateCategoryTutorial } from '@/features/categories-tutorial/api
 import { PostCreateCategoryTutorialParams } from '@/features/categories-tutorial/api/types';
 import { Modal } from '@/components/modal';
 import { CategoryTutorialForm } from '@/features/categories-tutorial/components/category-tutorial-form';
+import { CategoryTutorial, CategoryTutorialPayload } from '../../types';
 
 interface CategoryTutorialModalProps extends Partial<ModalProps> {
   categoryTutorial?: CategoryTutorial;

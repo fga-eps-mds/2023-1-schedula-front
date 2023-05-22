@@ -7,6 +7,7 @@ import {
 } from '@testing-library/react';
 import { vi } from 'vitest';
 import { CategoryTutorialForm } from '.';
+import { CategoryTutorial } from '../../types';
 
 const categoryTutorial: CategoryTutorial = {
   id: '1',

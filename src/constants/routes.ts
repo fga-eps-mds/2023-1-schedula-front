@@ -1,4 +1,4 @@
-import { IconType } from 'react-icons';
+import { IconType, icons } from 'react-icons';
 import { BsSignpost2, BsTags, BsTelephonePlus } from 'react-icons/bs';
 import { FaUsersCog } from 'react-icons/fa';
 import { FiMapPin } from 'react-icons/fi';

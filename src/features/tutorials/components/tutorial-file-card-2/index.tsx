@@ -14,14 +14,14 @@ import {
 
 export interface InputProps extends ChakraInputProps {
   label: string | JSX.Element;
-  errors?: FieldError | undefined;
+  errors: FieldError | undefined;
   rightElement?: ReactElement<InputElementProps>;
   leftElement?: ReactElement<InputElementProps>;
   rightAddon?: ReactElement<InputAddonProps>;
   leftAddon?: ReactElement<InputAddonProps>;
 }
 
-export const Input = forwardRef<InputProps, 'input'>((props, ref) => {
+export const InputFile2 = forwardRef<InputProps, 'input'>((props, ref) => {
   const {
     label,
     errors,
@@ -38,7 +38,12 @@ export const Input = forwardRef<InputProps, 'input'>((props, ref) => {
       <InputGroup>
         {leftAddon ?? null}
         {leftElement ?? null}
-        <ChakraInput {...rest} ref={ref} />
+        <ChakraInput
+          type="file"
+          style={{ textAlign: 'center' }}
+          {...rest}
+          ref={ref}
+        />
         {rightAddon ?? null}
         {rightElement ?? null}
       </InputGroup>

@@ -13,7 +13,7 @@ import { Props, Select } from 'chakra-react-select';
 import { FaSearch, FaTags } from 'react-icons/fa';
 import { CloseIcon } from '@chakra-ui/icons';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllTutorials } from '@/features/tutorials/api/get-all-tutorials';
+import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { ListView } from '@/components/list';
 import { TutorialItem } from '@/features/tutorials/components/tutorial-item';
 import { Tutorial } from '@/features/tutorials/api/types';
@@ -23,7 +23,7 @@ import {
 } from '@/components/form-fields/controlled-select/styles';
 
 export function Tutoriais() {
-  const { data: tutorials, isLoading } = useGetAllTutorials();
+  const { data: tutorials, isLoading } = useGetallTutorials();
 
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
     tutorials || []
@@ -111,6 +111,13 @@ export function Tutoriais() {
           onClick={() => navigate('categorias_de_tutorial')}
         >
           Gerenciamento de categorias
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() => navigate('gerenciar-tutorial')}
+          style={{ marginLeft: 30 }}
+        >
+          Gerenciar tutoriais
         </Button>
       </PageHeader>
 

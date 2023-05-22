@@ -2,6 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { vi } from 'vitest';
 import { CategoryTutorialItem } from '@/features/categories-tutorial/components/category-tutorial-item';
 import { useAuth } from '@/contexts/AuthContext';
+import { CategoryTutorial } from '../../types';
 
 const mockedCategoryTutorial: CategoryTutorial = {
   id: '1',

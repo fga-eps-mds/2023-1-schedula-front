@@ -4,34 +4,45 @@ import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
-import { CategoryTutorial } from '../../types';
+import { Tutorial } from '../../type';
 
-interface CategoryTutorialItemProps {
-  categoryTutorial: CategoryTutorial;
-  onEdit: (categoryTutorial: CategoryTutorial) => void;
-  onDelete: (categoryTutorialId: string) => void;
+interface TutorialItemManagerProps {
+  tutorial: Tutorial;
+  onEdit: (tutorial: Tutorial) => void;
+  onDelete: (tutorialId: string) => void;
   isDeleting: boolean;
 }
 
-export function CategoryTutorialItem({
-  categoryTutorial,
+export function TutorialItemManager({
+  tutorial,
   onEdit,
   onDelete,
   isDeleting,
-}: CategoryTutorialItemProps) {
+}: TutorialItemManagerProps) {
   return (
-    <Item title={`${categoryTutorial?.name}`}>
+    <Item
+      title={`${tutorial?.name}`}
+      description={
+        <HStack spacing={2} mt={2.5}>
+          <p>{tutorial?.category.name}</p>
+        </HStack>
+      }
+    >
       <Permission allowedRoles={['ADMIN']}>
-        <ItemActions item={categoryTutorial}>
+        <ItemActions item={tutorial}>
           <EditButton
             onClick={onEdit}
-            label={categoryTutorial.name}
+            label={tutorial.name}
             disabled={isDeleting}
           />
 
           <DeleteButton
-            onClick={() => onDelete(categoryTutorial.id)}
-            label={categoryTutorial.name}
+            onClick={() => {
+              if (tutorial.id) {
+                onDelete(tutorial.id);
+              }
+            }}
+            label={tutorial.name}
             isLoading={isDeleting}
           />
         </ItemActions>

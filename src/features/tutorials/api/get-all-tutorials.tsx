@@ -4,28 +4,26 @@ import { toast } from 'utils/toast';
 import { api } from '@/config/lib/axios';
 
 import { TUTORIALS_CACHE_KEYS } from '@/features/tutorials/constants/cache';
-import { TUTORIALS_ENDPOINT } from '@/features/tutorials/constants/requests';
+import { TUTORIAL_ENDPOINT } from '@/features/tutorials/constants/requests';
 import { Tutorial } from '@/features/tutorials/api/types';
 
 export type GetAllTutorialsResponse = Array<Tutorial>;
 
-// Aguardandoapi de tutoriais para trocar o endereço do ENDPOINT
-
 export const getAllTutorials = async () =>
   api
-    .get<GetAllTutorialsResponse>(`${TUTORIALS_ENDPOINT}/tutorials`)
+    .get<GetAllTutorialsResponse>(`${TUTORIAL_ENDPOINT}/tutorials`)
     .then((response) => response.data)
     .catch((err) => {
       const errMessage =
         err?.response?.data?.message ??
-        'Não foi possível carregar os tutorial. Tente novamente mais tarde!';
+        'Não foi possível carregar os tutoriais. Tente novamente mais tarde!';
       toast.error(errMessage);
       return [] as GetAllTutorialsResponse;
     });
 
 const getTutorial = async (tutorialId: string) =>
   api
-    .get<Tutorial>(`${TUTORIALS_ENDPOINT}/tutorials/${tutorialId}`)
+    .get<Tutorial>(`${TUTORIAL_ENDPOINT}/tutorials/${tutorialId}`)
     .then((response) => response.data)
     .catch(() => {
       toast.error(
@@ -34,7 +32,7 @@ const getTutorial = async (tutorialId: string) =>
       return null;
     });
 
-export const useGetAllTutorials = () =>
+export const useGetallTutorials = () =>
   useQuery([TUTORIALS_CACHE_KEYS.allTutorials], getAllTutorials);
 
 export const useGetTutorial = (tutorialId: string) =>

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Button, Flex, Text } from '@chakra-ui/react';
 import { Input } from '@/components/form-fields';
 import { CategoryTutorial } from '@/features/categories-tutorial/api/types';
+import { CategoryTutorialPayload } from '../../types';
 
 interface CategoryTutorialFormProps {
   defaultValues?: CategoryTutorial;

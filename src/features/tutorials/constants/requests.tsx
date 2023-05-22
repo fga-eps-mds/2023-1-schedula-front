@@ -1,2 +1,2 @@
-export const TUTORIALS_ENDPOINT =
+export const TUTORIAL_ENDPOINT =
   import.meta.env.VITE_PUBLIC_GERENCIADOR_DE_TUTORIAIS_URL ?? '';
