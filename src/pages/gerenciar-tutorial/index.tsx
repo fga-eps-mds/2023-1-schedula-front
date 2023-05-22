@@ -18,7 +18,6 @@ import { Input } from '@/components/form-fields';
 import { ListView } from '@/components/list';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
-import { TutorialItem } from '@/features/tutorials/components/tutorial-item';
 import { Tutorial } from '@/features/tutorials/type';
 import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
 import { Permission } from '@/components/permission';
@@ -26,6 +25,7 @@ import {
   chakraStyles,
   customComponents,
 } from '@/components/form-fields/controlled-select/styles';
+import { TutorialItemManager } from '@/features/tutorials/components/tutorial-item-manager';
 
 export function GerenciarTutoriais() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,7 +78,7 @@ export function GerenciarTutoriais() {
   const renderTutorialItem = useCallback(
     (tutorial: Tutorial) => {
       return (
-        <TutorialItem
+        <TutorialItemManager
           tutorial={tutorial}
           onEdit={() => onEdit(tutorial)}
           onDelete={() => {
