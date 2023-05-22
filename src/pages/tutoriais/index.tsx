@@ -70,6 +70,7 @@ export function Tutoriais() {
         (tutorial) => tutorial.category.name === selectedCategory
       );
     }
+    updatedTutorials.sort((a, b) => a.name.localeCompare(b.name));
     setFilteredTutorials(updatedTutorials);
   }, [tutorials, selectedCategory, handleResetFilters]);
 
