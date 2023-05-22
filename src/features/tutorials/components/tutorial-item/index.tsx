@@ -32,23 +32,22 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
           </HStack>
         }
       >
-        <Permission allowedRoles={['BASIC' || 'USER']}>
-          <IconButton
-            aria-label="Download Tutorial"
-            onClick={() => handleOpenFile(tutorial)}
-            variant="ghost"
-            display="block"
-            position="absolute"
-            top={0}
-            bottom={0}
-            left={0}
-            right={0}
-            width="100%"
-            height="100%"
-            opacity={0}
-          />
+        <IconButton
+          aria-label="Download Tutorial"
+          onClick={() => handleOpenFile(tutorial)}
+          variant="ghost"
+          display="block"
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={0}
+          right={0}
+          width="100%"
+          height="100%"
+          opacity={0}
+        />
+        <ItemActions item={tutorial}>
           <Button
-            aria-label="Download Tutorial"
             leftIcon={<HiDownload />}
             onClick={() => handleOpenFile(tutorial)}
             variant="outline"
@@ -56,42 +55,10 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
             color="black"
             borderColor="transparent"
             borderWidth={0}
-            marginTop="20px"
           >
             Download
           </Button>
-        </Permission>
-
-        <Permission allowedRoles={['ADMIN']}>
-          <IconButton
-            aria-label="Download Tutorial"
-            onClick={() => handleOpenFile(tutorial)}
-            variant="ghost"
-            display="block"
-            position="absolute"
-            top={0}
-            bottom={0}
-            left={0}
-            right={0}
-            width="100%"
-            height="100%"
-            opacity={0}
-          />
-          <ItemActions item={tutorial}>
-            <Button
-              aria-label="Download Tutorial"
-              leftIcon={<HiDownload />}
-              onClick={() => handleOpenFile(tutorial)}
-              variant="outline"
-              colorScheme="orange"
-              color="black"
-              borderColor="transparent"
-              borderWidth={0}
-            >
-              Download
-            </Button>
-          </ItemActions>
-        </Permission>
+        </ItemActions>
       </Item>
     </div>
   );

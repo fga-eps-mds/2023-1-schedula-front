@@ -39,8 +39,6 @@ describe('TutorialItem', () => {
     );
 
     const downloadButton = queryByLabelText('Download Tutorial');
-    if (downloadButton) {
-      expect(downloadButton).toBeInTheDocument();
-    }
+    expect(downloadButton).toBeInTheDocument();
   });
 });

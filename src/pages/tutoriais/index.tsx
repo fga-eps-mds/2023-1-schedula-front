@@ -21,6 +21,7 @@ import {
   chakraStyles,
   customComponents,
 } from '@/components/form-fields/controlled-select/styles';
+import { Permission } from '@/components/permission';
 
 export function Tutoriais() {
   const { data: tutorials, isLoading } = useGetallTutorials();
@@ -107,19 +108,21 @@ export function Tutoriais() {
   return (
     <>
       <PageHeader title="Tutoriais">
-        <Button
-          variant="primary"
-          onClick={() => navigate('categorias_de_tutorial')}
-        >
-          Gerenciamento de categorias
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => navigate('gerenciar-tutorial')}
-          style={{ marginLeft: 30 }}
-        >
-          Gerenciar tutoriais
-        </Button>
+        <Permission allowedRoles={['ADMIN']}>
+          <Button
+            variant="primary"
+            onClick={() => navigate('categorias_de_tutorial')}
+          >
+            Gerenciamento de categorias
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => navigate('gerenciar-tutorial')}
+            style={{ marginLeft: 30 }}
+          >
+            Gerenciar tutoriais
+          </Button>
+        </Permission>
       </PageHeader>
 
       <Grid templateColumns="repeat(2, 1fr)" gap={8} marginBottom="4">
