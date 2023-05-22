@@ -34,7 +34,7 @@ describe('TutorialItem', () => {
     const { queryByLabelText } = render(
       <TutorialItem
         tutorial={mockedTutorial}
-        {...{ openFile: vi.fn(() => {}) }}
+        {...{ handleOpenFile: vi.fn(() => {}) }}
       />
     );
 

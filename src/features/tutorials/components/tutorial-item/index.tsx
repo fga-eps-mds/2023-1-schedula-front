@@ -1,6 +1,5 @@
 import { HStack, IconButton, Button } from '@chakra-ui/react';
 import { HiDownload } from 'react-icons/hi';
-import { saveAs } from 'file-saver';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
@@ -14,8 +13,13 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
   const openFile = (tutorial: Tutorial) => {
     const byteArray = new Uint8Array(tutorial.data.data);
     const blob = new Blob([byteArray], { type: 'application/pdf' });
-    const file = new File([blob], tutorial.filename);
-    saveAs(file, tutorial.filename);
+    const fileUrl = URL.createObjectURL(blob);
+    return fileUrl;
+  };
+
+  const handleOpenFile = (tutorial: Tutorial) => {
+    const fileUrl = openFile(tutorial);
+    window.open(fileUrl, '_blank');
   };
 
   return (
@@ -31,7 +35,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
         <Permission allowedRoles={['BASIC' || 'USER']}>
           <IconButton
             aria-label="Download Tutorial"
-            onClick={() => openFile(tutorial)}
+            onClick={() => handleOpenFile(tutorial)}
             variant="ghost"
             display="block"
             position="absolute"
@@ -46,7 +50,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
           <Button
             aria-label="Download Tutorial"
             leftIcon={<HiDownload />}
-            onClick={() => openFile(tutorial)}
+            onClick={() => handleOpenFile(tutorial)}
             variant="outline"
             colorScheme="orange"
             color="black"
@@ -61,7 +65,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
         <Permission allowedRoles={['ADMIN']}>
           <IconButton
             aria-label="Download Tutorial"
-            onClick={() => openFile(tutorial)}
+            onClick={() => handleOpenFile(tutorial)}
             variant="ghost"
             display="block"
             position="absolute"
@@ -77,7 +81,7 @@ export function TutorialItem({ tutorial }: TutorialItemProps) {
             <Button
               aria-label="Download Tutorial"
               leftIcon={<HiDownload />}
-              onClick={() => openFile(tutorial)}
+              onClick={() => handleOpenFile(tutorial)}
               variant="outline"
               colorScheme="orange"
               color="black"
