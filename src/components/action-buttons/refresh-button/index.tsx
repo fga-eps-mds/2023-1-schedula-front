@@ -12,7 +12,6 @@ export function RefreshButton({ refresh }: RefreshButtonProps) {
   const handleRefresh = useCallback(() => {
     setIsLoading(true);
     refresh?.().finally(() => setIsLoading(false));
-    console.log('Refresh clicado');
   }, [refresh]);
 
   return (

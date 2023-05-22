@@ -11,6 +11,7 @@ export interface IRoute {
   label: string;
   pathname: string;
   icon?: IconType;
+  allowedUsersPath: string[];
 }
 
 export const routes: IRoute[] = [
@@ -18,45 +19,54 @@ export const routes: IRoute[] = [
     label: 'Chamados',
     pathname: '/chamados',
     icon: MdOutlineViewAgenda,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Agendamentos',
     pathname: '/agendamentos',
     icon: RiCalendarEventLine,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Exportar Agendamentos',
     pathname: '/exportar/agendamentos',
     icon: AiOutlineExport,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Registrar Chamado',
     pathname: '/chamados/registrar',
     icon: BsTelephonePlus,
+    allowedUsersPath: ['ADMIN', 'BASIC'],
   },
   {
     label: 'Categorias de Problema',
     pathname: '/categorias',
     icon: BsTags,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Cidades',
     pathname: '/cidades',
     icon: BsSignpost2,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Postos de Trabalho',
     pathname: '/postos-de-trabalho',
     icon: FiMapPin,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Usuários',
     pathname: '/usuarios',
     icon: FaUsersCog,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
     label: 'Tutoriais',
     pathname: '/tutoriais',
     icon: TbBulb,
+    allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
 ];

@@ -6,7 +6,7 @@ import { CategoryTutorial } from '../../types';
 
 const mockedCategoryTutorial: CategoryTutorial = {
   id: '1',
-  name: 'Goiânia',
+  name: 'Rede',
 };
 
 const mockedOnEditFunction = vi.fn(() => {});
@@ -15,7 +15,7 @@ const mockedOnDeleteFunction = vi.fn(
 );
 
 describe('CategoryTutorialItem', () => {
-  it('should display the name of the city correctly', async () => {
+  it('should display the name of the category correctly', async () => {
     const { findAllByText } = render(
       <CategoryTutorialItem
         categoryTutorial={mockedCategoryTutorial}
@@ -29,7 +29,7 @@ describe('CategoryTutorialItem', () => {
     expect(name[0]).toBeInTheDocument();
   });
 
-  it('should be able to edit a city', async () => {
+  it('should be able to edit a category', async () => {
     const { queryByLabelText } = render(
       <CategoryTutorialItem
         categoryTutorial={mockedCategoryTutorial}
@@ -48,7 +48,7 @@ describe('CategoryTutorialItem', () => {
     }
   });
 
-  it('should be able to delete a city', async () => {
+  it('should be able to delete a category', async () => {
     const { queryByLabelText } = render(
       <CategoryTutorialItem
         categoryTutorial={mockedCategoryTutorial}

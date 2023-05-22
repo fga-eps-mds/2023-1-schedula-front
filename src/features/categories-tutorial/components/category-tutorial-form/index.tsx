@@ -40,7 +40,7 @@ export function CategoryTutorialForm({
         <Input
           label="Nome"
           {...register('name', { required: 'Campo obrigatório' })}
-          errors={errors?.name}
+          errors={errors?.name ?? undefined}
           placeholder="Nome"
         />
       </Flex>
