@@ -75,18 +75,6 @@ export function GerenciarTutoriais() {
     [tutorials]
   );
 
-  const handleSearchCategory = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const searchText = event.target.value.toLowerCase();
-      console.log(searchText);
-      const filteredTutorials = tutorials?.filter((tutorial) =>
-        tutorial.category.name.toLowerCase().includes(searchText)
-      );
-      setFilteredTutorials(filteredTutorials || []);
-    },
-    [tutorials]
-  );
-
   const renderTutorialItem = useCallback(
     (tutorial: Tutorial) => {
       return (
@@ -177,7 +165,6 @@ export function GerenciarTutoriais() {
             errors={undefined}
           />
         </div>
-        {/*  <Icon as={FaSearch} boxSize={4} color="gray.400" marginRight={3} /> */}
 
         <div style={{ alignItems: 'center', marginTop: 7 }}>
           <Select
@@ -208,28 +195,7 @@ export function GerenciarTutoriais() {
             components={customComponents}
           />
         </div>
-
-        {/* <Input
-            placeholder="Pesquisar Categorias"
-            onChange={handleSearchCategory}
-            _placeholder={{ color: 'gray.400' }}
-          /> */}
       </Grid>
-
-      {/* <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginTop: 20,
-          marginBottom: 20,
-        }}
-      >
-        <Button onClick={onDelete} width="10%">
-          Excluir Tutorial
-        </Button>
-      </div> */}
-
-      {/* <DeleteTutorialModal isOpen={isOpenDelete} onClose={onCloseDelete} /> */}
 
       <TutorialModal
         isOpen={isOpen}

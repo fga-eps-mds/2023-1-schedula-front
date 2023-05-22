@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { GrDocumentPdf } from 'react-icons/gr';
 import { ControlledSelect, Input } from '@/components/form-fields';
 import { TutorialPayload, File } from '../../type';
@@ -39,14 +39,12 @@ export function TutorialForm({
   }));
 
   const [fileName, setFileName] = useState<File>();
-  const inputRef = useRef();
 
   const handleDragOver = (event: any) => {
     event.preventDefault();
   };
   const handleDrop = (event: any) => {
     event.preventDefault();
-    // console.log(event.dataTransfer.files[0]);
     setFileName(event.dataTransfer.files[0]);
   };
 
@@ -63,13 +61,6 @@ export function TutorialForm({
         errors={errors?.name}
       />
 
-      {/* <Input
-        label="ID da categoria"
-        {...register('category_id', { required: 'Campo obrigatório' })}
-        placeholder="Digite o id da categoria"
-        errors={errors?.name}
-      /> */}
-
       <ControlledSelect
         control={control}
         name="category_id"
@@ -78,6 +69,7 @@ export function TutorialForm({
         isLoading={isLoadingCategories}
         placeholder="Categoria"
         label="Categoria"
+        rules={{ required: 'Campo obrigatório.' }}
       />
 
       <div
@@ -137,17 +129,6 @@ export function TutorialForm({
           </span>
         </span>
       </div>
-
-      {/* <Input
-          id="fileinput"
-          label=""
-          type="file"
-          // Call handleFile function when a file is selected before uploading
-          {...register('file', { required: 'Campo obrigatório' })}
-          placeholder="Escolha um arquivo e jogue"
-          errors={errors?.name}
-          // ref={inputRef}
-        /> */}
 
       {nomeArquivo && (
         <div
