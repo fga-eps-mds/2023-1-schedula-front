@@ -23,7 +23,6 @@ import {
 } from '@/components/form-fields/controlled-select/styles';
 
 export function Tutoriais() {
-
   const { data: tutorials, isLoading } = useGetallTutorials();
 
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
