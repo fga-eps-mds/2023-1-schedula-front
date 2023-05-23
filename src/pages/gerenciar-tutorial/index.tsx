@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Grid,
   HStack,
   Icon,
@@ -12,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
 import { FaSearch, FaTags, FaTimes } from 'react-icons/fa';
 import { Props, Select } from 'chakra-react-select';
+import { is } from 'date-fns/locale';
 import { PageHeader } from '@/components/page-header';
 import { TutorialModal } from '@/features/tutorials/components/tutorial-modal';
 import { Input } from '@/components/form-fields';
@@ -26,9 +28,15 @@ import {
   customComponents,
 } from '@/components/form-fields/controlled-select/styles';
 import { TutorialItemManager } from '@/features/tutorials/components/tutorial-item-manager';
+import { DeleteTutorialModal } from '@/features/tutorials/components/delete-tutorial-modal';
 
 export function GerenciarTutoriais() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
 
   const [tutorialToEdit, setTutorialToEdit] = useState<Tutorial>();
 
@@ -47,6 +55,15 @@ export function GerenciarTutoriais() {
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
     tutorials || []
   );
+
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+
+  const handleSelect = () => {
+    setIsSelected(true);
+    if (isSelected) {
+      setIsSelected(false);
+    }
+  };
 
   const onEdit = useCallback(
     (tutorial: Tutorial) => {
@@ -78,19 +95,22 @@ export function GerenciarTutoriais() {
   const renderTutorialItem = useCallback(
     (tutorial: Tutorial) => {
       return (
-        <TutorialItemManager
-          tutorial={tutorial}
-          onEdit={() => onEdit(tutorial)}
-          onDelete={() => {
-            if (tutorial.id) {
-              onDelete(tutorial.id);
-            }
-          }}
-          isDeleting={isRemovingTutorial}
-        />
+        <div>
+          <TutorialItemManager
+            tutorial={tutorial}
+            onEdit={() => onEdit(tutorial)}
+            onDelete={() => {
+              if (tutorial.id) {
+                onDelete(tutorial.id);
+              }
+            }}
+            isDeleting={isRemovingTutorial}
+            isSelected={isSelected}
+          />
+        </div>
       );
     },
-    [onDelete, onEdit, isRemovingTutorial]
+    [onDelete, onEdit, isRemovingTutorial, isSelected]
   );
 
   const [selectedState, setSelectedState] = useState<string>('');
@@ -196,6 +216,19 @@ export function GerenciarTutoriais() {
           />
         </div>
       </Grid>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button style={{ marginBottom: '15px' }} onClick={handleSelect}>
+          Selecionar tutoriais
+        </Button>
+        {isSelected && (
+          <Button style={{ marginBottom: '15px' }} onClick={onOpenDelete}>
+            Excluir tutoriais
+          </Button>
+        )}
+      </div>
+
+      <DeleteTutorialModal isOpen={isOpenDelete} onClose={onCloseDelete} />
 
       <TutorialModal
         isOpen={isOpen}
