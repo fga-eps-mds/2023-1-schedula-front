@@ -63,10 +63,14 @@ export function GerenciarTutoriais() {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [tutorialsSelected, setTutorialsSelected] = useState<string[]>([]);
 
-  const resetSelectedTutorials = useCallback(() => {
+  const resetSelectedTutorials = useCallback(async () => {
     setTutorialsSelected([]);
     setIsSelected(false);
-    refetch();
+    try {
+      await refetch();
+    } catch (error) {
+      console.log(error);
+    }
   }, [refetch]);
 
   const handleSelect = () => {
@@ -92,12 +96,16 @@ export function GerenciarTutoriais() {
     [deleteTutorial]
   );
 
-  const onDeleteMany = useCallback(() => {
+  const onDeleteMany = useCallback(async () => {
     deleteTutorials({ tutorialsIds: tutorialsSelected });
     resetSelectedTutorials();
     onCloseDelete();
     // Refresh list
-    refetch();
+    try {
+      await refetch();
+    } catch (error) {
+      console.log(error);
+    }
   }, [
     deleteTutorials,
     onCloseDelete,
