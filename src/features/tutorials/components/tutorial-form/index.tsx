@@ -108,7 +108,7 @@ export function TutorialForm({
             // Call handleFile function when a file is selected before uploading
             {...register('file', { required: 'Campo obrigatório' })}
             placeholder="Escolha um arquivo e jogue"
-            errors={errors?.name}
+            errors={errors?.file}
             onChange={(event) => {
               const { files } = event.target;
               if (files) {
