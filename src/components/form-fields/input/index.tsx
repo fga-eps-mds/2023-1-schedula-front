@@ -14,7 +14,7 @@ import {
 
 export interface InputProps extends ChakraInputProps {
   label: string | JSX.Element;
-  errors: FieldError | undefined;
+  errors?: FieldError | undefined;
   rightElement?: ReactElement<InputElementProps>;
   leftElement?: ReactElement<InputElementProps>;
   rightAddon?: ReactElement<InputAddonProps>;

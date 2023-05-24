@@ -11,6 +11,9 @@ import { DefaultLayout } from '@/components/layout/default-layout';
 import { RegistrarChamado } from '@/pages/chamados/registrar';
 import { Agendamentos } from '@/pages/agendamentos';
 import { ScheduleExport } from '@/pages/exportacao_agendamentos';
+import { Tutoriais } from '@/pages/tutoriais';
+import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
+import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
 
 export function Router() {
   return (
@@ -97,6 +100,30 @@ export function Router() {
           element={
             <RequireAuth>
               <ListaProblemas />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="tutoriais"
+          element={
+            <RequireAuth>
+              <Tutoriais />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="tutoriais/categorias_de_tutorial"
+          element={
+            <RequireAuth>
+              <CategoriasTutorial />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="tutoriais/gerenciar-tutorial"
+          element={
+            <RequireAuth>
+              <GerenciarTutoriais />
             </RequireAuth>
           }
         />

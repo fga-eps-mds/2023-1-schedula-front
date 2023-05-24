@@ -4,8 +4,8 @@ import { ActionsProps } from '@/components/list-item/list-item-actions';
 
 export interface ItemProps<Data> {
   title: string | JSX.Element;
-  description: string | JSX.Element;
-  children?: ReactElement<ActionsProps<Data>>;
+  description?: string | JSX.Element;
+  children?: ReactElement<ActionsProps<Data>> | JSX.Element | JSX.Element[];
 }
 
 export const customDivider = {
