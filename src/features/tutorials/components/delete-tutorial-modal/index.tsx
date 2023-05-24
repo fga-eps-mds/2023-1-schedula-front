@@ -15,7 +15,7 @@ export function DeleteTutorialModal({
 }: TutorialModalProps) {
   return (
     <Modal size="2xl" title="Atenção" onClose={onClose} {...props}>
-      <DeleteTutorialForm tutorialsIds={tutorialsIds} />
+      <DeleteTutorialForm tutorialsIds={tutorialsIds} onClose={onClose} />
     </Modal>
   );
 }

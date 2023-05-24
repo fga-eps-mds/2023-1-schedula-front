@@ -231,7 +231,7 @@ export function GerenciarTutoriais() {
         <Button style={{ marginBottom: '15px' }} onClick={handleSelect}>
           Selecionar tutoriais
         </Button>
-        {isSelected && (
+        {tutorialsSelected.length > 0 && (
           <Button style={{ marginBottom: '15px' }} onClick={onOpenDelete}>
             Excluir tutoriais
           </Button>

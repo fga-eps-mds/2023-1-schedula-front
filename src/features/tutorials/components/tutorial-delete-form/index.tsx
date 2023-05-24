@@ -3,16 +3,27 @@ import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
 
 interface DeleteTutorialFormProps extends Partial<ModalProps> {
   tutorialsIds: string[];
+  onClose: () => void;
 }
 
-export function DeleteTutorialForm({ tutorialsIds }: DeleteTutorialFormProps) {
+export function DeleteTutorialForm({
+  tutorialsIds,
+  onClose,
+}: DeleteTutorialFormProps) {
   const { mutate: deleteTutorial, isLoading: isRemovingTutorial } =
     useDeleteTutorial();
 
-  const handleDeleteTutorials = () => {
+  const handleDeleteTutorials = (e) => {
+    e.preventDefault();
     tutorialsIds.forEach((tutorialId) => {
       deleteTutorial({ tutorialId });
     });
+    onClose();
+  };
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    onClose();
   };
 
   return (
@@ -25,7 +36,7 @@ export function DeleteTutorialForm({ tutorialsIds }: DeleteTutorialFormProps) {
       </p>
 
       <Grid templateColumns="1fr 0fr" style={{ paddingTop: 20 }}>
-        <Button type="submit" width="45%">
+        <Button type="submit" width="45%" onClick={handleClose}>
           Cancelar
         </Button>
         <Button type="submit" width="45%" onClick={handleDeleteTutorials}>
