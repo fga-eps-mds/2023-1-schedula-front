@@ -1,6 +1,20 @@
-import { Button, Grid } from '@chakra-ui/react';
+import { Button, Grid, ModalProps } from '@chakra-ui/react';
+import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
 
-export function DeleteTutorialForm() {
+interface DeleteTutorialFormProps extends Partial<ModalProps> {
+  tutorialsIds: string[];
+}
+
+export function DeleteTutorialForm({ tutorialsIds }: DeleteTutorialFormProps) {
+  const { mutate: deleteTutorial, isLoading: isRemovingTutorial } =
+    useDeleteTutorial();
+
+  const handleDeleteTutorials = () => {
+    tutorialsIds.forEach((tutorialId) => {
+      deleteTutorial({ tutorialId });
+    });
+  };
+
   return (
     <form>
       <p style={{ fontWeight: 'bold', textAlign: 'center' }}>
@@ -14,7 +28,7 @@ export function DeleteTutorialForm() {
         <Button type="submit" width="45%">
           Cancelar
         </Button>
-        <Button type="submit" width="45%">
+        <Button type="submit" width="45%" onClick={handleDeleteTutorials}>
           Confirmar
         </Button>
       </Grid>

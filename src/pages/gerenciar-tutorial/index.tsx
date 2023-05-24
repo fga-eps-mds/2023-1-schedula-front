@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   Grid,
   HStack,
   Icon,
@@ -13,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
 import { FaSearch, FaTags, FaTimes } from 'react-icons/fa';
 import { Props, Select } from 'chakra-react-select';
-import { is } from 'date-fns/locale';
 import { PageHeader } from '@/components/page-header';
 import { TutorialModal } from '@/features/tutorials/components/tutorial-modal';
 import { Input } from '@/components/form-fields';
@@ -57,6 +55,7 @@ export function GerenciarTutoriais() {
   );
 
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [tutorialsSelected, setTutorialsSelected] = useState<string[]>([]);
 
   const handleSelect = () => {
     setIsSelected(true);
@@ -92,6 +91,16 @@ export function GerenciarTutoriais() {
     [tutorials]
   );
 
+  const handleCheckedTutorial = (value: string, checked: boolean) => {
+    if (checked) {
+      setTutorialsSelected((prevSelected) => [...prevSelected, value]);
+    } else {
+      setTutorialsSelected((prevSelected) =>
+        prevSelected.filter((item) => item !== value)
+      );
+    }
+  };
+
   const renderTutorialItem = useCallback(
     (tutorial: Tutorial) => {
       return (
@@ -99,6 +108,7 @@ export function GerenciarTutoriais() {
           <TutorialItemManager
             tutorial={tutorial}
             onEdit={() => onEdit(tutorial)}
+            onChecked={handleCheckedTutorial}
             onDelete={() => {
               if (tutorial.id) {
                 onDelete(tutorial.id);
@@ -228,7 +238,11 @@ export function GerenciarTutoriais() {
         )}
       </div>
 
-      <DeleteTutorialModal isOpen={isOpenDelete} onClose={onCloseDelete} />
+      <DeleteTutorialModal
+        isOpen={isOpenDelete}
+        onClose={onCloseDelete}
+        tutorialsIds={tutorialsSelected}
+      />
 
       <TutorialModal
         isOpen={isOpen}

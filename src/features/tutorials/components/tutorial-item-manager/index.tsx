@@ -12,6 +12,7 @@ interface TutorialItemManagerProps {
   onDelete: (tutorialId: string) => void;
   isDeleting: boolean;
   isSelected: boolean;
+  onChecked: (value: string, checked: boolean) => void;
 }
 
 export function TutorialItemManager({
@@ -20,10 +21,24 @@ export function TutorialItemManager({
   onDelete,
   isDeleting,
   isSelected,
+  onChecked,
 }: TutorialItemManagerProps) {
+  const handleCheckbox = (event: { target: { value: any; checked: any } }) => {
+    const { value, checked } = event.target;
+    onChecked(value, checked);
+  };
+
   return (
     <div style={{ display: 'flex' }}>
-      {isSelected && <Checkbox style={{ marginRight: '10px' }} />}
+      {isSelected && (
+        <Checkbox
+          style={{ marginRight: '10px' }}
+          onChange={(event) => {
+            handleCheckbox(event);
+          }}
+          value={tutorial?.id}
+        />
+      )}
       <Item
         title={`${tutorial?.name}`}
         description={
