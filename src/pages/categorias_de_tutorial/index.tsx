@@ -28,11 +28,14 @@ export function CategoriasTutorial() {
   const [categoryTutorialToEdit, setCategoryTutorialToEdit] =
     useState<CategoryTutorial>();
 
+  const [modalClosed, setModalClosed] = useState(false);
+  const [aux, setAux] = useState(0);
+
   const {
     data: categoriesTutorial,
     isLoading,
     refetch,
-  } = useGetAllCategoryTutorial();
+  } = useGetAllCategoryTutorial(aux);
 
   const [filteredCategoriesTutorial, setFilteredCategoriesTutorial] = useState<
     CategoryTutorial[]
@@ -55,6 +58,8 @@ export function CategoriasTutorial() {
     (categoryTutorialId: string) => {
       deleteCategoryTutorial({ categoryTutorialId });
       refetch();
+      console.log('62');
+      setModalClosed((prevModalClosed) => !prevModalClosed);
     },
     [deleteCategoryTutorial, refetch]
   );
@@ -62,6 +67,8 @@ export function CategoriasTutorial() {
   const handleClose = useCallback(() => {
     setCategoryTutorialToEdit(undefined);
     onClose();
+    console.log('70');
+    setModalClosed((prevModalClosed) => !prevModalClosed);
   }, [onClose]);
 
   const renderCategoryTutorialItem = useCallback(
@@ -92,6 +99,22 @@ export function CategoriasTutorial() {
     const updatedCategoriesTutorial = categoriesTutorial || [];
     setFilteredCategoriesTutorial(updatedCategoriesTutorial);
   }, [categoriesTutorial]);
+
+  useEffect(() => {
+    let i = 0;
+    setAux(i);
+    const interval = setInterval(() => {
+      console.log('refetch: ', i);
+      refetch?.();
+      if (i >= 3) {
+        setAux(i - i);
+        clearInterval(interval);
+      }
+      i += 1;
+      setAux(i);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [modalClosed, refetch]);
 
   return (
     <>

@@ -9,7 +9,7 @@ import { CategoryTutorial } from '@/features/categories-tutorial/api/types';
 
 export type GetAllCategoryTutorialResponse = Array<CategoryTutorial>;
 
-export const getAllCategoryTutorial = async () =>
+export const getAllCategoryTutorial = async (count: number) =>
   api
     .get<GetAllCategoryTutorialResponse>(
       `${CATEGORIES_TUTORIAL_ENDPOINT}/categories`
@@ -19,7 +19,9 @@ export const getAllCategoryTutorial = async () =>
       const errMessage =
         err?.response?.data?.message ??
         'Não foi possível carregar as categorias. Tente novamente mais tarde!';
-      toast.error(errMessage);
+      if (count === 1) {
+        toast.error(errMessage);
+      }
       return [] as GetAllCategoryTutorialResponse;
     });
 
@@ -36,10 +38,9 @@ const getCategoryTutorial = async (categoryTutorialId: string) =>
       return null;
     });
 
-export const useGetAllCategoryTutorial = () =>
-  useQuery(
-    [CATEGORIES_TUTORIAL_CACHE_KEYS.allCategoriesTutorial],
-    getAllCategoryTutorial
+export const useGetAllCategoryTutorial = (count: number) =>
+  useQuery([CATEGORIES_TUTORIAL_CACHE_KEYS.allCategoriesTutorial], () =>
+    getAllCategoryTutorial(count)
   );
 
 export const useGetCategoryTutorial = (categoryTutorialId: string) =>

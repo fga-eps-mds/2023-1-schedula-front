@@ -31,7 +31,7 @@ export function TutorialForm({
   });
 
   const { data: categories, isLoading: isLoadingCategories } =
-    useGetAllCategoryTutorial();
+    useGetAllCategoryTutorial(0);
 
   const categoryOptions = categories?.map((category) => ({
     label: category?.name,
