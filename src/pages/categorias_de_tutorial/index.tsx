@@ -58,7 +58,6 @@ export function CategoriasTutorial() {
     (categoryTutorialId: string) => {
       deleteCategoryTutorial({ categoryTutorialId });
       refetch();
-      console.log('62');
       setModalClosed((prevModalClosed) => !prevModalClosed);
     },
     [deleteCategoryTutorial, refetch]
@@ -67,7 +66,6 @@ export function CategoriasTutorial() {
   const handleClose = useCallback(() => {
     setCategoryTutorialToEdit(undefined);
     onClose();
-    console.log('70');
     setModalClosed((prevModalClosed) => !prevModalClosed);
   }, [onClose]);
 
@@ -103,11 +101,10 @@ export function CategoriasTutorial() {
   useEffect(() => {
     let i = 0;
     setAux(i);
-    const interval = setInterval(() => {
-      console.log('refetch: ', i);
-      refetch?.();
+    const interval = setInterval(async () => {
+      await refetch?.();
       if (i >= 3) {
-        setAux(i - i);
+        setAux(0);
         clearInterval(interval);
       }
       i += 1;
