@@ -20,6 +20,7 @@ import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { Tutorial } from '@/features/tutorials/type';
 import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
+import { useDeleteTutorials } from '@/features/tutorials/api/detele-tutorials';
 import { Permission } from '@/components/permission';
 import {
   chakraStyles,
@@ -50,6 +51,9 @@ export function GerenciarTutoriais() {
   const { mutate: deleteTutorial, isLoading: isRemovingTutorial } =
     useDeleteTutorial();
 
+  const { mutate: deleteTutorials, isLoading: isRemovingTutorials } =
+    useDeleteTutorials();
+
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
     tutorials || []
   );
@@ -61,6 +65,7 @@ export function GerenciarTutoriais() {
     setIsSelected(true);
     if (isSelected) {
       setIsSelected(false);
+      resetSelectedTutorials();
     }
   };
 
@@ -79,6 +84,14 @@ export function GerenciarTutoriais() {
     [deleteTutorial]
   );
 
+  const onDeleteMany = useCallback(() => {
+    deleteTutorials({tutorialsIds: tutorialsSelected});
+    resetSelectedTutorials();
+    onCloseDelete();
+    // Refresh list
+    refetch();
+  }, [deleteTutorials, onCloseDelete, isRemovingTutorials, tutorialsSelected]);
+
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const searchText = event.target.value.toLowerCase();
@@ -86,7 +99,6 @@ export function GerenciarTutoriais() {
         tutorial.name.toLowerCase().includes(searchText)
       );
       setFilteredTutorials(filteredTutorials || []);
-      // setSelectedState('');
     },
     [tutorials]
   );
@@ -155,6 +167,13 @@ export function GerenciarTutoriais() {
     setFilteredTutorials(tutorials || []);
     setSelectedState('');
   }, [tutorials]);
+
+
+  const resetSelectedTutorials = useCallback(() => {
+    setTutorialsSelected([]);
+    setIsSelected(false);
+    refetch();
+  }, [tutorialsSelected, refetch]);
 
   return (
     <>
@@ -241,6 +260,8 @@ export function GerenciarTutoriais() {
       <DeleteTutorialModal
         isOpen={isOpenDelete}
         onClose={onCloseDelete}
+        onClear={resetSelectedTutorials}
+        onDelete={onDeleteMany}
         tutorialsIds={tutorialsSelected}
       />
 

@@ -1,27 +1,32 @@
 import { Button, Grid, ModalProps } from '@chakra-ui/react';
 import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
+import { useCallback } from 'react';
 
 interface DeleteTutorialFormProps extends Partial<ModalProps> {
   tutorialsIds: string[];
   onClose: () => void;
+  onClear: () => void;
+  onDelete: () => void;
 }
 
 export function DeleteTutorialForm({
   tutorialsIds,
   onClose,
+  onClear,
+  onDelete,
 }: DeleteTutorialFormProps) {
-  const { mutate: deleteTutorial, isLoading: isRemovingTutorial } =
-    useDeleteTutorial();
 
-  const handleDeleteTutorials = (e) => {
-    e.preventDefault();
-    tutorialsIds.forEach((tutorialId) => {
-      deleteTutorial({ tutorialId });
-    });
-    onClose();
-  };
+  const handleDeleteTutorials = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.preventDefault();
+      onDelete();
+      onClear();
+      onClose();
+    },
+    [onDelete, onClear, onClose]
+  );
 
-  const handleClose = (e) => {
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     onClose();
   };
@@ -36,10 +41,10 @@ export function DeleteTutorialForm({
       </p>
 
       <Grid templateColumns="1fr 0fr" style={{ paddingTop: 20 }}>
-        <Button type="submit" width="45%" onClick={handleClose}>
+        <Button type="submit" width="45%" onClick={(e)=>handleClose(e)}>
           Cancelar
         </Button>
-        <Button type="submit" width="45%" onClick={handleDeleteTutorials}>
+        <Button type="submit" width="45%" onClick={(e)=>handleDeleteTutorials(e)}>
           Confirmar
         </Button>
       </Grid>
