@@ -3,14 +3,19 @@ import { api } from '@/config/lib/axios';
 import { TUTORIAL_ENDPOINT } from '@/features/tutorials/constants/requests';
 import { toast } from '@/utils/toast';
 import { TUTORIALS_CACHE_KEYS } from '@/features/tutorials/constants/cache';
-import { DeleteTutorialParams, DeleteTutorialsParams } from '@/features/tutorials/api/types';
+import {
+  DeleteTutorialParams,
+  DeleteTutorialsParams,
+} from '@/features/tutorials/api/types';
 
 function deleteTutorial({ tutorialId }: DeleteTutorialParams) {
   return api.delete<boolean>(`${TUTORIAL_ENDPOINT}/tutorials/${tutorialId}`);
 }
 
 function deleteTutorials({ tutorialsIds }: DeleteTutorialsParams) {
-  return api.delete<boolean>(`${TUTORIAL_ENDPOINT}/tutorials/delete-tutorials/${tutorialsIds}`);
+  return api.delete<boolean>(
+    `${TUTORIAL_ENDPOINT}/tutorials/delete-tutorials/${tutorialsIds}`
+  );
 }
 
 export function useDeleteTutorial() {

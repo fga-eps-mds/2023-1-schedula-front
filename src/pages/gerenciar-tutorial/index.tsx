@@ -19,8 +19,10 @@ import { ListView } from '@/components/list';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { Tutorial } from '@/features/tutorials/type';
-import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
-import { useDeleteTutorials } from '@/features/tutorials/api/detele-tutorials';
+import {
+  useDeleteTutorial,
+  useDeleteTutorials,
+} from '@/features/tutorials/api/detele-tutorials';
 import { Permission } from '@/components/permission';
 import {
   chakraStyles,
@@ -61,6 +63,12 @@ export function GerenciarTutoriais() {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [tutorialsSelected, setTutorialsSelected] = useState<string[]>([]);
 
+  const resetSelectedTutorials = useCallback(() => {
+    setTutorialsSelected([]);
+    setIsSelected(false);
+    refetch();
+  }, [refetch]);
+
   const handleSelect = () => {
     setIsSelected(true);
     if (isSelected) {
@@ -85,12 +93,18 @@ export function GerenciarTutoriais() {
   );
 
   const onDeleteMany = useCallback(() => {
-    deleteTutorials({tutorialsIds: tutorialsSelected});
+    deleteTutorials({ tutorialsIds: tutorialsSelected });
     resetSelectedTutorials();
     onCloseDelete();
     // Refresh list
     refetch();
-  }, [deleteTutorials, onCloseDelete, isRemovingTutorials, tutorialsSelected]);
+  }, [
+    deleteTutorials,
+    onCloseDelete,
+    tutorialsSelected,
+    refetch,
+    resetSelectedTutorials,
+  ]);
 
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,14 +180,7 @@ export function GerenciarTutoriais() {
   const resetFilter = useCallback(() => {
     setFilteredTutorials(tutorials || []);
     setSelectedState('');
-  }, [tutorials]);
-
-
-  const resetSelectedTutorials = useCallback(() => {
-    setTutorialsSelected([]);
-    setIsSelected(false);
-    refetch();
-  }, [tutorialsSelected, refetch]);
+  }, [tutorials, setSelectedState, setFilteredTutorials]);
 
   return (
     <>
