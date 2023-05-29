@@ -2,7 +2,6 @@ import { HStack, IconButton, Button } from '@chakra-ui/react';
 import { HiDownload } from 'react-icons/hi';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
-import { Permission } from '@/components/permission';
 import { Tutorial } from '@/features/tutorials/api/types';
 
 interface TutorialItemProps {

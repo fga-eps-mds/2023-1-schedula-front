@@ -2,13 +2,10 @@ import {
   AspectRatio,
   Box,
   Container,
-  Heading,
-  Icon,
   Input,
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { invert } from 'lodash';
 import { GrDocumentPdf } from 'react-icons/gr';
 
 export function InputFile() {

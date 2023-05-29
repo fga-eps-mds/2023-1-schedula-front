@@ -1,9 +1,3 @@
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactFragment,
-  ReactPortal,
-} from 'react';
 import { GrDocumentPdf } from 'react-icons/gr';
 
 export function TutorialFileCard() {
