@@ -24,12 +24,12 @@ export function Chamados() {
 
   return (
     <>
-      <PageHeader title="Chamados">
+      <PageHeader title="Atendimentos">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
           <Permission allowedRoles={['ADMIN', 'BASIC']}>
             <Link to="/chamados/registrar">
-              <Button variant="primary">Novo Chamado</Button>
+              <Button variant="primary">Novo Atendimento</Button>
             </Link>
           </Permission>
         </HStack>
