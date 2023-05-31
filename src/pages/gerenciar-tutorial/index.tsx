@@ -19,16 +19,25 @@ import { ListView } from '@/components/list';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { useGetallTutorials } from '@/features/tutorials/api/get-all-tutorials';
 import { Tutorial } from '@/features/tutorials/type';
-import { useDeleteTutorial } from '@/features/tutorials/api/detele-tutorials';
+import {
+  useDeleteTutorial,
+  useDeleteTutorials,
+} from '@/features/tutorials/api/detele-tutorials';
 import { Permission } from '@/components/permission';
 import {
   chakraStyles,
   customComponents,
 } from '@/components/form-fields/controlled-select/styles';
 import { TutorialItemManager } from '@/features/tutorials/components/tutorial-item-manager';
+import { DeleteTutorialModal } from '@/features/tutorials/components/delete-tutorial-modal';
 
 export function GerenciarTutoriais() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useDisclosure();
 
   const [tutorialToEdit, setTutorialToEdit] = useState<Tutorial>();
 
@@ -44,9 +53,33 @@ export function GerenciarTutoriais() {
   const { mutate: deleteTutorial, isLoading: isRemovingTutorial } =
     useDeleteTutorial();
 
+  const { mutate: deleteTutorials, isLoading: isRemovingTutorials } =
+    useDeleteTutorials();
+
   const [filteredTutorials, setFilteredTutorials] = useState<Tutorial[]>(
     tutorials || []
   );
+
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [tutorialsSelected, setTutorialsSelected] = useState<string[]>([]);
+
+  const resetSelectedTutorials = useCallback(async () => {
+    setTutorialsSelected([]);
+    setIsSelected(false);
+    try {
+      await refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [refetch]);
+
+  const handleSelect = () => {
+    setIsSelected(true);
+    if (isSelected) {
+      setIsSelected(false);
+      resetSelectedTutorials();
+    }
+  };
 
   const onEdit = useCallback(
     (tutorial: Tutorial) => {
@@ -63,6 +96,24 @@ export function GerenciarTutoriais() {
     [deleteTutorial]
   );
 
+  const onDeleteMany = useCallback(async () => {
+    deleteTutorials({ tutorialsIds: tutorialsSelected });
+    resetSelectedTutorials();
+    onCloseDelete();
+    // Refresh list
+    try {
+      await refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [
+    deleteTutorials,
+    onCloseDelete,
+    tutorialsSelected,
+    refetch,
+    resetSelectedTutorials,
+  ]);
+
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const searchText = event.target.value.toLowerCase();
@@ -70,27 +121,40 @@ export function GerenciarTutoriais() {
         tutorial.name.toLowerCase().includes(searchText)
       );
       setFilteredTutorials(filteredTutorials || []);
-      // setSelectedState('');
     },
     [tutorials]
   );
 
+  const handleCheckedTutorial = (value: string, checked: boolean) => {
+    if (checked) {
+      setTutorialsSelected((prevSelected) => [...prevSelected, value]);
+    } else {
+      setTutorialsSelected((prevSelected) =>
+        prevSelected.filter((item) => item !== value)
+      );
+    }
+  };
+
   const renderTutorialItem = useCallback(
     (tutorial: Tutorial) => {
       return (
-        <TutorialItemManager
-          tutorial={tutorial}
-          onEdit={() => onEdit(tutorial)}
-          onDelete={() => {
-            if (tutorial.id) {
-              onDelete(tutorial.id);
-            }
-          }}
-          isDeleting={isRemovingTutorial}
-        />
+        <div>
+          <TutorialItemManager
+            tutorial={tutorial}
+            onEdit={() => onEdit(tutorial)}
+            onChecked={handleCheckedTutorial}
+            onDelete={() => {
+              if (tutorial.id) {
+                onDelete(tutorial.id);
+              }
+            }}
+            isDeleting={isRemovingTutorial}
+            isSelected={isSelected}
+          />
+        </div>
       );
     },
-    [onDelete, onEdit, isRemovingTutorial]
+    [onDelete, onEdit, isRemovingTutorial, isSelected]
   );
 
   const [selectedState, setSelectedState] = useState<string>('');
@@ -124,7 +188,7 @@ export function GerenciarTutoriais() {
   const resetFilter = useCallback(() => {
     setFilteredTutorials(tutorials || []);
     setSelectedState('');
-  }, [tutorials]);
+  }, [tutorials, setSelectedState, setFilteredTutorials]);
 
   return (
     <>
@@ -196,6 +260,25 @@ export function GerenciarTutoriais() {
           />
         </div>
       </Grid>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button style={{ marginBottom: '15px' }} onClick={handleSelect}>
+          Selecionar tutoriais
+        </Button>
+        {tutorialsSelected.length > 0 && (
+          <Button style={{ marginBottom: '15px' }} onClick={onOpenDelete}>
+            Excluir tutoriais
+          </Button>
+        )}
+      </div>
+
+      <DeleteTutorialModal
+        isOpen={isOpenDelete}
+        onClose={onCloseDelete}
+        onClear={resetSelectedTutorials}
+        onDelete={onDeleteMany}
+        tutorialsIds={tutorialsSelected}
+      />
 
       <TutorialModal
         isOpen={isOpen}
