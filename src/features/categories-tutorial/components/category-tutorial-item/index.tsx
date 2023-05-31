@@ -1,4 +1,3 @@
-import { HStack } from '@chakra-ui/react';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { Item } from '@/components/list-item';

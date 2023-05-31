@@ -35,7 +35,7 @@ describe('Issues page', () => {
     );
 
     const heading = await findByRole('heading');
-    expect(heading).toHaveTextContent('Chamados');
+    expect(heading).toHaveTextContent('Atendimentos');
   });
 
   it('should display a list', async () => {
@@ -60,7 +60,7 @@ describe('Issues page', () => {
       </BrowserRouter>
     );
 
-    const button = await queryByText('Novo Chamado');
+    const button = await queryByText('Novo Atendimento');
     if (button) {
       expect(button).toBeInTheDocument();
     }

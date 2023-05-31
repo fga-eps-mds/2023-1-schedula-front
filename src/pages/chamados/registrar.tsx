@@ -8,9 +8,9 @@ export function RegistrarChamado() {
 
   return (
     <>
-      <PageHeader title="Novo Chamado">
+      <PageHeader title="Novo Atendimento">
         <Button variant="primary" onClick={() => navigate('/chamados')}>
-          Ver Chamados
+          Ver Atendimentos
         </Button>
       </PageHeader>
 

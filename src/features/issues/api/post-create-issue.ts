@@ -27,7 +27,7 @@ export function usePostCreateIssue({
     onSuccess(data: PostCreateIssueResponse) {
       queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
 
-      toast.success('Chamado criado com sucesso!');
+      toast.success('Atendimento criado com sucesso!');
 
       onSuccessCallBack?.(data);
     },
@@ -37,7 +37,7 @@ export function usePostCreateIssue({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar criar um chamado.'
+        'Houve um problema ao tentar criar um atendimento.'
       );
     },
   });
