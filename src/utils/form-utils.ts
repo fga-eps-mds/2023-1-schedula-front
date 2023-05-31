@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import { CHAMADO_PRIORITY, CHAMADO_STATUS } from '@/constants/chamados';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getSelectOptions = <T extends Record<string, any>>(

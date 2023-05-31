@@ -1,30 +1,30 @@
-import { useCallback } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { Modal } from '@/components/modal';
-import { PostCreateUserParams, User } from '@/features/users/api/types';
-import { usePostCreateUser } from '@/features/users/api/post-create-user';
-import { usePutUpdateUser } from '@/features/users/api/put-update-user';
-import {
-  UserForm,
-  UserFormValues,
-} from '@/features/users/components/user-form';
-import { TutorialForm } from '../tutorial-form';
 import { DeleteTutorialForm } from '../tutorial-delete-form';
 
 interface TutorialModalProps extends Partial<ModalProps> {
-  user?: User | undefined;
   isOpen: boolean;
+  tutorialsIds: string[];
   onClose: () => void;
+  onClear: () => void;
+  onDelete: () => void;
 }
 
 export function DeleteTutorialModal({
   onClose,
-  user,
+  onClear,
+  onDelete,
+  tutorialsIds,
   ...props
 }: TutorialModalProps) {
   return (
     <Modal size="2xl" title="Atenção" onClose={onClose} {...props}>
-      <DeleteTutorialForm />
+      <DeleteTutorialForm
+        tutorialsIds={tutorialsIds}
+        onClose={onClose}
+        onClear={onClear}
+        onDelete={onDelete}
+      />
     </Modal>
   );
 }

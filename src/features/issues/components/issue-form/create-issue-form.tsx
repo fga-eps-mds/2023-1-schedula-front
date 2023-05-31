@@ -246,7 +246,7 @@ export function CreateIssueForm() {
           <GridItem colSpan={2} display="flex" justifyContent="space-between">
             <Text color="gray" fontWeight="light" fontSize="12px">
               Atenção: Caso seja necessário, você poderá gerar um agendamento
-              após registrar o chamado
+              após registrar o atendimento
             </Text>
             <Button disabled={!createdIssue} onClick={onOpen}>
               Gerar Agendamento
@@ -284,7 +284,7 @@ export function CreateIssueForm() {
             color: '#F49320',
           })}
         >
-          {!createdIssue ? 'Registrar Chamado' : 'Ir para os chamados'}
+          {!createdIssue ? 'Registrar Atendimento' : 'Ir para os atendimentos'}
         </Button>
       </form>
 

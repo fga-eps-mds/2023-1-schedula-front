@@ -1,7 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
 import { vi } from 'vitest';
 import { CityItem } from '@/features/cities/components/city-item';
-import { useAuth } from '@/contexts/AuthContext';
 
 const mockedCity: City = {
   id: '1',
