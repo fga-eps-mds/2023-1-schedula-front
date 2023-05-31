@@ -34,7 +34,7 @@ export const routes: IRoute[] = [
     allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
   {
-    label: 'Registrar Chamado',
+    label: 'Registrar Atendimento',
     pathname: '/chamados/registrar',
     icon: BsTelephonePlus,
     allowedUsersPath: ['ADMIN', 'BASIC'],
