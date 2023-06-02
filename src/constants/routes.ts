@@ -6,6 +6,7 @@ import { MdOutlineViewAgenda } from 'react-icons/md';
 import { RiCalendarEventLine } from 'react-icons/ri';
 import { AiOutlineExport } from 'react-icons/ai';
 import { TbBulb } from 'react-icons/tb';
+import { BsCardChecklist } from 'react-icons/bs';
 
 export interface IRoute {
   label: string;
@@ -68,5 +69,11 @@ export const routes: IRoute[] = [
     pathname: '/tutoriais',
     icon: TbBulb,
     allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
+  },
+  {
+    label: 'Homologação',
+    pathname: '/homologacao',
+    icon: BsCardChecklist,
+    allowedUsersPath: ['ADMIN'],
   },
 ];

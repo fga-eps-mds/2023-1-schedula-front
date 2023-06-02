@@ -14,6 +14,7 @@ import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
 import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
+import { GerenciarHomologacao } from '@/pages/homologacao';
 
 export function Router() {
   return (
@@ -127,6 +128,14 @@ export function Router() {
             </RequireAuth>
           }
         />
+        <Route
+          path="homologacao"
+          element={
+            <RequireAuth>
+              <GerenciarHomologacao />
+            </RequireAuth>
+          }
+        />        
       </Route>
 
       {/* ROTAS PUBLICAS */}
