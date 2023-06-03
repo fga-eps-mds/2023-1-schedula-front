@@ -14,6 +14,7 @@ import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
 import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
+import { Notificacoes } from '@/pages/notificacoes';
 
 export function Router() {
   return (
@@ -124,6 +125,14 @@ export function Router() {
           element={
             <RequireAuth>
               <GerenciarTutoriais />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="notificacoes"
+          element={
+            <RequireAuth>
+              <Notificacoes />
             </RequireAuth>
           }
         />
