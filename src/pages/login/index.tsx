@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box, Button, Center, Input, Text } from '@chakra-ui/react';
+import { CalendarClock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function Login() {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -100,6 +103,34 @@ export function Login() {
             </Button>
           </Center>
         </Box>
+        <CalendarClock
+          style={{ marginLeft: '245px', marginTop: '20px' }}
+          fontSize={18}
+          size={70}
+        />
+        <Center>
+          <Button
+            onClick={() => navigate('../agendamentos_abertos')}
+            sx={{
+              bgImage:
+                'linear-gradient(to right, #fa781b 0%, #FF8C00 51%, #FFA03A 100%)',
+              _hover: {
+                bgImage:
+                  'linear-gradient(to right, #fa781b 0%, #fa652f 51%, #FFA03A 100%)',
+                backgroundPosition: 'right center',
+                transition: '0.5s',
+              },
+            }}
+            mt="10px"
+            mb="70px"
+            type="submit"
+            paddingX="24"
+            width="sm"
+            isLoading={isLoading}
+          >
+            Agendamentos
+          </Button>
+        </Center>
       </form>
     </Center>
   );
