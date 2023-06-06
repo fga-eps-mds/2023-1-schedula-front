@@ -37,12 +37,6 @@ export function TutorialForm({
     },
   });
 
-  // const openFile = (tutorial: Tutorial) => {
-  //   const byteArray = new Uint8Array(tutorial.data.data);
-  //   const blob = new Blob([byteArray], { type: 'application/pdf' });
-  //   return blob;
-  // };
-
   const { data: categories, isLoading: isLoadingCategories } =
     useGetAllCategoryTutorial();
 
@@ -52,7 +46,7 @@ export function TutorialForm({
   }));
 
   const [fileName, setFileName] = useState<File>();
-  console.log(editTutorial);
+
   const handleDragOver = (event: any) => {
     event.preventDefault();
   };
@@ -131,6 +125,7 @@ export function TutorialForm({
             type="file"
             // Call handleFile function when a file is selected before uploading
             {...register('file', { required: 'Campo obrigatório' })}
+            accept="application/pdf"
             placeholder="Escolha um arquivo e jogue"
             errors={errors?.file}
             onChange={(event) => {
