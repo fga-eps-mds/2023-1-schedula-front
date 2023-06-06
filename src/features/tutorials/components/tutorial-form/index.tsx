@@ -28,9 +28,20 @@ export function TutorialForm({
     formState: { errors },
   } = useForm({
     defaultValues: {
+      name: editTutorial?.name ?? '',
+      category_id: {
+        label: editTutorial?.category?.name ?? 'Escolha uma categoria',
+        value: editTutorial?.category?.id ?? '',
+      },
       ...defaultValues,
     },
   });
+
+  // const openFile = (tutorial: Tutorial) => {
+  //   const byteArray = new Uint8Array(tutorial.data.data);
+  //   const blob = new Blob([byteArray], { type: 'application/pdf' });
+  //   return blob;
+  // };
 
   const { data: categories, isLoading: isLoadingCategories } =
     useGetAllCategoryTutorial();
@@ -41,7 +52,7 @@ export function TutorialForm({
   }));
 
   const [fileName, setFileName] = useState<File>();
-
+  console.log(editTutorial);
   const handleDragOver = (event: any) => {
     event.preventDefault();
   };
@@ -56,7 +67,7 @@ export function TutorialForm({
     nomeArquivo = editTutorial?.filename;
   }
 
-  const defaultWorkstationCity = (category: CategoryTutorial | undefined) => {
+  const defaultTutorial = (category: CategoryTutorial | undefined) => {
     return {
       label: category?.name ?? '',
       value: category?.id ?? '',
@@ -72,19 +83,18 @@ export function TutorialForm({
         errors={errors?.name}
       />
 
-      <ControlledSelect
-        control={control}
-        name="category_id"
-        id="category_id"
-        options={categoryOptions}
-        isLoading={isLoadingCategories}
-        placeholder="Categoria"
-        label="Categoria"
-        defaultValue={
-          isEditing && defaultWorkstationCity(editTutorial?.category)
-        }
-        rules={{ required: 'Campo obrigatório.' }}
-      />
+      <div style={{ marginTop: '5px' }}>
+        <ControlledSelect
+          control={control}
+          name="category_id"
+          id="category_id"
+          options={categoryOptions}
+          isLoading={isLoadingCategories}
+          label="Categoria"
+          defaultValue={isEditing && defaultTutorial(editTutorial?.category)}
+          rules={{ required: 'Campo obrigatório' }}
+        />
+      </div>
 
       <div
         style={{
