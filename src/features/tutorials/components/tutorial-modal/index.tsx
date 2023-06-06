@@ -60,6 +60,7 @@ export function TutorialModal({
         defaultValues={tutorial}
         onSubmit={handleSubmit}
         isSubmitting={isCreatingTutorial || isUpdatingTutorial}
+        editTutorial={tutorial}
       />
     </Modal>
   );

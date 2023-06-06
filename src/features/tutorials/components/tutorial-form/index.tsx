@@ -3,19 +3,21 @@ import { useForm } from 'react-hook-form';
 import { useMemo, useState } from 'react';
 import { GrDocumentPdf } from 'react-icons/gr';
 import { ControlledSelect, Input } from '@/components/form-fields';
-import { TutorialPayload, File } from '../../type';
+import { TutorialPayload, File, Tutorial } from '../../type';
 import { useGetAllCategoryTutorial } from '@/features/categories-tutorial/api/get-all-categories-tutorial';
 
 interface TutorialFromProps {
   defaultValues?: TutorialPayload;
   onSubmit: (data: TutorialPayload) => void;
   isSubmitting: boolean;
+  editTutorial?: Tutorial;
 }
 
 export function TutorialForm({
   defaultValues,
   onSubmit,
   isSubmitting,
+  editTutorial,
 }: TutorialFromProps) {
   const isEditing = useMemo(() => Boolean(defaultValues), [defaultValues]);
   let nomeArquivo;
@@ -50,7 +52,16 @@ export function TutorialForm({
 
   if (fileName) {
     nomeArquivo = fileName.name;
+  } else {
+    nomeArquivo = editTutorial?.filename;
   }
+
+  const defaultWorkstationCity = (category: CategoryTutorial | undefined) => {
+    return {
+      label: category?.name ?? '',
+      value: category?.id ?? '',
+    };
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
@@ -69,6 +80,9 @@ export function TutorialForm({
         isLoading={isLoadingCategories}
         placeholder="Categoria"
         label="Categoria"
+        defaultValue={
+          isEditing && defaultWorkstationCity(editTutorial?.category)
+        }
         rules={{ required: 'Campo obrigatório.' }}
       />
 
@@ -123,6 +137,7 @@ export function TutorialForm({
               height: '170px',
               bottom: '-70px',
             }}
+            // defaultValue={editTutorial?.filename}
           />
           <span style={{ color: '#dbdada' }}>
             Arraste e solte um arquivo...
@@ -154,7 +169,7 @@ export function TutorialForm({
 
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 15 }}>
         <Button type="submit" size="lg" width="80%" isLoading={isSubmitting}>
-          {isEditing ? 'Salvar' : 'Criar Tutorial'}
+          {isEditing ? 'Salvar Tutorial' : 'Criar Tutorial'}
         </Button>
       </div>
     </form>
