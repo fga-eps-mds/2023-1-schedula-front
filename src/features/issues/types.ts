@@ -20,6 +20,24 @@ export interface Issue {
   problem_types: ProblemTypeOption[];
 }
 
+export interface ExternIssue {
+  id: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: string;
+  description: string;
+  problem_category: {
+    id: string;
+    name: string;
+    description: string;
+    problem_types: ProblemTypeOption[];
+  };
+  problem_types: ProblemTypeOption[];
+}
+
 export interface PostCreateIssueParams {
   requester: string;
   phone: string;

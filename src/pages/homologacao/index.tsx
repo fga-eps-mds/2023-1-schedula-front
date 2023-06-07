@@ -1,34 +1,45 @@
-import { useCallback, useState, useEffect } from 'react';
-import {
-  Button,
-  HStack,
-  useDisclosure,
-  Input,
-  Icon,
-  Tooltip,
-  InputGroup,
-  InputLeftElement,
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { IoArrowBackCircleOutline } from 'react-icons/all';
-import { FaSearch } from 'react-icons/fa';
-import { CategoryTutorialItem } from '@/features/categories-tutorial/components/category-tutorial-item';
-import { PageHeader } from '@/components/page-header';
+import { Button, HStack } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { useCallback } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
-import { ListView } from '@/components/list';
-import { CategoryTutorialModal } from '@/features/categories-tutorial/components/category-tutorial-modal/category-tutorial-modal';
-import { useGetAllCategoryTutorial } from '@/features/categories-tutorial/api/get-all-categories-tutorial';
-import { useDeleteCategoryTutorial } from '@/features/categories-tutorial/api/delete-category-tutorial';
-import { CategoryTutorial } from '@/features/categories-tutorial/api/types';
+import { PageHeader } from '@/components/page-header';
+import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
+import { ExternIssue } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
 
+import { ListView } from '@/components/list';
+import { ExternIssueItem } from '@/features/issues/components/extern-issue-item';
+
 export function GerenciarHomologacao() {
+  const {
+    data: externIssues,
+    isLoading: isLoadingExternIssues,
+    refetch,
+  } = useGetAllIssues();
+
+  const renderExternIssueItem = useCallback(
+    (externIssue: ExternIssue) => <ExternIssueItem externIssue={externIssue} />,
+    []
+  );
 
   return (
     <>
       <PageHeader title="Homologação">
-
+        <HStack spacing={2}>
+          <RefreshButton refresh={refetch} />
+          <Permission allowedRoles={['ADMIN']}>
+            <Link to="/chamados/registrar">
+              <Button variant="primary">Novo Atendimento</Button>
+            </Link>
+          </Permission>
+        </HStack>
       </PageHeader>
+
+      <ListView<ExternIssue>
+        items={externIssues}
+        render={renderExternIssueItem}
+        isLoading={isLoadingExternIssues}
+      />
     </>
   );
 }
