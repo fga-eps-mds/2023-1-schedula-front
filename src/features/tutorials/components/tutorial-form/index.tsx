@@ -144,7 +144,9 @@ export function TutorialForm({
             }}
           />
           <span style={{ color: '#dbdada' }}>
-            Arraste e solte um arquivo...
+            {isEditing
+              ? 'Envie o arquivo novamente...'
+              : 'Arraste e solte um arquivo...'}
           </span>
         </span>
       </div>
