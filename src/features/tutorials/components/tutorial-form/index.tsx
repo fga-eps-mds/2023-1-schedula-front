@@ -124,7 +124,7 @@ export function TutorialForm({
             label=""
             type="file"
             // Call handleFile function when a file is selected before uploading
-            {...register('file', { required: 'Campo obrigatório' })}
+            {...register('file')}
             accept="application/pdf"
             placeholder="Escolha um arquivo e jogue"
             errors={errors?.file}
@@ -142,7 +142,6 @@ export function TutorialForm({
               height: '170px',
               bottom: '-70px',
             }}
-            // defaultValue={editTutorial?.filename}
           />
           <span style={{ color: '#dbdada' }}>
             Arraste e solte um arquivo...
