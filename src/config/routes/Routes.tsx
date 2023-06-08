@@ -131,6 +131,9 @@ export function Router() {
 
       {/* ROTAS PUBLICAS */}
       <Route path="/login" element={<Login />} />
+      <Route path="/" element={<DefaultLayout />}>
+      <Route path="/agendamento_externo" element={<p></p>} />
+      </Route>
       <Route path="*" element={<p>404</p>} />
     </Routes>
   );

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box, Button, Center, Input, Text } from '@chakra-ui/react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { TbCalendarTime } from 'react-icons/tb';
 
 export function Login() {
   const { signIn } = useAuth();
@@ -21,6 +23,7 @@ export function Login() {
     await signIn({ username, password });
     setIsLoading(false);
   };
+  const navigate = useNavigate();
 
   return (
     <Center
@@ -97,6 +100,19 @@ export function Login() {
               isLoading={isLoading}
             >
               ENTRAR
+            </Button>
+          </Center>
+          <Center>
+            <Button
+              mb="40px"
+              //type="submit"
+              paddingX="24"
+              width="sm"
+              //isLoading={isLoading}
+              onClick={() => navigate('../agendamento_externo')}>               
+              <TbCalendarTime size={24} style={{ marginRight: '4px' }} />
+            
+              AGENDAMENTO
             </Button>
           </Center>
         </Box>
