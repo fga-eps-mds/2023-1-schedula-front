@@ -22,13 +22,15 @@ export interface Issue {
 
 export interface PostCreateIssueParams {
   requester: string;
+  cellphone:string;
+  email:string;
   phone: string;
   city_id: string;
   workstation_id: string;
-  email: string;
   date: string;
   problem_category_id: string;
   problem_types_ids: string[];
+  description_payload: string;
 }
 
 export interface PostCreateIssueResponse {
@@ -86,11 +88,17 @@ export interface DeleteIssueParams {
 export interface IssuePayload {
   issueId: string;
   requester: string;
+  cellphone: string;
+  email:string;
   phone: string;
+  
+  
+  
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
   problem_types_payload?: { label: string; value: string }[];
+  description_payload: string;
 }
 
 export interface PostCreateScheduleParams {
