@@ -120,21 +120,23 @@ export function Notificacoes() {
         </Permission>
       </PageHeader>
 
-      <Select
-        aria-label="Filtrar por categoria"
-        placeholder={
-          <Flex alignItems="center">
-            <Icon as={FaTags} boxSize={4} mr={2} />
-            Status
-            {resetButton}
-          </Flex>
-        }
-        onChange={handleCategoryChange}
-        value={selectedCategory}
-        options={options}
-        chakraStyles={chakraStyles}
-        components={customComponents}
-      />
+      <div style={{ width: '290px' }}>
+        <Select
+          aria-label="Filtrar por categoria"
+          placeholder={
+            <Flex alignItems="center">
+              <Icon as={FaTags} boxSize={4} mr={2} />
+              Status
+              {resetButton}
+            </Flex>
+          }
+          onChange={handleCategoryChange}
+          value={selectedCategory}
+          options={options}
+          chakraStyles={chakraStyles}
+          components={customComponents}
+        />
+      </div>
 
       <ListView<Tutorial>
         items={filteredTutorials}
