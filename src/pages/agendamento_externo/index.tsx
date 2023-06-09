@@ -54,7 +54,7 @@ export function AgendamentosExterno() {
   return (
     <>
       <PageHeader title="Agendamentos Externos">
-        <HStack spacing={2} />
+        //<HStack spacing={2} />
       </PageHeader>
 
       <ListView<Schedule>
