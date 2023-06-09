@@ -22,8 +22,8 @@ export interface Issue {
 
 export interface PostCreateIssueParams {
   requester: string;
-  cellphone:string;
-  email:string;
+  cellphone: string;
+  email: string;
   phone: string;
   city_id: string;
   workstation_id: string;
@@ -89,11 +89,9 @@ export interface IssuePayload {
   issueId: string;
   requester: string;
   cellphone: string;
-  email:string;
+  email: string;
   phone: string;
-  
-  
-  
+
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
