@@ -19,8 +19,8 @@ import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { usePostCreateIssue } from '@/features/issues/api/post-create-issue';
 import {
   Issue,
-  IssuePayload,
-  PostCreateIssueParams,
+  IssuePayloadOpen,
+  PostCreateIssueParamsOpen,
 } from '@/features/issues/types';
 
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
@@ -53,7 +53,7 @@ export function CreateIssueForm() {
     watch,
     resetField,
     formState: { errors },
-  } = useForm<IssuePayload>();
+  } = useForm<IssuePayloadOpen>();
 
   const { mutate: createIssue, isLoading: isCreatingIssue } =
     usePostCreateIssue({
@@ -69,6 +69,8 @@ export function CreateIssueForm() {
 
   const { data: workstations, isLoading: isLoadingWorkstations } =
     useGetAllWorkstations();
+
+  const { data: phone, isLoading: isLoadingPhone } = useGetAllWorkstations();
 
   const citiesOptions = cities?.map((city) => {
     return {
@@ -94,6 +96,18 @@ export function CreateIssueForm() {
         .map((workstation) => ({
           value: workstation?.id ?? '',
           label: workstation?.name ?? '',
+        }))
+    : [];
+
+  const workstationPayLoad = watch('workstation_payload');
+
+  const phoneOptions = workstationPayLoad
+    ? workstations
+
+        ?.filter((workstation) => workstation.id === workstationPayLoad.value)
+        .map((workstation) => ({
+          value: workstation?.phone ?? '',
+          label: workstation?.phone ?? '',
         }))
     : [];
 
@@ -132,10 +146,10 @@ export function CreateIssueForm() {
       requester,
       workstation_payload,
       description_payload,
-    }: IssuePayload) => {
-      const payload: PostCreateIssueParams = {
+    }: IssuePayloadOpen) => {
+      const payload: PostCreateIssueParamsOpen = {
         requester,
-        phone,
+        phone: phone?.value,
         cellphone,
         email,
         city_id: city_payload?.value,
@@ -200,8 +214,20 @@ export function CreateIssueForm() {
               />
             )}
           />
-
-          <Controller
+          <Input
+            label="Email"
+            {...register('email', {
+              required: 'Campo obrigatório',
+            })}
+            errors={errors?.email}
+            placeholder="Email do solicitante"
+            leftElement={
+              <InputLeftElement>
+                <Icon as={MdEmail} fontSize={20} />
+              </InputLeftElement>
+            }
+          />
+          {/* <Controller
             control={control}
             name="email"
             defaultValue=""
@@ -230,7 +256,7 @@ export function CreateIssueForm() {
                 }
               />
             )}
-          />
+          /> */}
 
           <ControlledSelect
             control={control}
@@ -256,10 +282,10 @@ export function CreateIssueForm() {
 
           <ControlledSelect
             control={control}
-            name="email"
-            id="email"
-            options={citiesOptions}
-            isLoading={isLoadingCities}
+            name="phone"
+            id="phone"
+            options={phoneOptions}
+            isLoading={isLoadingPhone}
             placeholder="(00) 0000-0000"
             label="Telefone"
             rules={{ required: 'Campo obrigatório' }}
