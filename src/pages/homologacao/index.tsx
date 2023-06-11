@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { useCallback } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
+import { useGetAllIssues } from '@/features/homologations/api/get-all-extern-issues';
 import { ExternIssue } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
-import { ExternIssueItem } from '@/features/issues/components/extern-issue-item';
+import { ExternIssueItem } from '@/features/homologations/components/extern-issue-item';
+import { useDeleteHomologation } from '@/features/homologations/api/delete-extern-issue';
 
 export function GerenciarHomologacao() {
   const {
@@ -16,9 +17,25 @@ export function GerenciarHomologacao() {
     refetch,
   } = useGetAllIssues();
 
+  const { mutate: deleteIssues, isLoading: isDeletingIssue } =
+    useDeleteHomologation();
+
+  const onDelete = useCallback(
+    (id: string) => {
+      deleteIssues({ id });
+    },
+    [deleteIssues]
+  );
+
   const renderExternIssueItem = useCallback(
-    (externIssue: ExternIssue) => <ExternIssueItem externIssue={externIssue} />,
-    []
+    (externIssue: ExternIssue) => (
+      <ExternIssueItem
+        externIssue={externIssue}
+        onDelete={onDelete}
+        isDeleting={isDeletingIssue}
+      />
+    ),
+    [onDelete, isDeletingIssue]
   );
 
   return (

@@ -19,9 +19,16 @@ import { ActionButton } from '@/components/action-buttons';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
+  // onEdit: (schedule: Schedule) => void;
+  onDelete: (externIssueId: string) => void;
+  isDeleting: boolean;
 }
 
-export function ExternIssueItem({ externIssue }: ExternIssueItemProps) {
+export function ExternIssueItem({
+  externIssue,
+  onDelete,
+  isDeleting,
+}: ExternIssueItemProps) {
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === externIssue?.city_id;
@@ -119,14 +126,14 @@ export function ExternIssueItem({ externIssue }: ExternIssueItemProps) {
           </HStack>
           <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
             <ActionButton
-              label="Excluir Homologação"
+              label="Aprovar Homologação"
               icon={<AiFillCheckCircle size={23} />}
               onClick={() => onDelete()}
               color="green.500"
               tabIndex={0}
             />
             <ActionButton
-              label="Excluir Homologação"
+              label="Editar Homologação"
               icon={<RiEdit2Fill size={23} />}
               onClick={() => onDelete()}
               color="yellow.500"
@@ -135,7 +142,7 @@ export function ExternIssueItem({ externIssue }: ExternIssueItemProps) {
             <ActionButton
               label="Excluir Homologação"
               icon={<AiFillCloseCircle size={21} />}
-              onClick={() => onDelete()}
+              onClick={() => onDelete(externIssue?.id)}
               color="red.500"
               tabIndex={0}
             />
