@@ -20,7 +20,7 @@ export function useDeleteIssue() {
     },
     onError() {
       toast.error(
-        'Não foi possível remover o atendimento. Tente novamente mais tarde!'
+        'Não foi possível remover o atendimento, verifique se há um agendamento associado. Tente novamente mais tarde!'
       );
     },
   });
