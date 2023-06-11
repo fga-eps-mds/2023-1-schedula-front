@@ -17,9 +17,11 @@ export function Chamados() {
     refetch,
   } = useGetAllIssues();
 
+  const onEdit = useCallback(() => {}, []);
+
   const renderIssueItem = useCallback(
-    (issue: Issue) => <IssueItem issue={issue} />,
-    []
+    (issue: Issue) => <IssueItem issue={issue} onEdit={onEdit} />,
+    [onEdit]
   );
 
   return (

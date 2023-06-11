@@ -11,12 +11,17 @@ import { formatDate } from '@/utils/format-date';
 import { Issue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
+import { DeleteButton } from '@/components/action-buttons/delete-button';
+import { EditButton } from '@/components/action-buttons/edit-button';
+import { ItemActions } from '@/components/list-item/list-item-actions';
+import { Permission } from '@/components/permission';
 
 interface IssueItemProps {
   issue: Issue;
+  onEdit: (issue: Issue) => void;
 }
 
-export function IssueItem({ issue }: IssueItemProps) {
+export function IssueItem({ issue, onEdit }: IssueItemProps) {
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
@@ -93,6 +98,26 @@ export function IssueItem({ issue }: IssueItemProps) {
                 Atendente
               </Text>
               <Text noOfLines={1}>{issue?.email}</Text>
+              <Permission allowedRoles={['ADMIN']}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    textAlign: 'left',
+                  }}
+                >
+                  <ItemActions item={city}>
+                    <EditButton onClick={onEdit} label="atendimento" />
+
+                    <DeleteButton
+                      label="atendimento"
+                      onClick={function click(): void | Promise<void> {
+                        throw new Error('Function not implemented.');
+                      }}
+                    />
+                  </ItemActions>
+                </div>
+              </Permission>
             </Box>
           </HStack>
         </VStack>
