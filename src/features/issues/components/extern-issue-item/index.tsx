@@ -8,11 +8,14 @@ import {
   Button,
   VStack,
 } from '@chakra-ui/react';
+import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';
+import { RiEdit2Fill } from 'react-icons/ri';
 import { formatDate } from '@/utils/format-date';
 import { ExternIssue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
+import { ActionButton } from '@/components/action-buttons';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
@@ -114,8 +117,28 @@ export function ExternIssueItem({ externIssue }: ExternIssueItemProps) {
               <Text noOfLines={1}>{externIssue?.email}</Text>
             </Box>
           </HStack>
-          <HStack alignItems="start" spacing={0} height="75%" textAlign="right">
-            <Button>Edit</Button>
+          <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
+            <ActionButton
+              label="Excluir Homologação"
+              icon={<AiFillCheckCircle size={23} />}
+              onClick={() => onDelete()}
+              color="green.500"
+              tabIndex={0}
+            />
+            <ActionButton
+              label="Excluir Homologação"
+              icon={<RiEdit2Fill size={23} />}
+              onClick={() => onDelete()}
+              color="yellow.500"
+              tabIndex={0}
+            />
+            <ActionButton
+              label="Excluir Homologação"
+              icon={<AiFillCloseCircle size={21} />}
+              onClick={() => onDelete()}
+              color="red.500"
+              tabIndex={0}
+            />
           </HStack>
         </VStack>
       </Item>

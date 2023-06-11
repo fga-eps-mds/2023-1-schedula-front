@@ -6,7 +6,6 @@ import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
 import { ExternIssue } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
-
 import { ListView } from '@/components/list';
 import { ExternIssueItem } from '@/features/issues/components/extern-issue-item';
 
