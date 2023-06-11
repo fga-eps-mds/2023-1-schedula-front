@@ -12,16 +12,16 @@ import { Issue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
-import { EditButton } from '@/components/action-buttons/edit-button';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
 
 interface IssueItemProps {
   issue: Issue;
-  onEdit: (issue: Issue) => void;
+  onDelete: (issueId: string) => void;
+  isDeleting: boolean;
 }
 
-export function IssueItem({ issue, onEdit }: IssueItemProps) {
+export function IssueItem({ issue, onDelete, isDeleting }: IssueItemProps) {
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
@@ -107,13 +107,10 @@ export function IssueItem({ issue, onEdit }: IssueItemProps) {
                   }}
                 >
                   <ItemActions item={city}>
-                    <EditButton onClick={onEdit} label="atendimento" />
-
                     <DeleteButton
+                      onClick={() => onDelete(issue.id)}
                       label="atendimento"
-                      onClick={function click(): void | Promise<void> {
-                        throw new Error('Function not implemented.');
-                      }}
+                      isLoading={isDeleting}
                     />
                   </ItemActions>
                 </div>

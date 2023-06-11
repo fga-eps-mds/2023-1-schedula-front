@@ -6,9 +6,9 @@ import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
 import { Issue } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
-
 import { ListView } from '@/components/list';
 import { IssueItem } from '@/features/issues/components/issue-item';
+import { useDeleteIssue } from '@/features/issues/api/delete-issue';
 
 export function Chamados() {
   const {
@@ -16,12 +16,24 @@ export function Chamados() {
     isLoading: isLoadingIssues,
     refetch,
   } = useGetAllIssues();
+  const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
 
-  const onEdit = useCallback(() => {}, []);
+  const onDelete = useCallback(
+    (issueId: string) => {
+      deleteIssue({ issueId });
+    },
+    [deleteIssue]
+  );
 
   const renderIssueItem = useCallback(
-    (issue: Issue) => <IssueItem issue={issue} onEdit={onEdit} />,
-    [onEdit]
+    (issue: Issue) => (
+      <IssueItem
+        issue={issue}
+        onDelete={onDelete}
+        isDeleting={isRemovingIssue}
+      />
+    ),
+    [onDelete, isRemovingIssue]
   );
 
   return (
