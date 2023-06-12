@@ -16,10 +16,12 @@ import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { ActionButton } from '@/components/action-buttons';
+import { EditarChamadoExterno } from '@/pages/homologacao/editar-issues-extern';
+import { useNavigate } from 'react-router-dom';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
-  // onEdit: (schedule: Schedule) => void;
+  onEdit: (externIssueId: string) => void;
   onDelete: (externIssueId: string) => void;
   isDeleting: boolean;
 }
@@ -28,7 +30,12 @@ export function ExternIssueItem({
   externIssue,
   onDelete,
   isDeleting,
+  onEdit
 }: ExternIssueItemProps) {
+  const history = useNavigate();
+  const handleOnClick = () => {
+    history('/homologacao/editar');
+  };
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === externIssue?.city_id;
@@ -117,12 +124,6 @@ export function ExternIssueItem({
             height="100%"
             textAlign="right"
           >
-            <Box>
-              <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Atendente
-              </Text>
-              <Text noOfLines={1}>{externIssue?.email}</Text>
-            </Box>
           </HStack>
           <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
             <ActionButton
@@ -135,10 +136,11 @@ export function ExternIssueItem({
             <ActionButton
               label="Editar Homologação"
               icon={<RiEdit2Fill size={23} />}
-              onClick={() => onDelete()}
+              onClick={handleOnClick}
               color="yellow.500"
               tabIndex={0}
             />
+
             <ActionButton
               label="Excluir Homologação"
               icon={<AiFillCloseCircle size={21} />}

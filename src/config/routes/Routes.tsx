@@ -9,6 +9,7 @@ import { ListaProblemas } from '@/pages/categorias/problemas';
 import { RequireAuth } from '@/config/routes/require-auth';
 import { DefaultLayout } from '@/components/layout/default-layout';
 import { RegistrarChamado } from '@/pages/chamados/registrar';
+import { EditarChamadoExterno } from '@/pages/homologacao/editar-issues-extern';
 import { Agendamentos } from '@/pages/agendamentos';
 import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
@@ -135,7 +136,17 @@ export function Router() {
               <GerenciarHomologacao />
             </RequireAuth>
           }
-        />        
+        /> 
+
+        <Route
+          path="homologacao/editar"
+          element={
+            <RequireAuth>
+              <EditarChamadoExterno />
+            </RequireAuth>
+          }
+        />
+
       </Route>
 
       {/* ROTAS PUBLICAS */}
