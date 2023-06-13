@@ -16,9 +16,9 @@ import { MdEmail } from 'react-icons/md';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
-import { usePostCreateIssue } from '@/features/issues/api/post-create-issue';
+import { usePostCreateIssueOpen } from '@/features/issues/api/post-create-issue-open';
 import {
-  Issue,
+  IssueOpen,
   IssuePayloadOpen,
   PostCreateIssueParamsOpen,
 } from '@/features/issues/types';
@@ -39,7 +39,7 @@ export function CreateIssueForm() {
 
   const { user } = useAuth();
 
-  const [createdIssue, setCreatedIssue] = useState<Issue>();
+  const [createdIssue, setCreatedIssue] = useState<IssueOpen>();
 
   const cityRef = useRef<Option | null>(null);
   const categoryRef = useRef<Option | null>(null);
@@ -56,7 +56,7 @@ export function CreateIssueForm() {
   } = useForm<IssuePayloadOpen>();
 
   const { mutate: createIssue, isLoading: isCreatingIssue } =
-    usePostCreateIssue({
+    usePostCreateIssueOpen({
       onSuccessCallBack(data) {
         setCreatedIssue(data);
       },
@@ -145,7 +145,7 @@ export function CreateIssueForm() {
       problem_types_payload,
       requester,
       workstation_payload,
-      description_payload,
+      description,
     }: IssuePayloadOpen) => {
       const payload: PostCreateIssueParamsOpen = {
         requester,
@@ -158,7 +158,7 @@ export function CreateIssueForm() {
         problem_types_ids:
           problem_types_payload?.map((type) => type?.value) ?? [],
         workstation_id: workstation_payload?.value,
-        description_payload,
+        description,
       };
 
       createIssue(payload);
@@ -227,36 +227,6 @@ export function CreateIssueForm() {
               </InputLeftElement>
             }
           />
-          {/* <Controller
-            control={control}
-            name="email"
-            defaultValue=""
-            rules={{
-              required: 'Campo obrigatório',
-              maxLength: {
-                value: 15,
-                message: 'Email inválido',
-              },
-            }}
-            render={({
-              field: { ref, value, onChange },
-              fieldState: { error },
-            }) => (
-              <Input
-                ref={ref}
-                label="Email"
-                placeholder="Email do solicitante"
-                value={value}
-                errors={error}
-                onChange={(e) => onChange(maskPhoneField(e.target.value))}
-                leftElement={
-                  <InputLeftElement>
-                    <Icon as={MdEmail} fontSize={20} />
-                  </InputLeftElement>
-                }
-              />
-            )}
-          /> */}
 
           <ControlledSelect
             control={control}
@@ -291,37 +261,6 @@ export function CreateIssueForm() {
             rules={{ required: 'Campo obrigatório' }}
           />
 
-          {/* <Controller
-            control={control}
-            name="phone"
-            defaultValue=""
-            rules={{
-              required: 'Campo obrigatório',
-              maxLength: {
-                value: 15,
-                message: 'Número inválido',
-              },
-            }}
-            render={({
-              field: { ref, value, onChange },
-              fieldState: { error },
-            }) => (
-              <Input
-                ref={ref}
-                label="Telefone"
-                placeholder="(00) 0000-0000"
-                value={value}
-                errors={error}
-                onChange={(e) => onChange(maskPhoneField(e.target.value))}
-                leftElement={
-                  <InputLeftElement>
-                    <Icon as={BsTelephoneFill} fontSize={20} />
-                  </InputLeftElement>
-                }
-              />
-            )}
-          /> */}
-
           <ControlledSelect
             control={control}
             name="problem_category_payload"
@@ -353,7 +292,7 @@ export function CreateIssueForm() {
             <Input
               // height={150}
               label="Descrição do Problema"
-              {...register('description_payload', {
+              {...register('description', {
                 required: 'Campo obrigatório',
               })}
               errors={errors?.requester}
@@ -392,7 +331,7 @@ export function CreateIssueForm() {
             color: '#F49320',
           })}
         >
-          {!createdIssue ? 'Registrar Atendimento' : 'Ir para os atendimentos'}
+          {!createdIssue ? 'Registrar Agendamento' : 'Ir para os agendamentos'}
         </Button>
       </form>
 

@@ -20,6 +20,25 @@ export interface Issue {
   problem_types: ProblemTypeOption[];
 }
 
+export interface IssueOpen {
+  id: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: string;
+  cellphone: string;
+  description: string;
+  problem_category: {
+    id: string;
+    name: string;
+    description: string;
+    problem_types: ProblemTypeOption[];
+  };
+  problem_types: ProblemTypeOption[];
+}
+
 export interface PostCreateIssueParams {
   requester: string;
   phone: string;
@@ -41,7 +60,7 @@ export interface PostCreateIssueParamsOpen {
   date: string;
   problem_category_id: string;
   problem_types_ids: string[];
-  description_payload: string;
+  description: string;
 }
 
 export interface PostCreateIssueResponse {
@@ -52,6 +71,25 @@ export interface PostCreateIssueResponse {
   workstation_id: string;
   email: string;
   date: string;
+  problem_category: {
+    id: string;
+    name: string;
+    description: string;
+    problem_types: ProblemTypeOption[];
+  };
+  problem_types: ProblemTypeOption[];
+}
+
+export interface PostCreateIssueResponseOpen {
+  id: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: string;
+  cellphone: string;
+  description: string;
   problem_category: {
     id: string;
     name: string;
@@ -118,7 +156,7 @@ export interface IssuePayloadOpen {
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
   problem_types_payload?: { label: string; value: string }[];
-  description_payload: string;
+  description: string;
 }
 
 export interface PostCreateScheduleParams {
