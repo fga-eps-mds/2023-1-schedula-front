@@ -16,7 +16,11 @@ export function useDeleteIssue() {
     onSuccess() {
       toast.success('Atendimento removido com sucesso!');
 
-      queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
+      queryClient
+        .invalidateQueries([ISSUES_CACHE_KEYS.allIssues])
+        .catch((error) => {
+          toast.error(`Erro interno:${error}`);
+        });
     },
     onError() {
       toast.error(
