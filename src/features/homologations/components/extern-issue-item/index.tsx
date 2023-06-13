@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';
 import { RiEdit2Fill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@/utils/format-date';
 import { ExternIssue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
@@ -17,7 +18,7 @@ import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { ActionButton } from '@/components/action-buttons';
 import { EditarChamadoExterno } from '@/pages/homologacao/editar-issues-extern';
-import { useNavigate } from 'react-router-dom';
+import { DeleteButton } from '@/components/action-buttons/delete-button-homologation';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
@@ -30,7 +31,7 @@ export function ExternIssueItem({
   externIssue,
   onDelete,
   isDeleting,
-  onEdit
+  onEdit,
 }: ExternIssueItemProps) {
   const history = useNavigate();
   const handleOnClick = () => {
@@ -123,8 +124,7 @@ export function ExternIssueItem({
             spacing={6}
             height="100%"
             textAlign="right"
-          >
-          </HStack>
+          />
           <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
             <ActionButton
               label="Aprovar Homologação"
@@ -141,8 +141,8 @@ export function ExternIssueItem({
               tabIndex={0}
             />
 
-            <ActionButton
-              label="Excluir Homologação"
+            <DeleteButton
+              label="Homologação"
               icon={<AiFillCloseCircle size={21} />}
               onClick={() => onDelete(externIssue?.id)}
               color="red.500"
