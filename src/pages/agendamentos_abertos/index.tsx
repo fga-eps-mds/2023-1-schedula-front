@@ -16,6 +16,10 @@ export function AgendamentosAbertos() {
 
   const { data: schedules, isLoading, refetch } = useGetAllSchedules();
 
+  const filteredSchedules = schedules?.filter(
+    (schedule) => schedule.status !== 'RESOLVIDO'
+  );
+
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
     useDeleteSchedule();
 
@@ -63,7 +67,7 @@ export function AgendamentosAbertos() {
       </PageHeader>
 
       <ListView<Schedule>
-        items={schedules}
+        items={filteredSchedules?.length > 0 ? filteredSchedules : undefined}
         render={renderScheduleItem}
         isLoading={isLoading}
       />
