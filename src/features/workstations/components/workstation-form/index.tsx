@@ -265,7 +265,7 @@ export function WorkstationForm({
                   label="Gateway"
                   errors={error}
                   value={value}
-                  placeholder="Gateway"
+                  placeholder="0.0.0.0"
                   onChange={(e) => onChange(e.target.value)}
                 />
               )}

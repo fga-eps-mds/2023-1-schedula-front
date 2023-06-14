@@ -1,14 +1,17 @@
 import { fireEvent, render } from '@testing-library/react';
 import { ChakraProvider } from '@chakra-ui/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Login } from '@/pages/login';
 import { theme } from '@/styles/theme';
 
 describe('Login page', () => {
   it('should have a form', async () => {
     const { findByRole } = render(
-      <ChakraProvider resetCSS theme={theme}>
-        <Login />
-      </ChakraProvider>
+      <Router>
+        <ChakraProvider resetCSS theme={theme}>
+          <Login />
+        </ChakraProvider>
+      </Router>
     );
 
     const form = await findByRole('form');
@@ -18,9 +21,11 @@ describe('Login page', () => {
 
   it('should have wellcome text', async () => {
     const { findByText } = render(
-      <ChakraProvider resetCSS theme={theme}>
-        <Login />
-      </ChakraProvider>
+      <Router>
+        <ChakraProvider resetCSS theme={theme}>
+          <Login />
+        </ChakraProvider>
+      </Router>
     );
 
     const wellcome = await findByText('Bem-vindo');
@@ -30,9 +35,11 @@ describe('Login page', () => {
 
   it('should display error message when any field is empty', async () => {
     const { findByText, findAllByText } = render(
-      <ChakraProvider resetCSS theme={theme}>
-        <Login />
-      </ChakraProvider>
+      <Router>
+        <ChakraProvider resetCSS theme={theme}>
+          <Login />
+        </ChakraProvider>
+      </Router>
     );
 
     const button = await findByText('ENTRAR');
