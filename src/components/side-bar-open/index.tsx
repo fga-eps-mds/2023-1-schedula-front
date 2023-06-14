@@ -17,8 +17,8 @@ import { SideBarItem } from '@/components/side-bar/sidebar-item';
 export const SideBarOpen = memo(() => {
   const { user, signOut } = useAuth();
 
-  async function handleSignOut() {
-    await signOut();
+  function handleSignOut() {
+    signOut();
   }
 
   const filteredRoutes = [
