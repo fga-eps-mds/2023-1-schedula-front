@@ -2,6 +2,7 @@ export interface Alert {
   id: string;
   sourceName: string;
   targetName: string;
+  sourceEmail: string;
   targetEmail: string;
   message: string;
   status: string;
@@ -10,19 +11,22 @@ export interface Alert {
 }
 
 export interface PostCreateAlertParams {
-  sourceName: string;
+  sourceName: string | undefined;
   targetName: string;
+  sourceEmail: string | undefined;
   targetEmail: string;
   message: string;
   status: string;
   pendency: string;
   read: boolean;
+  createdAt: Date;
 }
 
 export interface PostCreateAlertResponse {
   id: string;
   sourceName: string;
   targetName: string;
+  sourceEmail: string;
   targetEmail: string;
   message: string;
   status: string;

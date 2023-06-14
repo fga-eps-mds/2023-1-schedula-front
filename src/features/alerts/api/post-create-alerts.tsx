@@ -11,12 +11,8 @@ import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateAlert(data: PostCreateAlertParams) {
-  const form = new FormData();
-  form.append('name', data.name);
-  form.append('category_id', data.category_id.value);
-  form.append('file', data.file[0]);
 
-  return api.post<PostCreateAlertResponse>(`${ALERT_ENDPOINT}/alerts`, form);
+  return api.post<PostCreateAlertResponse>(`${ALERT_ENDPOINT}/alerts`, data);
 }
 
 export function usePostCreateAlert({

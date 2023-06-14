@@ -4,8 +4,8 @@ import { Modal } from '@/components/modal';
 import { AlertForm } from '../alert-form';
 import { Alert, AlertPayload } from '../../type';
 import { usePostCreateAlert } from '../../api/post-create-alerts';
-import { usePutUpdateAlert } from '../../api/put-update-alerts';
 import { PostCreateAlertParams } from '../../api/types';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AlertModalProps extends Partial<ModalProps> {
   alert?: Alert;
@@ -18,45 +18,40 @@ export function AlertModal({ onClose, alert, ...props }: AlertModalProps) {
     usePostCreateAlert({
       onSuccessCallBack: onClose,
     });
-  const { mutate: updateAlert, isLoading: isUpdatingAlert } = usePutUpdateAlert(
-    {
-      onSuccessCallBack: onClose,
-    }
-  );
+
+  const { user } = useAuth();
 
   const handleSubmit = useCallback(
-    async ({ name, category_id, file }: AlertPayload) => {
-      if (!name || !category_id) {
-        return;
-      }
+    async ({ target, message }: AlertPayload) => {
+      console.log(target)
+      const { label, value } = target
+      const targetName = label
+      const targetEmail = value
+      const sourceName = user?.name
+      const sourceEmail = user?.email
+      const pendency = ""
+      const read = false
+      const status = "UNRESOLVED"
+      const createdAt = new Date()
       const payload: PostCreateAlertParams = {
-        name,
-        category_id,
-        file,
+        sourceName, targetName, sourceEmail, targetEmail, message, status, pendency, read, createdAt
       };
-      if (alert?.id && alert !== undefined) {
-        updateAlert({
-          alertId: alert.id,
-          data: payload,
-        });
-      } else {
-        createAlert(payload);
-      }
+      console.log(payload)
+      createAlert(payload);
     },
-    [createAlert, updateAlert, alert]
+    [createAlert, alert]
   );
 
   return (
     <Modal
-      title={`${alert ? 'Editar' : 'Criar'} Alert`}
+      title="Criar alerta"
       size="2xl"
       onClose={onClose}
       {...props}
     >
       <AlertForm
-        defaultValues={alert}
         onSubmit={handleSubmit}
-        isSubmitting={isCreatingAlert || isUpdatingAlert}
+        isSubmitting={isCreatingAlert}
       />
     </Modal>
   );

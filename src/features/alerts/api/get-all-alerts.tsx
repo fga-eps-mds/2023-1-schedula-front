@@ -33,7 +33,10 @@ const getAlert = async (alertId: string) =>
     });
 
 export const useGetallAlerts = () =>
-  useQuery([ALERTS_CACHE_KEYS.allAlerts], getAllAlerts);
+  useQuery([ALERTS_CACHE_KEYS.allAlerts], getAllAlerts, 
+    {
+      refetchInterval: 500
+    });
 
 export const useGetAlert = (alertId: string) =>
   useQuery([ALERTS_CACHE_KEYS.alert], () => getAlert(alertId));

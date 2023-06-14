@@ -1,6 +1,5 @@
 import { Button, Grid, ModalProps } from '@chakra-ui/react';
 import { useCallback } from 'react';
-import { useDeleteAlert } from '@/features/alerts/api/detele-alerts';
 
 interface DeleteAlertFormProps extends Partial<ModalProps> {
   alertsIds: string[];
