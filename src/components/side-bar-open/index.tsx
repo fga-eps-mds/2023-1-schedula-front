@@ -12,14 +12,13 @@ import {
 } from '@chakra-ui/react';
 import { CalendarClock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { routes } from '@/constants/routes';
 import { SideBarItem } from '@/components/side-bar/sidebar-item';
 
 export const SideBarOpen = memo(() => {
   const { user, signOut } = useAuth();
 
   async function handleSignOut() {
-    signOut();
+    await signOut();
   }
 
   const filteredRoutes = [
