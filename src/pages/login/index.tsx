@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Box, Button, Center, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Input, Text, Flex } from '@chakra-ui/react';
+import { CalendarClock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function Login() {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -100,6 +103,42 @@ export function Login() {
             </Button>
           </Center>
         </Box>
+
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          flexDirection="column"
+          marginTop="20px"
+        >
+          <Box
+            _hover={{
+              transform: 'scale(1.1)',
+              transition: '0.3s',
+            }}
+            onClick={() => navigate('../agendamentos_abertos')}
+            cursor="pointer"
+          >
+            <CalendarClock fontSize={18} size={70} />
+          </Box>
+
+          <Button
+            onClick={() => navigate('../agendamentos_abertos')}
+            sx={{
+              bgImage:
+                'linear-gradient(to right, #fa781b 0%, #FA652F 51%, #FFA03A 100%)',
+              _hover: {
+                backgroundPosition: 'right center',
+                transition: '0.5s',
+              },
+            }}
+            mt="10px"
+            paddingX="24"
+            width="sm"
+            isLoading={isLoading}
+          >
+            Agendamentos
+          </Button>
+        </Flex>
       </form>
     </Center>
   );
