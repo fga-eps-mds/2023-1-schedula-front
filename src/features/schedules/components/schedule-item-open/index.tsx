@@ -16,6 +16,7 @@ import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { Permission } from '@/components/permission';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
+import { useGetAllUsers } from '@/features/users/api/get-all-users';
 
 interface ScheduleItemProps {
   schedule: Schedule;
@@ -57,6 +58,11 @@ export function ScheduleItem({
   const { data: workstations } = useGetAllWorkstations();
   const workstation = workstations?.find((workstation) => {
     return workstation?.id === schedule.issue.workstation_id;
+  });
+
+  const { data: users } = useGetAllUsers();
+  const user = users?.find((user) => {
+    return user?.email === schedule.issue.email;
   });
 
   return (
@@ -160,7 +166,7 @@ export function ScheduleItem({
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Atendente
               </Text>
-              <Text noOfLines={1}>{schedule.issue.email}</Text>
+              <Text noOfLines={1}>{user?.name}</Text>
             </Box>
           </HStack>
         </VStack>
