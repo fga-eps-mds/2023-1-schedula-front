@@ -5,8 +5,8 @@ import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
 import { ListView } from '@/components/list';
-import { Schedule } from '@/features/schedules/types';
-import { ScheduleItem } from '@/features/schedules/components/schedule-item';
+import { Schedule, ScheduleStatus } from '@/features/schedules/types';
+import { ScheduleItem } from '@/features/schedules/components/schedule-item-open';
 import { useDeleteSchedule } from '@/features/schedules/api/delete-schedule';
 import { ScheduleEditModal } from '@/features/schedules/components/schedule-edit-modal';
 
@@ -17,7 +17,7 @@ export function AgendamentosAbertos() {
   const { data: schedules, isLoading, refetch } = useGetAllSchedules();
 
   const filteredSchedules = schedules?.filter(
-    (schedule) => schedule.status !== 'RESOLVIDO'
+    (schedule) => schedule.status !== ('RESOLVIDO' as ScheduleStatus)
   );
 
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
@@ -60,14 +60,16 @@ export function AgendamentosAbertos() {
       <PageHeader title="Agendamentos Abertos">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Link to="/chamados/registrar">
-            <Button variant="primary">Novo Agendamento</Button>
-          </Link>
+          <Button variant="primary">Novo Agendamento</Button>
         </HStack>
       </PageHeader>
 
       <ListView<Schedule>
-        items={filteredSchedules?.length > 0 ? filteredSchedules : undefined}
+        items={
+          filteredSchedules && filteredSchedules.length > 0
+            ? filteredSchedules
+            : undefined
+        }
         render={renderScheduleItem}
         isLoading={isLoading}
       />
