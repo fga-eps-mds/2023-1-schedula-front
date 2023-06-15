@@ -100,7 +100,9 @@ export function ScheduleItem({
               </Text>
               {isExpanded ? (
                 <Box maxWidth="110ch">
-                  <Text noOfLines={undefined}>{schedule.description}</Text>
+                  <Text noOfLines={undefined} textAlign="justify">
+                    {schedule.description}
+                  </Text>
                 </Box>
               ) : (
                 <Text noOfLines={1}>
