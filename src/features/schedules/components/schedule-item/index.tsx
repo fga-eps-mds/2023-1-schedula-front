@@ -2,7 +2,6 @@ import {
   Badge,
   Box,
   Button,
-  Collapse,
   HStack,
   Spacer,
   Tag,
