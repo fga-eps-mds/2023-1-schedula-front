@@ -6,13 +6,15 @@ import {
   Icon,
   InputLeftElement,
   Text,
+  Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useFormState } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { MdEmail } from 'react-icons/md';
+import { BiBold } from 'react-icons/bi';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -61,6 +63,11 @@ export function CreateIssueForm() {
         setCreatedIssue(data);
       },
     });
+
+  const validateEmailFormat = (value: string) => {
+    const emailRegex = /^[a-z0-9](.?[a-z0-9]){5,}@policiacivil.go.gov.br$/;
+    return emailRegex.test(value) || 'Formato de e-mail inválido';
+  };
 
   const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
 
@@ -183,7 +190,6 @@ export function CreateIssueForm() {
               </InputLeftElement>
             }
           />
-
           <Controller
             control={control}
             name="cellphone"
@@ -214,10 +220,12 @@ export function CreateIssueForm() {
               />
             )}
           />
+          
           <Input
             label="Email"
             {...register('email', {
               required: 'Campo obrigatório',
+              validate: validateEmailFormat,
             })}
             errors={errors?.email}
             placeholder="Email do solicitante"
@@ -226,8 +234,8 @@ export function CreateIssueForm() {
                 <Icon as={MdEmail} fontSize={20} />
               </InputLeftElement>
             }
+            // type="email"
           />
-
           <ControlledSelect
             control={control}
             name="city_payload"
@@ -238,7 +246,6 @@ export function CreateIssueForm() {
             label="Cidade"
             rules={{ required: 'Campo obrigatório' }}
           />
-
           <ControlledSelect
             control={control}
             name="workstation_payload"
@@ -271,6 +278,7 @@ export function CreateIssueForm() {
             label="Categoria do Problema"
             rules={{
               shouldUnregister: true,
+              required: 'Campo obrigatório',
             }}
           />
 
@@ -285,17 +293,21 @@ export function CreateIssueForm() {
             label="Tipos de Problema"
             rules={{
               shouldUnregister: true,
+              required: 'Campo obrigatório',
             }}
           />
-
           <GridItem colSpan={2} display="center" justifyContent="center">
             <Input
               // height={150}
               label="Descrição do Problema"
               {...register('description', {
                 required: 'Campo obrigatório',
+                maxLength: {
+                  value: 500,
+                  message: 'A descrição deve ter no máximo 500 caracteres',
+                },
               })}
-              errors={errors?.requester}
+              errors={errors?.description}
               placeholder="Descrição do Problema"
             />
           </GridItem>
