@@ -43,11 +43,7 @@ export function GerenciarHomologacao() {
       <PageHeader title="Homologação">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Permission allowedRoles={['ADMIN']}>
-            <Link to="/chamados/registrar">
-              <Button variant="primary">Novo Atendimento</Button>
-            </Link>
-          </Permission>
+          <Permission allowedRoles={['ADMIN']} />
         </HStack>
       </PageHeader>
 

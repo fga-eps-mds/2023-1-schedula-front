@@ -49,7 +49,35 @@ export interface PostCreateIssueParams {
   problem_types_ids: string[];
 }
 
+export interface PostCreateExternIssueParams {
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: string;
+  problem_category_id: string;
+  problem_types_ids: string[];
+}
+
 export interface PostCreateIssueResponse {
+  id: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: string;
+  problem_category: {
+    id: string;
+    name: string;
+    description: string;
+    problem_types: ProblemTypeOption[];
+  };
+  problem_types: ProblemTypeOption[];
+}
+
+export interface PostCreateExternIssueResponse {
   id: string;
   requester: string;
   phone: string;

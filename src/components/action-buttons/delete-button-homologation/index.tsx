@@ -80,7 +80,7 @@ export function DeleteButton<Data>({
           </Heading>
         </PopoverHeader>
 
-        <PopoverBody bg="blackAlpha.300">
+        <PopoverBody bg="blackAlpha.300" textAlign="center">
           <Text>Você realmente deseja reprovar a homologação?</Text>
           <Text fontStyle="italic" mt={1}>
             Justifique o motivo da reprovação:
