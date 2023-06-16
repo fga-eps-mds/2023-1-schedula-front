@@ -1,14 +1,6 @@
 import { FaSearch } from 'react-icons/fa';
-import {
-  Button,
-  Grid,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Icon,
-  Flex,
-} from '@chakra-ui/react';
-import { useCallback } from 'react';
+import { Input, InputGroup, InputLeftElement, Icon } from '@chakra-ui/react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PageHeader } from '@/components/page-header';
 import { Notification } from '@/features/notifications/api/types';
 import { NotificationItem } from '@/features/notifications/components/notification-item';
@@ -18,6 +10,10 @@ import { ListView } from '@/components/list';
 export function NotificacaoUsuario() {
   const { data: notifications, isLoading } = useGetAllNotification();
 
+  const [filteredNotifications, setFilteredNotifications] = useState<
+    Notification[]
+  >(notifications || []);
+
   const renderNotificationItem = useCallback(
     (notification: Notification) => (
       <NotificationItem notification={notification} />
@@ -25,11 +21,30 @@ export function NotificacaoUsuario() {
     []
   );
 
+  const handleSearch = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const searchText = event.target.value.toLowerCase();
+      console.log(searchText);
+      const filteredNotifications = notifications?.filter((notification) =>
+        notification.message.toLowerCase().includes(searchText)
+      );
+      setFilteredNotifications(filteredNotifications || []);
+    },
+    [notifications]
+  );
+
+  useEffect(() => {
+    const updatedNotifications = notifications || [];
+
+    updatedNotifications.sort((a, b) => a.message.localeCompare(b.message));
+    setFilteredNotifications(updatedNotifications);
+  }, [notifications]);
+
   return (
     <>
       <PageHeader title="Notificações" />
 
-      <Grid>
+      <div>
         <InputGroup>
           <InputLeftElement pointerEvents="none">
             <Icon as={FaSearch} boxSize={4} color="gray.400" />
@@ -37,12 +52,14 @@ export function NotificacaoUsuario() {
           <Input
             placeholder="Pesquisar notificações"
             _placeholder={{ color: 'gray.400' }}
+            onChange={handleSearch}
+            style={{ marginBottom: '10px' }}
           />
         </InputGroup>
-      </Grid>
+      </div>
 
       <ListView<Notification>
-        items={notifications}
+        items={filteredNotifications}
         render={renderNotificationItem}
         isLoading={isLoading}
       />
