@@ -32,7 +32,9 @@ export function AlertModal({ onClose, alert, handleSubmitAlert, ...props }: Aler
       const pendency = ""
       const read = false
       const status = "unsolved"
-      const createdAt = new Date()
+      let date = new Date();
+      date.setHours(date.getHours() - 3);
+      const createdAt = date;
       const payload: PostCreateAlertParams = {
         sourceName, targetName, sourceEmail, targetEmail, message, status, pendency, read, createdAt
       };

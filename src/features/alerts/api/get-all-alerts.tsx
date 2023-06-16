@@ -9,7 +9,9 @@ import { Alert } from '@/features/alerts/api/types';
 
 export type GetAllAlertsResponse = Array<Alert>;
 
-export const getAllAlerts = async () =>
+let errorShown = false; // Variável para controlar se o erro já foi mostrado
+
+export const getAllAlerts = async () => 
   api
     .get<GetAllAlertsResponse>(`${ALERT_ENDPOINT}/alerts`)
     .then((response) => response.data)
@@ -17,7 +19,10 @@ export const getAllAlerts = async () =>
       const errMessage =
         err?.response?.data?.message ??
         'Não foi possível carregar os alertas. Tente novamente mais tarde!';
-      toast.error(errMessage);
+      if (!errorShown) {
+        toast.error(errMessage);
+        errorShown = true;
+      }
       return [] as GetAllAlertsResponse;
     });
 
@@ -35,7 +40,7 @@ const getAlert = async (alertId: string) =>
 export const useGetallAlerts = () =>
   useQuery([ALERTS_CACHE_KEYS.allAlerts], getAllAlerts, 
     {
-      refetchInterval: 500
+      refetchInterval: 1000
     });
 
 export const useGetAlert = (alertId: string) =>
