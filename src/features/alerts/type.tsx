@@ -8,6 +8,7 @@ export interface Alert {
   status: string;
   pendency: string;
   read: boolean;
+  createdAt: Date;
 }
 
 export interface AlertPayload {

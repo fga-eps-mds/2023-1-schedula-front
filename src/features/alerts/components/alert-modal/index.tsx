@@ -11,9 +11,10 @@ interface AlertModalProps extends Partial<ModalProps> {
   alert?: Alert;
   isOpen: boolean;
   onClose: () => void;
+  handleSubmitAlert: () => void;
 }
 
-export function AlertModal({ onClose, alert, ...props }: AlertModalProps) {
+export function AlertModal({ onClose, alert, handleSubmitAlert, ...props }: AlertModalProps) {
   const { mutate: createAlert, isLoading: isCreatingAlert } =
     usePostCreateAlert({
       onSuccessCallBack: onClose,
@@ -23,7 +24,6 @@ export function AlertModal({ onClose, alert, ...props }: AlertModalProps) {
 
   const handleSubmit = useCallback(
     async ({ target, message }: AlertPayload) => {
-      console.log(target)
       const { label, value } = target
       const targetName = label
       const targetEmail = value
@@ -31,13 +31,13 @@ export function AlertModal({ onClose, alert, ...props }: AlertModalProps) {
       const sourceEmail = user?.email
       const pendency = ""
       const read = false
-      const status = "UNRESOLVED"
+      const status = "unsolved"
       const createdAt = new Date()
       const payload: PostCreateAlertParams = {
         sourceName, targetName, sourceEmail, targetEmail, message, status, pendency, read, createdAt
       };
-      console.log(payload)
       createAlert(payload);
+      handleSubmitAlert();
     },
     [createAlert, alert]
   );

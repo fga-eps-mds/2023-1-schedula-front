@@ -30,7 +30,6 @@ export function AlertForm({
 
   const { data: users, isLoading: isLoadingUsers } =
     useGetAllUsers();
-    console.log(users)
   const [ user, setUser]=useState(null)
   const usersOptions = users?.map((users) => ({
     label: users?.name,
