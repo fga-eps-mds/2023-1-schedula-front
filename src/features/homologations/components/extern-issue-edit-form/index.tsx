@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  Divider,
+  Flex,
   Grid,
   GridItem,
   Icon,
@@ -10,12 +12,13 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiCellphoneFill } from 'react-icons/ri';
 import { AiFillCalendar, AiFillAlert } from 'react-icons/ai';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { FaPlus } from 'react-icons/fa';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -28,11 +31,15 @@ import {
   PostCreateExternIssueParams,
 } from '@/features/issues/types';
 
+import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
+
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 import { maskPhoneField } from '@/utils/form-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { ScheduleModal } from '@/features/schedules/components/schedule-modal';
+import { DeleteButton } from '@/components/action-buttons/delete-button';
+import { ActionButton } from '@/components/action-buttons';
 
 interface Option {
   label: string;
@@ -62,6 +69,7 @@ export function CreateExternIssueForm() {
     formState: { errors },
   } = useForm<IssuePayloadOpen>({
     defaultValues: locate.state.externIssue,
+    event_date: parseSelectedDatetime(locate.state.externIssue?.dateTime ?? ''),
   });
 
   const { mutate: createIssue, isLoading: isCreatingIssue } =
@@ -162,14 +170,22 @@ export function CreateExternIssueForm() {
     [createIssue, user?.email]
   );
 
-  useEffect(() => {
-    if (locate.state.externIssue) {
-      const { city_payload, workstation_payload } = locate.state.externIssue;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    shouldUnregister: true,
+    name: 'alert_dates',
+  });
 
-      setValue('city_payload', city_payload);
-      setValue('workstation_payload', workstation_payload);
-    }
-  }, [locate.state.externIssue, setValue]);
+  const handleAddDate = useCallback(() => {
+    append({ date: '' });
+  }, [append]);
+
+  const handleRemoveDate = useCallback(
+    (index: number) => () => {
+      remove(index);
+    },
+    [remove]
+  );
 
   return (
     <>
@@ -296,33 +312,110 @@ export function CreateExternIssueForm() {
             }}
           />
 
-          <Input
-            label="Data do Evento"
-            {...register('dateTime', {
-              required: 'Campo obrigatório',
-            })}
-            errors={errors?.dateTime}
-            placeholder="__/__/__"
-            leftElement={
-              <InputLeftElement>
-                <Icon as={AiFillCalendar} fontSize={20} />
-              </InputLeftElement>
-            }
-          />
+          <Box>
+            <Controller
+              control={control}
+              name="event_date"
+              rules={{
+                min: {
+                  value: new Date().toISOString(),
+                  message: 'Informe uma data no futuro.',
+                },
+              }}
+              render={({
+                field: { onChange, onBlur, ref, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <Input
+                    label="Data do Evento"
+                    type="datetime-local"
+                    name="event_date"
+                    id="event_date"
+                    onChange={onChange}
+                    ref={ref}
+                    onBlur={onBlur}
+                    value={value}
+                  />
+                  <Text color="red.100" mt=".5rem">
+                    {error ? error.message : null}
+                  </Text>
+                </>
+              )}
+            />
+          </Box>
 
-          <Input
-            label="Alerta"
-            {...register('alerts', {
-              required: 'Campo obrigatório',
-            })}
-            errors={errors?.alerts}
-            placeholder="__/__/__"
-            leftElement={
-              <InputLeftElement>
-                <Icon as={AiFillAlert} fontSize={20} />
-              </InputLeftElement>
-            }
-          />
+          <Box>
+            <Flex gap={4} alignItems="center" my="-0.2rem">
+              <Text>Alertas</Text>
+            </Flex>
+            <Divider mb={4} mt={1} />
+            <Grid
+              templateColumns="repeat(auto-fill, minmax(220px, 1fr))"
+              gap={6}
+            >
+              {fields?.map((field, index) => {
+                return (
+                  <Flex key={field.id} gap={1}>
+                    <Controller
+                      control={control}
+                      name={`alert_dates.${index}.date`}
+                      rules={{
+                        min: {
+                          value: new Date().toISOString(),
+                          message: 'Informe uma data no futuro.',
+                        },
+                        required: 'Informe a data ou exclua o alerta',
+                      }}
+                      render={({
+                        field: { onChange, onBlur, ref, value },
+                        fieldState: { error },
+                      }) => (
+                        <Box w="full">
+                          <Input
+                            type="date"
+                            name={`alert_dates.${index}.date`}
+                            id={`alert_dates.${index}.date`}
+                            onChange={onChange}
+                            min={new Date().toISOString()}
+                            ref={ref}
+                            onBlur={onBlur}
+                            w="full"
+                            value={value}
+                          />
+                          <Text color="red.400" mt=".5rem">
+                            {error ? error.message : null}
+                          </Text>
+                        </Box>
+                      )}
+                    />
+
+                    <DeleteButton
+                      label={`Alerta ${index + 1}`}
+                      onClick={handleRemoveDate(index)}
+                      variant="ghost"
+                      alignSelf="flex-end"
+                      _hover={{
+                        backgroundColor: 'blackAlpha.300',
+                      }}
+                    />
+                  </Flex>
+                );
+              })}
+            </Grid>
+            <Flex my="-0.3rem">
+              <ActionButton
+                label="Adicionar Alerta"
+                icon={<FaPlus />}
+                variant="outline"
+                color="primary"
+                tooltipProps={{
+                  placement: 'bottom',
+                }}
+                onClick={handleAddDate}
+              />
+            </Flex>
+          </Box>
 
           <GridItem colSpan={2} display="center" justifyContent="center">
             <Input
