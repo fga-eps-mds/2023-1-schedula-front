@@ -7,24 +7,33 @@ import { Notification } from '../../types';
 
 interface NotificationItemProps {
   notification: Notification;
+  onEdit: (notification: Notification) => void;
+  /* onView: (notificationId: string) => void; */
+  isviewing: boolean;
 }
 
-export function NotificationItem({ notification }: NotificationItemProps) {
+export function NotificationItem({
+  notification,
+  onEdit,
+  isviewing,
+}: NotificationItemProps) {
   return (
     <Item title={notification.message} description={notification.sourceName}>
       <ItemActions item={NotificationItem}>
         <ActionButton
           label="Adicionar pendencia"
           icon={<AiOutlineClockCircle size={22} />}
-          onClick={() => {}}
+          onClick={() => onEdit(notification)}
           color="gray.700"
         />
 
         <ActionButton
           label="Marcar como resolvido"
           icon={<AiFillCheckCircle size={22} />}
-          onClick={() => {}}
           color="gray.700"
+          onClick={function (item: unknown): void | Promise<void> {
+            throw new Error('Function not implemented.');
+          }}
         />
       </ItemActions>
     </Item>
