@@ -1,12 +1,16 @@
 import { IconType } from 'react-icons';
-import { BsSignpost2, BsTags, BsTelephonePlus } from 'react-icons/bs';
+import {
+  BsSignpost2,
+  BsTags,
+  BsTelephonePlus,
+  BsCardChecklist,
+} from 'react-icons/bs';
 import { FaUsersCog } from 'react-icons/fa';
 import { FiMapPin } from 'react-icons/fi';
 import { MdOutlineViewAgenda } from 'react-icons/md';
 import { RiCalendarEventLine } from 'react-icons/ri';
 import { AiOutlineExport } from 'react-icons/ai';
 import { TbBulb } from 'react-icons/tb';
-import { BsCardChecklist } from 'react-icons/bs';
 
 export interface IRoute {
   label: string;

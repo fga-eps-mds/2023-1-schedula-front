@@ -17,12 +17,11 @@ import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { ActionButton } from '@/components/action-buttons';
-import { EditarChamadoExterno } from '@/pages/homologacao/editar-issues-extern';
+import { EditarChamadoExterno } from '@/pages/homologacao/editar-atendimentos-externos';
 import { DeleteButton } from '@/components/action-buttons/delete-button-homologation';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
-  onEdit: (externIssueId: string) => void;
   onDelete: (externIssueId: string) => void;
   isDeleting: boolean;
 }
@@ -31,11 +30,10 @@ export function ExternIssueItem({
   externIssue,
   onDelete,
   isDeleting,
-  onEdit,
 }: ExternIssueItemProps) {
   const history = useNavigate();
-  const handleOnClick = () => {
-    history('/homologacao/editar');
+  const handleOnClick = (externIssue: ExternIssue) => {
+    history('/homologacao/editar', { state: { externIssue } });
   };
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
@@ -136,7 +134,7 @@ export function ExternIssueItem({
             <ActionButton
               label="Editar Homologação"
               icon={<RiEdit2Fill size={23} />}
-              onClick={handleOnClick}
+              onClick={() => handleOnClick(externIssue)}
               color="yellow.500"
               tabIndex={0}
             />

@@ -15,15 +15,17 @@ import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiCellphoneFill } from 'react-icons/ri';
 import { AiFillCalendar, AiFillAlert } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { usePostCreateIssue } from '@/features/issues/api/post-create-issue';
 import {
-  Issue,
-  IssuePayload,
-  PostCreateIssueParams,
+  ExternIssue,
+  IssueOpen,
+  IssuePayloadOpen,
+  ExternIssuePayload,
+  PostCreateExternIssueParams,
 } from '@/features/issues/types';
 
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
@@ -39,10 +41,11 @@ interface Option {
 
 export function CreateExternIssueForm() {
   const navigate = useNavigate();
+  const locate = useLocation();
 
   const { user } = useAuth();
 
-  const [createdIssue, setCreatedIssue] = useState<Issue>();
+  const [createdIssue, setCreatedIssue] = useState<IssueOpen>();
 
   const cityRef = useRef<Option | null>(null);
   const categoryRef = useRef<Option | null>(null);
@@ -55,8 +58,11 @@ export function CreateExternIssueForm() {
     handleSubmit,
     watch,
     resetField,
+    setValue,
     formState: { errors },
-  } = useForm<IssuePayload>();
+  } = useForm<IssuePayloadOpen>({
+    defaultValues: locate.state.externIssue,
+  });
 
   const { mutate: createIssue, isLoading: isCreatingIssue } =
     usePostCreateIssue({
@@ -128,14 +134,20 @@ export function CreateExternIssueForm() {
     ({
       city_payload,
       phone,
+      cellphone,
+      dateTime,
+      alerts,
       problem_category_payload,
       problem_types_payload,
       requester,
       workstation_payload,
-    }: IssuePayload) => {
-      const payload: PostCreateIssueParams = {
+    }: IssuePayloadOpen) => {
+      const payload: PostCreateExternIssueParams = {
         requester,
         phone,
+        dateTime,
+        alerts,
+        cellphone,
         city_id: city_payload?.value,
         date: new Date().toISOString(),
         problem_category_id: problem_category_payload?.value,
@@ -149,6 +161,16 @@ export function CreateExternIssueForm() {
     },
     [createIssue, user?.email]
   );
+
+  useEffect(() => {
+    if (locate.state.externIssue) {
+      const { city_payload, workstation_payload } = locate.state.externIssue;
+
+      setValue('city_payload', city_payload);
+      setValue('workstation_payload', workstation_payload);
+    }
+  }, [locate.state.externIssue, setValue]);
+
   return (
     <>
       <form id="create-issue-form" onSubmit={handleSubmit(onSubmit)}>
@@ -170,7 +192,6 @@ export function CreateExternIssueForm() {
           <Controller
             control={control}
             name="phone"
-            defaultValue=""
             rules={{
               required: 'Campo obrigatório',
               maxLength: {
@@ -200,10 +221,10 @@ export function CreateExternIssueForm() {
 
           <Input
             label="E-mail"
-            {...register('requester', {
+            {...register('email', {
               required: 'Campo obrigatório',
             })}
-            errors={errors?.requester}
+            errors={errors?.email}
             placeholder="exemplo@gmail.com"
             leftElement={
               <InputLeftElement>
@@ -214,10 +235,10 @@ export function CreateExternIssueForm() {
 
           <Input
             label="Celular"
-            {...register('requester', {
+            {...register('cellphone', {
               required: 'Campo obrigatório',
             })}
-            errors={errors?.requester}
+            errors={errors?.cellphone}
             placeholder="(00) 00000-0000"
             leftElement={
               <InputLeftElement>
@@ -277,10 +298,10 @@ export function CreateExternIssueForm() {
 
           <Input
             label="Data do Evento"
-            {...register('requester', {
+            {...register('dateTime', {
               required: 'Campo obrigatório',
             })}
-            errors={errors?.requester}
+            errors={errors?.dateTime}
             placeholder="__/__/__"
             leftElement={
               <InputLeftElement>
@@ -291,10 +312,10 @@ export function CreateExternIssueForm() {
 
           <Input
             label="Alerta"
-            {...register('requester', {
+            {...register('alerts', {
               required: 'Campo obrigatório',
             })}
-            errors={errors?.requester}
+            errors={errors?.alerts}
             placeholder="__/__/__"
             leftElement={
               <InputLeftElement>
@@ -309,10 +330,10 @@ export function CreateExternIssueForm() {
               verticalAlign="top"
               placeholder="Descrição do Problema"
               label="Descrição do Problema"
-              {...register('description_payload', {
+              {...register('description', {
                 required: 'Campo obrigatório',
               })}
-              errors={errors?.requester}
+              errors={errors?.description}
             />
           </GridItem>
 

@@ -6,7 +6,6 @@ export interface DeleteIssuesParams {
   id: string;
 }
 
-
 export interface PutEditIssuesParams {
   id: string;
   data: {
@@ -23,7 +22,5 @@ export interface PutEditIssuesParams {
       problem_types: ProblemTypeOption[];
     };
     problem_types: ProblemTypeOption[];
-    };
-  }
-
-
+  };
+}
