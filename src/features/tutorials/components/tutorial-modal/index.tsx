@@ -44,7 +44,10 @@ export function TutorialModal({
           data: payload,
         });
       } else if (payload?.category_id.value === '') {
-        toast.error('', 'Campo categoria é obrigatório.');
+        toast.error(
+          'Escolha uma categoria para poder cadastrar um novo tutorial',
+          'Campo categoria é obrigatório.'
+        );
       } else {
         createTutorial(payload);
       }
