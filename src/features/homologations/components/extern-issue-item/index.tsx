@@ -19,6 +19,7 @@ import { useGetAllWorkstations } from '@/features/workstations/api/get-all-works
 import { ActionButton } from '@/components/action-buttons';
 import { EditarChamadoExterno } from '@/pages/homologacao/editar-atendimentos-externos';
 import { DeleteButton } from '@/components/action-buttons/delete-button-homologation';
+import { ApproveButton } from '@/components/action-buttons/approve-button-homologation';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
@@ -124,7 +125,7 @@ export function ExternIssueItem({
             textAlign="right"
           />
           <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
-            <ActionButton
+            <ApproveButton
               label="Aprovar Homologação"
               icon={<AiFillCheckCircle size={23} />}
               onClick={() => onDelete()}
