@@ -220,7 +220,7 @@ export function CreateIssueForm() {
               />
             )}
           />
-          
+
           <Input
             label="Email"
             {...register('email', {
