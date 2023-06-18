@@ -102,19 +102,6 @@ export function Login() {
               ENTRAR
             </Button>
           </Center>
-          <Center>
-            <Button
-              mb="40px"
-              // type="submit"
-              paddingX="24"
-              width="sm"
-              // isLoading={isLoading}
-              onClick={() => navigate('../agendamento_externo')}
-            >
-              <TbCalendarTime size={24} style={{ marginRight: '4px' }} />
-              AGENDAMENTO
-            </Button>
-          </Center>
         </Box>
       </form>
     </Center>

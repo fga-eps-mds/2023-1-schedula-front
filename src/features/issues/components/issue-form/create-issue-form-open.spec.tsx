@@ -78,4 +78,27 @@ describe('renders form fields correctly', () => {
     });
     fireEvent.click(screen.getByText('Registrar Agendamento'));
   });
+
+  it('displays a validation error message for invalid email format', async () => {
+    render(
+      <BrowserRouter>
+        <AuthProvider>
+          <ChakraProvider resetCSS theme={theme}>
+            <QueryClientProvider client={queryClient}>
+              <CreateIssueForm />
+            </QueryClientProvider>
+          </ChakraProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'Formato invalido' },
+    });
+
+    fireEvent.click(screen.getByText('Registrar Agendamento'));
+    expect(
+      screen.getByLabelText('Formato de e-mail inválido')
+    ).toBeInTheDocument();
+  });
 });

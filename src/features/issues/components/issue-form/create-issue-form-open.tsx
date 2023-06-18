@@ -337,7 +337,7 @@ export function CreateIssueForm() {
           boxShadow="xl"
           isLoading={isCreatingIssue}
           {...(createdIssue && {
-            onClick: () => navigate('/chamados'),
+            onClick: () => navigate('/AgendamentosAbertos'),
             bg: 'transparent',
             border: '1px solid #F49320',
             color: '#F49320',
