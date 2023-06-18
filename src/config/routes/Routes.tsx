@@ -15,6 +15,7 @@ import { Tutoriais } from '@/pages/tutoriais';
 import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
 import { RegistrarAgendamento } from '@/pages/agendamento_externo/index';
+import { AgendamentosAbertos } from '@/pages/agendamentos_abertos';
 import { DefaultLayoutOpen } from '@/components/layout/default-layout-open';
 
 export function Router() {
@@ -135,6 +136,7 @@ export function Router() {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<DefaultLayoutOpen />}>
         <Route path="/agendamento_externo" element={<RegistrarAgendamento />} />
+        <Route path="/agendamentos_abertos" element={<AgendamentosAbertos />} />
       </Route>
       <Route path="*" element={<p>404</p>} />
     </Routes>

@@ -11,24 +11,33 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { BsSignpost2, BsTags, BsTelephonePlus } from 'react-icons/bs';
-import { useAuth } from '@/contexts/AuthContext';
 import { routes } from '@/constants/routes';
+import { CalendarClock } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { SideBarItem } from '@/components/side-bar/sidebar-item';
 
 export const SideBarOpen = memo(() => {
   const { user, signOut } = useAuth();
 
-  async function handleSignOut() {
+  function handleSignOut() {
     signOut();
   }
-  const filtro = [
+
+  const filteredRoutes = [
     {
+      label: 'Agendamentos abertos',
+      pathname: '/agendamentos_abertos',
+      icon: CalendarClock,
+      allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
+    },
+     {
       label: 'Registrar Agendamento',
       pathname: '/agendamento_externo',
       icon: BsTelephonePlus,
       allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
     },
   ];
+
   return (
     <Flex
       flexDirection="column"
@@ -45,10 +54,13 @@ export const SideBarOpen = memo(() => {
       <Divider />
 
       <VStack spacing={4} align="stretch">
-        {filtro.map((route) => (
+
+        {filteredRoutes.map((route) => (
           <SideBarItem key={route.label} {...route} />
         ))}
       </VStack>
+
+      
       <Box marginTop="auto" shadow="xl" p=".5rem">
         <Divider marginBottom={2} />
         <Flex gap={2} justifyContent="space-between" alignItems="center">
