@@ -10,20 +10,27 @@ import { ListView } from '@/components/list';
 import { IssueItem } from '@/features/issues/components/issue-item';
 import { useDeleteIssue } from '@/features/issues/api/delete-issue';
 
+export function sortIssues(issues: Issue[] | undefined): Issue[] {
+  if (!issues) {
+    return [];
+  }
+
+  return issues.slice().sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+
+    return dateB.getTime() - dateA.getTime();
+  });
+}
+
 export function Chamados() {
   const {
     data: issues,
     isLoading: isLoadingIssues,
     refetch,
   } = useGetAllIssues();
-  const sortedIssues = issues
-    ? issues.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
+  const sortedIssues = sortIssues(issues);
 
-        return dateB.getTime() - dateA.getTime();
-      })
-    : [];
   const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
 
   const onDelete = useCallback(
