@@ -24,7 +24,6 @@ export function Login() {
     await signIn({ username, password });
     setIsLoading(false);
   };
-  const navigate = useNavigate();
 
   return (
     <Center

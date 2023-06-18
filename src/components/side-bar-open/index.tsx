@@ -11,8 +11,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { BsSignpost2, BsTags, BsTelephonePlus } from 'react-icons/bs';
-import { routes } from '@/constants/routes';
 import { CalendarClock } from 'lucide-react';
+import { routes } from '@/constants/routes';
 import { useAuth } from '@/contexts/AuthContext';
 import { SideBarItem } from '@/components/side-bar/sidebar-item';
 
@@ -30,7 +30,7 @@ export const SideBarOpen = memo(() => {
       icon: CalendarClock,
       allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
     },
-     {
+    {
       label: 'Registrar Agendamento',
       pathname: '/agendamento_externo',
       icon: BsTelephonePlus,
@@ -54,13 +54,11 @@ export const SideBarOpen = memo(() => {
       <Divider />
 
       <VStack spacing={4} align="stretch">
-
         {filteredRoutes.map((route) => (
           <SideBarItem key={route.label} {...route} />
         ))}
       </VStack>
 
-      
       <Box marginTop="auto" shadow="xl" p=".5rem">
         <Divider marginBottom={2} />
         <Flex gap={2} justifyContent="space-between" alignItems="center">
