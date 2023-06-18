@@ -14,8 +14,8 @@ import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
 import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
-import { DefaultLayoutOpen } from '@/components/layout-open/default-layout-open';
 import { RegistrarAgendamento } from '@/pages/agendamento_externo/index';
+import { DefaultLayoutOpen } from '@/components/layout/default-layout-open';
 
 export function Router() {
   return (

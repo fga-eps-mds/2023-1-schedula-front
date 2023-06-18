@@ -15,7 +15,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { routes } from '@/constants/routes';
 import { SideBarItem } from '@/components/side-bar/sidebar-item';
 
-export const SideBar = memo(() => {
+export const SideBarOpen = memo(() => {
   const { user, signOut } = useAuth();
 
   async function handleSignOut() {
@@ -68,4 +68,4 @@ export const SideBar = memo(() => {
   );
 });
 
-SideBar.displayName = 'SideBar';
+SideBarOpen.displayName = 'SideBar';

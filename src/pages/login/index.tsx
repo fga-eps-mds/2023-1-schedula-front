@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Box, Button, Center, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Input, Text, Flex } from '@chakra-ui/react';
+import { CalendarClock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { TbCalendarTime } from 'react-icons/tb';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function Login() {

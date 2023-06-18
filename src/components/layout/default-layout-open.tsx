@@ -1,6 +1,6 @@
 import { Flex, Grid } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
-import { SideBar } from '@/components/side-bar-open';
+import { SideBarOpen } from '@/components/side-bar-open';
 import Footnote from '@/features/api-status/components/footnote';
 import { AutoLogoutComponent } from '@/components/auto-logout-component';
 
@@ -20,7 +20,7 @@ export function DefaultLayoutOpen() {
           templateColumns="auto minmax(0, 1fr)"
           gap={14}
         >
-          <SideBar />
+          <SideBarOpen />
           <Flex flexDirection="column">
             <Outlet />
           </Flex>
