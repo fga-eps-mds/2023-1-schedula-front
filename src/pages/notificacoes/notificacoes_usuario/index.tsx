@@ -27,9 +27,12 @@ export function NotificacaoUsuario() {
     (notification: Notification) => {
       setNotificationToEdit(notification);
       onOpen();
+      console.log(notification);
     },
     [onOpen]
   );
+
+  const user = JSON.parse(localStorage.getItem('@schedula:user') || '[]');
 
   const {
     onOpen: onOpenView,
@@ -58,7 +61,6 @@ export function NotificacaoUsuario() {
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const searchText = event.target.value.toLowerCase();
-      console.log(searchText);
       const filteredNotifications = notifications?.filter((notification) =>
         notification.message.toLowerCase().includes(searchText)
       );
@@ -69,8 +71,6 @@ export function NotificacaoUsuario() {
 
   useEffect(() => {
     const updatedNotifications = notifications || [];
-
-    updatedNotifications.sort((a, b) => a.message.localeCompare(b.message));
     setFilteredNotifications(updatedNotifications);
   }, [notifications]);
 
@@ -95,7 +95,7 @@ export function NotificacaoUsuario() {
       <NotificationPendencyModal
         isOpen={isOpen}
         onClose={onClose}
-        notificationIds={notificationToEdit?.id}
+        notification={notificationToEdit}
         onClear={function (): void {
           throw new Error('Function not implemented.');
         }}
@@ -105,7 +105,9 @@ export function NotificacaoUsuario() {
       />
 
       <ListView<Notification>
-        items={filteredNotifications}
+        items={filteredNotifications.filter((notification) => {
+          return notification.targetEmail === user.email;
+        })}
         render={renderNotificationItem}
         isLoading={isLoading}
       />
