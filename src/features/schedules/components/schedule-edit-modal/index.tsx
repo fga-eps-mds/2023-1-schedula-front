@@ -26,14 +26,14 @@ export function ScheduleEditModal({
     (values: any) => {
       const { description, status, dateTime } = schedule ?? {};
       const alerts =
-      values.alert_dates?.map((alert: { date: string }) => alert.date) || [];
-      
+        values.alert_dates?.map((alert: { date: string }) => alert.date) || [];
+
       const defaultStatus = status
-      ? Object.keys(ScheduleStatus)[
-        Object.values(ScheduleStatus).indexOf(status)
-      ]
-      : 'PROGRESS';
-      
+        ? Object.keys(ScheduleStatus)[
+            Object.values(ScheduleStatus).indexOf(status)
+          ]
+        : 'PROGRESS';
+
       const data = {
         id: schedule?.id ?? '',
         data: {
@@ -43,7 +43,7 @@ export function ScheduleEditModal({
           dateTime: values.date_time ?? dateTime,
           alerts,
         },
-      }
+      };
 
       editSchedule(data);
     },

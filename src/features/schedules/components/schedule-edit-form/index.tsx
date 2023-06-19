@@ -41,7 +41,12 @@ export function ScheduleEditForm({
     (workstation) => workstation.id === schedule?.issue?.workstation_id
   )[0].name;
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       event_date: parseSelectedDatetime(schedule?.dateTime ?? ''),
       alert_dates: schedule?.alerts.map((alert) => ({
@@ -186,8 +191,11 @@ export function ScheduleEditForm({
 
         <Flex w="100%" flexDirection="column">
           <FormLabel htmlFor="description">Descrição</FormLabel>
-          <Textarea {...register('description', { maxLength: 500 })} height="100%" />
-          {errors.description && errors.description.type === "maxLength" && (
+          <Textarea
+            {...register('description', { maxLength: 500 })}
+            height="100%"
+          />
+          {errors.description && errors.description.type === 'maxLength' && (
             <span>Tamanho máximo é de 500 caracteres</span>
           )}
         </Flex>
