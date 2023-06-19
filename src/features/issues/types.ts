@@ -181,6 +181,8 @@ export interface ExternIssuePayload {
 }
 
 export interface IssueOpen {
+  name: any;
+  ExternIssuename: any;
   id: string;
   requester: string;
   phone: string;
