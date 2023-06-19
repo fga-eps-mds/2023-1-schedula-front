@@ -9,25 +9,25 @@ import {
 } from '@chakra-ui/react';
 import { formatDate } from '@/utils/format-date';
 import { Item } from '@/components/list-item';
-import { Schedule, ScheduleOpen } from '@/features/schedules/types';
+import { ScheduleOpen } from '@/features/schedules/types';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { Permission } from '@/components/permission';
 
-interface ScheduleItemProps {
-  schedule: Schedule | ScheduleOpen;
-  onEdit: (schedule: Schedule) => void;
+interface ScheduleOpenItemProps {
+  schedule: ScheduleOpen;
+  onEdit: (schedule: ScheduleOpen) => void;
   onDelete: (scheduleId: string) => void;
   isDeleting: boolean;
 }
 
-export function ScheduleItem({
+export function ScheduleOpenItem({
   schedule,
   onEdit,
   onDelete,
   isDeleting,
-}: ScheduleItemProps) {
+}: ScheduleOpenItemProps) {
   const scheduleDate = schedule?.dateTime
     ? new Date(schedule.dateTime)
     : new Date();

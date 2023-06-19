@@ -1,4 +1,4 @@
-import { Issue } from '@/features/issues/types';
+import { ExternIssue, Issue } from '@/features/issues/types';
 
 interface Alert {
   id: string;
@@ -20,4 +20,13 @@ export interface Schedule {
   status: ScheduleStatus;
   alerts: Array<Alert>;
   issue: Issue;
+}
+
+export interface ScheduleOpen {
+  id: string;
+  dateTime: string;
+  description: string;
+  status: ScheduleStatus;
+  alerts: Array<Alert>;
+  issue: ExternIssue;
 }

@@ -1,5 +1,5 @@
 import { HStack } from '@chakra-ui/react';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/homologations/api/get-all-extern-issues';
@@ -8,6 +8,8 @@ import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
 import { ExternIssueItem } from '@/features/homologations/components/extern-issue-item';
 import { useDeleteHomologation } from '@/features/homologations/api/delete-extern-issue';
+import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
+import { useGetAllSchedulesOpen } from '@/features/schedules/api/get-all-schedules-open';
 
 export function GerenciarHomologacao() {
   const {
@@ -15,6 +17,15 @@ export function GerenciarHomologacao() {
     isLoading: isLoadingExternIssues,
     refetch,
   } = useGetAllIssues();
+
+  const { data: schedules, isLoading: isLoadingSchedules } =
+    useGetAllSchedulesOpen();
+
+  const scheduledIssues = schedules
+    ? schedules.map((schedule) => schedule.issue.id)
+    : [];
+
+  console.log(scheduledIssues);
 
   const { mutate: deleteIssues, isLoading: isDeletingIssue } =
     useDeleteHomologation();
@@ -27,14 +38,26 @@ export function GerenciarHomologacao() {
   );
 
   const renderExternIssueItem = useCallback(
-    (externIssue: ExternIssue) => (
-      <ExternIssueItem
-        externIssue={externIssue}
-        onDelete={onDelete}
-        isDeleting={isDeletingIssue}
-      />
-    ),
-    [onDelete, isDeletingIssue]
+    (externIssue: ExternIssue) => {
+      // Verificar se o ID do Issue está na lista de schedules
+      const isIssueScheduled = schedules?.some(
+        (schedule) => schedule.issue.id === externIssue.id
+      );
+
+      // Se o ID estiver na lista de schedules, não renderizar o card
+      if (isIssueScheduled) {
+        return null;
+      }
+
+      return (
+        <ExternIssueItem
+          externIssue={externIssue}
+          onDelete={onDelete}
+          isDeleting={isDeletingIssue}
+        />
+      );
+    },
+    [schedules, onDelete, isDeletingIssue]
   );
 
   return (

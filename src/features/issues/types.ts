@@ -96,16 +96,47 @@ export interface PostCreateExternIssueResponse {
 
 export interface PutUpdateIssueParams {
   issueId: string;
-  data: {
-    requester: string;
-    phone: string;
-    city_id: string;
-    workstation_id: string;
-    email: string;
-    date: Date;
-    problem_category_id: string;
-    problem_types_ids: string[];
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: Date;
+  problem_category_id: string;
+  problem_types_ids: string[];
+  cellphone: string;
+  description: string;
+}
+
+export interface PutUpdateExternIssueParams {
+  issueId: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: Date;
+  problem_category_id: string;
+  problem_types_ids: string[];
+  cellphone: string;
+  description: string;
+}
+
+export interface PutUpdateExternIssueResponse {
+  id: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: Date;
+  problem_category: {
+    id: string;
+    name: string;
+    description: string;
+    problem_types: ProblemTypeOption[];
   };
+  problem_types: ProblemTypeOption[];
 }
 
 export interface PutUpdateIssueResponse {
@@ -230,4 +261,23 @@ export interface PostCreateScheduleParams {
 
 export interface PostCreateScheduleResponse {
   id: string;
+}
+
+export interface PutEditExternIssueParams {
+  id: string;
+  data: {
+    requester: string;
+    phone: string;
+    city_id: string;
+    workstation_id: string;
+    email: string;
+    date: string;
+    problem_category: {
+      id: string;
+      name: string;
+      description: string;
+      problem_types: ProblemTypeOption[];
+    };
+    problem_types: ProblemTypeOption[];
+  };
 }

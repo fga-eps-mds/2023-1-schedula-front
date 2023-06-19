@@ -20,12 +20,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { IssueInfo } from '@/features/issues/components/issue-info';
 import { useGetCity } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstationsCache } from '@/features/workstations/api/get-all-workstations';
-import { Schedule, ScheduleStatus } from '@/features/schedules/types';
+import {
+  Schedule,
+  ScheduleStatus,
+  ScheduleOpen,
+} from '@/features/schedules/types';
 import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
 import { ControlledSelect } from '@/components/form-fields';
 
 interface ScheduleEditFormProps {
-  schedule?: Schedule;
+  schedule?: Schedule | ScheduleOpen;
   onSubmit: any;
   isSubmitting: boolean;
 }
