@@ -81,7 +81,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         navigate(from, { replace: true });
       } catch (err) {
         toast.error(
-          'Não foi possível realizar o login! Verifique o email e a senha e tente novamente.'
+          'Não foi possível realizar o login! Verifique o nome de usuário e a senha e tente novamente.'
         );
       }
     },

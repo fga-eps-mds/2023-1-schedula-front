@@ -7,6 +7,7 @@ export interface Notification {
   status: string;
   pendency: string;
   read: boolean;
+  createdAt: Date;
 }
 
 export interface NotificationPayLoad {
@@ -17,4 +18,5 @@ export interface NotificationPayLoad {
   status: string;
   pendency: string;
   read: boolean;
+  createdAt: Date;
 }

@@ -7,4 +7,5 @@ export interface Notification {
   status: string;
   pendency: string;
   read: boolean;
+  createdAt: Date;
 }

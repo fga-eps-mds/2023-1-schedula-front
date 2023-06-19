@@ -1,9 +1,11 @@
 import { MdLibraryAdd } from 'react-icons/md';
 import { AiFillCheckCircle, AiOutlineClockCircle } from 'react-icons/ai';
+import { Box, Text } from '@chakra-ui/react';
 import { Item } from '@/components/list-item';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { ActionButton } from '@/components/action-buttons';
 import { Notification } from '../../types';
+import { formatDate } from '@/utils/format-date';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -18,7 +20,31 @@ export function NotificationItem({
   isviewing,
 }: NotificationItemProps) {
   return (
-    <Item title={notification.message} description={notification.sourceName}>
+    <Item
+      title={notification.message}
+      description={
+        <Box display="flex" gap={2}>
+          <Box textAlign="center" fontWeight="medium">
+            <Text fontSize="sm" fontWeight="light" color="GrayText">
+              Usuário
+            </Text>
+            <Text>{notification.sourceName} </Text>
+          </Box>
+          <Box textAlign="center" fontWeight="medium">
+            <Text fontSize="sm" fontWeight="light" color="GrayText">
+              Data
+            </Text>
+            <Text>{formatDate(notification?.createdAt, 'date')} </Text>
+          </Box>
+          <Box textAlign="center" fontWeight="medium">
+            <Text fontSize="sm" fontWeight="light" color="GrayText">
+              Hora
+            </Text>
+            <Text>{formatDate(notification?.createdAt, 'time')}</Text>
+          </Box>
+        </Box>
+      }
+    >
       <ItemActions item={NotificationItem}>
         <ActionButton
           label="Adicionar pendencia"
