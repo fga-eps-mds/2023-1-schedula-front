@@ -31,6 +31,10 @@ export function NotificacaoUsuario() {
     },
     [onOpen]
   );
+  const handleClose = useCallback(() => {
+    setNotificationToEdit(undefined);
+    onClose();
+  }, [onClose]);
 
   const user = JSON.parse(localStorage.getItem('@schedula:user') || '[]');
 
@@ -94,7 +98,7 @@ export function NotificacaoUsuario() {
 
       <NotificationPendencyModal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         notification={notificationToEdit}
         onClear={function (): void {
           throw new Error('Function not implemented.');

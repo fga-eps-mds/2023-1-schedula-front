@@ -45,7 +45,7 @@ export function NotificationItem({
         </Box>
       }
     >
-      <ItemActions item={NotificationItem}>
+      <ItemActions item={notification}>
         <ActionButton
           label="Adicionar pendencia"
           icon={<AiOutlineClockCircle size={22} />}
