@@ -42,7 +42,7 @@ export function Agendamentos() {
     (schedule: Schedule) => (
       <ScheduleItem
         schedule={schedule}
-        onEdit={onEdit}
+        onEdit={() => onEdit(schedule)}
         onDelete={onDelete}
         isDeleting={isDeletingSchedule}
       />
