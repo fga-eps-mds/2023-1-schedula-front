@@ -22,12 +22,15 @@ export function NotificacaoUsuario() {
   >(notifications || []);
 
   const [notificationToEdit, setNotificationToEdit] = useState<Notification>();
+  const [notificationStatus, setNotificationStatus] = useState<
+    'pending' | 'solved'
+  >('pending');
   const { onOpen, isOpen, onClose } = useDisclosure();
   const onEdit = useCallback(
-    (notification: Notification) => {
+    (notification: Notification, notificationStatus: 'pending' | 'solved') => {
       setNotificationToEdit(notification);
+      setNotificationStatus(notificationStatus);
       onOpen();
-      console.log(notification);
     },
     [onOpen]
   );
@@ -38,25 +41,14 @@ export function NotificacaoUsuario() {
 
   const user = JSON.parse(localStorage.getItem('@schedula:user') || '[]');
 
-  const {
-    onOpen: onOpenView,
-    isOpen: isOpenView,
-    onClose: onCloseView,
-  } = useDisclosure();
-  const onView = useCallback(
-    (notification: Notification) => {
-      setNotificationToEdit(notification);
-      onOpenView();
-    },
-    [onOpenView]
-  );
-
   const renderNotificationItem = useCallback(
     (notification: Notification) => (
       <NotificationItem
         notification={notification}
         isviewing={false}
-        onEdit={onEdit} /* onView={"string"} */
+        onEdit={(notification, notificationStatus) =>
+          onEdit(notification, notificationStatus)
+        }
       />
     ),
     [onEdit]
@@ -100,12 +92,7 @@ export function NotificacaoUsuario() {
         isOpen={isOpen}
         onClose={handleClose}
         notification={notificationToEdit}
-        onClear={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-        onDelete={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        notificationStatus={notificationStatus}
       />
 
       <ListView<Notification>

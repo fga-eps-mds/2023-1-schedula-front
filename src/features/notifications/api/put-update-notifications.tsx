@@ -14,11 +14,6 @@ function putUpdateNotifications({
   notificationId,
   data,
 }: PutUpdateNotificationsParams) {
-  /* const form = new FormData();
-  form.append('status', data.status);
-  form.append('pendency', data.pendency); */
-
-  console.log(data);
   return api.put<PutUpdateNotificationsResponse>(
     `${ALERTS_ENDPOINT}/alerts/${notificationId}`,
     data

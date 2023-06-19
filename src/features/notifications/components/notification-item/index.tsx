@@ -1,4 +1,3 @@
-import { MdLibraryAdd } from 'react-icons/md';
 import { AiFillCheckCircle, AiOutlineClockCircle } from 'react-icons/ai';
 import { Box, Text } from '@chakra-ui/react';
 import { Item } from '@/components/list-item';
@@ -9,16 +8,18 @@ import { formatDate } from '@/utils/format-date';
 
 interface NotificationItemProps {
   notification: Notification;
-  onEdit: (notification: Notification) => void;
-  /* onView: (notificationId: string) => void; */
-  isviewing: boolean;
+  onEdit: (
+    notification: Notification,
+    notificationStatus: 'pending' | 'solved'
+  ) => void;
 }
 
 export function NotificationItem({
   notification,
   onEdit,
-  isviewing,
 }: NotificationItemProps) {
+  if (notification.status === 'solved') return null;
+
   return (
     <Item
       title={notification.message}
@@ -28,7 +29,7 @@ export function NotificationItem({
             <Text fontSize="sm" fontWeight="light" color="GrayText">
               Usuário
             </Text>
-            <Text>{notification.sourceName} </Text>
+            <Text>{notification.sourceName}</Text>
           </Box>
           <Box textAlign="center" fontWeight="medium">
             <Text fontSize="sm" fontWeight="light" color="GrayText">
@@ -47,19 +48,20 @@ export function NotificationItem({
     >
       <ItemActions item={notification}>
         <ActionButton
+          backgroundColor={
+            notification.status === 'pending' ? 'orange' : 'gray.100'
+          }
           label="Adicionar pendencia"
           icon={<AiOutlineClockCircle size={22} />}
-          onClick={() => onEdit(notification)}
-          color="gray.700"
+          onClick={() => onEdit(notification, 'pending')}
+          color={notification.status === 'pending' ? 'white' : 'gray.700'}
         />
 
         <ActionButton
           label="Marcar como resolvido"
           icon={<AiFillCheckCircle size={22} />}
           color="gray.700"
-          onClick={function (item: unknown): void | Promise<void> {
-            throw new Error('Function not implemented.');
-          }}
+          onClick={() => onEdit(notification, 'solved')}
         />
       </ItemActions>
     </Item>

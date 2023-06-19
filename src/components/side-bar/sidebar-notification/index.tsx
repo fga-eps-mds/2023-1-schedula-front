@@ -1,9 +1,10 @@
 /* eslint-disable react/display-name */
 import { memo } from 'react';
-import { Box, LinkBox, HStack, Icon, Text } from '@chakra-ui/react';
+import { Box, LinkBox, HStack, Icon, Text, Badge } from '@chakra-ui/react';
 import { useLocation, Link } from 'react-router-dom';
 import { IRoute } from '@/constants/routes';
 import { Permission } from '@/components/permission';
+import { useGetAllNotification } from '@/features/notifications/api/get-all-notifications';
 
 const hoverStyle = {
   border: '1px solid',
@@ -16,6 +17,16 @@ export const SideBarNotification = memo(
   ({ label, pathname, icon, allowedUsersPath }: IRoute) => {
     const location = useLocation();
     const isActive = location.pathname === pathname;
+
+    const { data: notifications } = useGetAllNotification();
+
+    const user = JSON.parse(localStorage.getItem('@schedula:user') || '[]');
+
+    const filteredNotifications = notifications?.filter((notification) => {
+      return (
+        notification.targetEmail === user.email && notification.read === false
+      );
+    });
 
     return (
       <Permission allowedRoles={allowedUsersPath}>
@@ -45,7 +56,24 @@ export const SideBarNotification = memo(
               <Box flex="1" textAlign="center">
                 <Text fontWeight="medium">{label}</Text>
               </Box>
-              <Icon as={icon} boxSize="1.8em" style={{ opacity: 0 }} />
+
+              <Badge
+                colorScheme="red"
+                borderRadius="full"
+                variant="solid"
+                px={2}
+                py={1}
+                fontSize="xs"
+                style={{
+                  opacity:
+                    filteredNotifications?.length === 0 ||
+                    user.profile !== 'BASIC'
+                      ? 0
+                      : 1,
+                }}
+              >
+                {filteredNotifications?.length}
+              </Badge>
             </HStack>
           </LinkBox>
         </Link>
