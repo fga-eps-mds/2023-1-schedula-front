@@ -10,6 +10,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { BsTelephonePlus } from 'react-icons/bs';
 import { CalendarClock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { SideBarItem } from '@/components/side-bar/sidebar-item';
@@ -26,6 +27,12 @@ export const SideBarOpen = memo(() => {
       label: 'Agendamentos abertos',
       pathname: '/agendamentos_abertos',
       icon: CalendarClock,
+      allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
+    },
+    {
+      label: 'Registrar Agendamento',
+      pathname: '/agendamento_externo',
+      icon: BsTelephonePlus,
       allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
     },
   ];

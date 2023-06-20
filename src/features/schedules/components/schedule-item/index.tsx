@@ -1,12 +1,14 @@
 import {
   Badge,
   Box,
+  Button,
   HStack,
   Spacer,
   Tag,
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { useState } from 'react';
 import { formatDate } from '@/utils/format-date';
 import { Item } from '@/components/list-item';
 import { Schedule } from '@/features/schedules/types';
@@ -64,6 +66,8 @@ export function ScheduleItem({
   const user = users?.find((user) => {
     return user?.email === schedule.issue.email;
   });
+
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Box>
@@ -130,7 +134,29 @@ export function ScheduleItem({
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Descrição:
               </Text>
-              <Text noOfLines={1}>{schedule.description}</Text>
+              {isExpanded ? (
+                <Box maxWidth="110ch">
+                  <Text noOfLines={undefined} textAlign="justify">
+                    {schedule.description}
+                  </Text>
+                </Box>
+              ) : (
+                <Text noOfLines={1}>
+                  {schedule.description.length > 110
+                    ? `${schedule.description.substring(0, 110)}...`
+                    : schedule.description}
+                </Text>
+              )}
+              {schedule.description.length > 110 && (
+                <Button
+                  size="xs"
+                  variant="link"
+                  colorScheme="blue"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  {isExpanded ? 'Mostrar menos' : 'Mostrar mais'}
+                </Button>
+              )}
             </Box>
           </VStack>
         }

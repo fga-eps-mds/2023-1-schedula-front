@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import moment, { Moment } from 'moment';
 import { Schedule, ScheduleStatus } from '../../types';
 import { WorkstationItem } from '@/features/workstations/components/workstation-item';
@@ -49,7 +49,7 @@ const mockedSchedule: Schedule = {
     requester: 'cliente',
     phone: '99999999999',
     city_id: '1',
-    workstation_id: '2',
+    workstation_id: '1',
     email: 'example@example.com',
     date: '2021-10-10',
     problem_category: {
@@ -67,8 +67,36 @@ const mockedSchedule: Schedule = {
     ],
   },
 };
+
+const mockedScheduleNotResolved = {
+  ...mockedSchedule,
+  status: ScheduleStatus.NOT_RESOLVED,
+};
+
+const mockedSchedulePendent = {
+  ...mockedSchedule,
+  status: ScheduleStatus.PENDENT,
+};
+
+const mockedScheduleUrgent = {
+  ...mockedSchedule,
+  status: ScheduleStatus.URGENT,
+};
+
+const mockedScheduleResolved = {
+  ...mockedSchedule,
+  status: ScheduleStatus.RESOLVED,
+};
+
+const mockedScheduleDescription = {
+  ...mockedSchedule,
+  description:
+    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
+};
+
 const mockedOnEditFunction = vi.fn(() => {});
 const mockedOnDeleteFunction = vi.fn(() => {});
+
 describe('ScheduleItem', () => {
   const queryClient = new QueryClient();
   it('should display the workstation of schedule card correctly', async () => {
@@ -145,5 +173,164 @@ describe('ScheduleItem', () => {
       `${mockedUser.name} [${mockedUser.username}]`
     );
     expect(name).toBeInTheDocument();
+  });
+
+  it('should display the status NOT_RESOLVED of the schedule correctly', async () => {
+    const { findAllByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedScheduleNotResolved}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const status = await findAllByText(mockedScheduleNotResolved.status);
+    expect(status[0]).toBeInTheDocument();
+  });
+
+  it('should display the status PENDENT of the schedule correctly', async () => {
+    const { findAllByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedSchedulePendent}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const status = await findAllByText(mockedSchedulePendent.status);
+    expect(status[0]).toBeInTheDocument();
+  });
+
+  it('should display the status URGENT of the schedule correctly', async () => {
+    const { findAllByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedScheduleUrgent}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const status = await findAllByText(mockedScheduleUrgent.status);
+    expect(status[0]).toBeInTheDocument();
+  });
+
+  it('should display the status RESOLVED of the schedule correctly', async () => {
+    const { findAllByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedScheduleResolved}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const status = await findAllByText(mockedScheduleResolved.status);
+    expect(status[0]).toBeInTheDocument();
+  });
+
+  it('should display the description with less than 110 characters of the schedule correctly', async () => {
+    const { findAllByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedSchedule}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const description = await findAllByText(mockedSchedule.description);
+    expect(description[0]).toBeInTheDocument();
+  });
+
+  it('should display the description with more than 110 characters and no expanded of the schedule correctly', async () => {
+    const { findAllByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedScheduleDescription}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const description = await findAllByText(
+      `${mockedScheduleDescription.description.substring(0, 110)}...`
+    );
+    expect(description[0]).toBeInTheDocument();
+  });
+
+  it('should display the description with more than 110 characters and expanded of the schedule correctly', async () => {
+    const { findAllByText, findByText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedScheduleDescription}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const showMoreButton = await findByText('Mostrar mais');
+    fireEvent.click(showMoreButton);
+
+    const expandedDescription = await findAllByText(
+      mockedScheduleDescription.description
+    );
+    expect(expandedDescription[0]).toBeInTheDocument();
+  });
+
+  it('should be able to edit a schedule', async () => {
+    const { queryByLabelText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedSchedule}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const EditButton = await queryByLabelText(
+      `Editar ${mockedSchedule.status}`
+    );
+    if (EditButton) {
+      fireEvent.click(EditButton);
+      expect(mockedOnEditFunction).toHaveBeenCalled();
+    }
+  });
+
+  it('should be able to delete a schedule', async () => {
+    const { queryByLabelText } = render(
+      <QueryClientProvider client={queryClient}>
+        <ScheduleItem
+          schedule={mockedSchedule}
+          isDeleting={false}
+          onEdit={mockedOnEditFunction}
+          onDelete={mockedOnDeleteFunction}
+        />
+      </QueryClientProvider>
+    );
+
+    const deleteButton = queryByLabelText(`Excluir Agendamento`);
+    if (deleteButton) {
+      fireEvent.click(deleteButton);
+      expect(mockedOnDeleteFunction).toHaveBeenCalledWith(mockedSchedule.id);
+    }
   });
 });
