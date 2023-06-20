@@ -8,32 +8,24 @@ import {
   Icon,
   InputLeftElement,
   Text,
-  Textarea,
-  useDisclosure,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiCellphoneFill } from 'react-icons/ri';
-import { AiFillCalendar, AiFillAlert } from 'react-icons/ai';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { usePutUpdateExternIssue } from '@/features/issues/api/put-edit-extern-issue';
 import {
-  ExternIssue,
-  IssueOpen,
   IssuePayloadOpen,
-  ExternIssuePayload,
-  PostCreateExternIssueParams,
   PutUpdateExternIssueParams,
-  PutUpdateExternIssueResponse,
 } from '@/features/issues/types';
 
-import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
+import { parseSelectedDatetime } from '@/utils/format-date';
 
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
@@ -42,23 +34,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ActionButton } from '@/components/action-buttons';
 
-interface Option {
-  label: string;
-  value: string;
-}
-
 export function UpdateExternIssueForm() {
-  const navigate = useNavigate();
   const locate = useLocation();
 
   const { user } = useAuth();
 
-  const [createdIssue, setCreatedIssue] = useState<IssueOpen>();
-
   const cityRef = useRef<Option | null>(null);
   const categoryRef = useRef<Option | null>(null);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     register,
@@ -66,7 +48,6 @@ export function UpdateExternIssueForm() {
     handleSubmit,
     watch,
     resetField,
-    setValue,
     formState: { errors },
   } = useForm<IssuePayloadOpen>({
     defaultValues: locate.state.externIssue,
@@ -75,9 +56,7 @@ export function UpdateExternIssueForm() {
 
   const { mutate: updateIssue, isLoading: isUpdatingIssue } =
     usePutUpdateExternIssue({
-      onSuccessCallBack(data) {
-        setCreatedIssue(data);
-      },
+      onSuccessCallBack: () => {},
     });
 
   const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
@@ -152,7 +131,11 @@ export function UpdateExternIssueForm() {
       workstation_payload,
       description,
     }: IssuePayloadOpen) => {
+      const issueId = locate.state.externIssue?.id ?? '';
+      // const city_payload_id = city_payload?.value ?? '';
+      // const phone = phone ?? locate.externIssue.phone;
       const payload: PutUpdateExternIssueParams = {
+        issueId,
         phone,
         requester,
         dateTime,
@@ -170,7 +153,7 @@ export function UpdateExternIssueForm() {
 
       updateIssue(payload);
     },
-    [updateIssue, user?.email]
+    [updateIssue, user?.email, locate.state.externIssue?.id]
   );
 
   const { fields, append, remove } = useFieldArray({
@@ -190,8 +173,8 @@ export function UpdateExternIssueForm() {
     [remove]
   );
 
-  // how to console log requester?
   console.log(watch('requester'));
+  // console.log('kkk', isUpdatingIssue);
 
   return (
     <form id="update-issue-form" onSubmit={handleSubmit(onSubmit)}>
@@ -452,18 +435,12 @@ export function UpdateExternIssueForm() {
 
       <Button
         type="submit"
+        size="lg"
         form="update-issue-form"
         width="100%"
-        size="lg"
-        mt={8}
-        boxShadow="xl"
         isLoading={isUpdatingIssue}
-        onClick={() => navigate('/homologacao')}
-        bg="transparent"
-        border="1px solid #F49320"
-        color="#F49320"
       >
-        Ir para os atendimentos
+        Atualizar Agendamento
       </Button>
     </form>
   );
