@@ -74,17 +74,17 @@ export function CreateIssueForm() {
 
   const { isLoading: isLoadingPhone } = useGetAllWorkstations();
 
-  const citiesOptions = cities?.map((city) => {
+  const citiesOptions = cities?.map(({ name, id }) => {
     return {
-      label: city?.name ?? '',
-      value: city?.id ?? '',
+      label: name ?? '',
+      value: id ?? '',
     };
   });
 
-  const problemCategoriesOptions = problem_categories?.map((category) => {
+  const problemCategoriesOptions = problem_categories?.map(({ name, id }) => {
     return {
-      label: category?.name ?? '',
-      value: category?.id ?? '',
+      label: name ?? '',
+      value: id ?? '',
     };
   });
 
@@ -115,27 +115,26 @@ export function CreateIssueForm() {
 
   const problemTypesOptions = category
     ? problem_categories
-        ?.filter((cat) => cat.id === category.value)
-        .map((category) => category.problem_types)[0]
-        .map((problemType) => ({
-          value: problemType?.id ?? '',
-          label: problemType?.name ?? '',
-        }))
+        ?.filter(({ id }) => id === category.value)
+        .flatMap(({ problem_types }) =>
+          problem_types.map(({ id, name }) => ({
+            value: id ?? '',
+            label: name ?? '',
+          }))
+        )
     : [];
-
-  useEffect(() => {
-    if (city !== cityRef.current) {
-      resetField('workstation_payload', { defaultValue: null });
-      cityRef.current = city;
-    }
-  }, [city, resetField]);
 
   useEffect(() => {
     if (category !== categoryRef.current) {
       resetField('problem_types_payload', { defaultValue: null });
       categoryRef.current = category;
     }
-  }, [category, resetField]);
+
+    if (city !== cityRef.current) {
+      resetField('workstation_payload', { defaultValue: null });
+      cityRef.current = city;
+    }
+  }, [category, city, resetField]);
 
   const onSubmit = useCallback(
     ({
@@ -308,21 +307,6 @@ export function CreateIssueForm() {
           </GridItem>
         </Grid>
 
-        {problemTypes && problemTypes?.length > 0 ? (
-          <Box shadow="lg" mt="2rem" borderRadius=".5rem">
-            <Box bg="#ffdab7" p="1rem" borderRadius=".5rem">
-              <Text fontWeight="bold">Rol de atendimento</Text>
-            </Box>
-            {problemTypes?.map((problem) => (
-              <Box key={problem.value} my="1rem" px="1rem" pt=".5rem" pb="1rem">
-                <Text>
-                  {category.label} - {problem.label}
-                </Text>
-              </Box>
-            ))}
-          </Box>
-        ) : null}
-
         <Button
           type="submit"
           form="create-issue-form"
@@ -332,7 +316,7 @@ export function CreateIssueForm() {
           boxShadow="xl"
           isLoading={isCreatingIssue}
           {...(createdIssue && {
-            onClick: () => navigate('/AgendamentosAbertos'),
+            onClick: () => navigate('/agendamentos_abertos'),
             bg: 'transparent',
             border: '1px solid #F49320',
             color: '#F49320',
