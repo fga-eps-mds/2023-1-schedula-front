@@ -120,6 +120,8 @@ export interface PutUpdateExternIssueParams {
   problem_types_ids: string[];
   cellphone: string;
   description: string;
+  dateTime: Date;
+  alerts: Date[];
 }
 
 export interface PutUpdateExternIssueResponse {
@@ -130,6 +132,10 @@ export interface PutUpdateExternIssueResponse {
   workstation_id: string;
   email: string;
   date: Date;
+  dateTime: Date;
+  description: string;
+  cellphone: string;
+  alerts: Date[];
   problem_category: {
     id: string;
     name: string;
@@ -178,6 +184,10 @@ export interface ExternIssuePayload {
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
   problem_types_payload?: { label: string; value: string }[];
+  dateTime: Date;
+  alerts: Date[];
+  description: string;
+  cellphone: string;
 }
 
 export interface IssueOpen {
@@ -245,7 +255,6 @@ export interface IssuePayloadOpen {
   dateTime: Date;
   email: string;
   phone: { label: string; value: string };
-
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };

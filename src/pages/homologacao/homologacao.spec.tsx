@@ -54,7 +54,6 @@ describe('Issues page', () => {
     expect(list).toBeInTheDocument();
   });
 
-
   it('should display a refresh button', async () => {
     const { findByRole } = render(
       <BrowserRouter>

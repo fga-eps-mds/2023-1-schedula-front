@@ -16,12 +16,11 @@ import {
   PopoverFooter,
   PopoverHeader,
   Text,
-  Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { ActionButtonProps } from '../types';
 import { ActionButton } from '..';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Input } from '@/components/form-fields/input';
 import { DeleteButton } from '../delete-button';
 
@@ -38,7 +37,7 @@ export function ApproveButton<Data>({
   ...props
 }: DeleteButtonProps<Data>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [justification, setJustification] = useState('');
+  const [justification] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -48,24 +47,14 @@ export function ApproveButton<Data>({
     onClose?.();
     setIsLoading(false);
   }, [onClose, onClick, justification]);
-  
-  const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    resetField,
-    setValue,
-    formState: { errors },
-  } = useForm<IssuePayloadOpen>({
 
-  });
+  const { control } = useForm<IssuePayloadOpen>({});
 
   const { fields, append, remove } = useFieldArray({
     control,
     shouldUnregister: true,
     name: 'alert_dates',
-  });  
+  });
 
   const handleAddDate = useCallback(() => {
     append({ date: '' });
@@ -93,7 +82,7 @@ export function ApproveButton<Data>({
         />
       </PopoverAnchor>
       <PopoverContent
-        height='200%'
+        height="200%"
         width="150%"
         left="-175%"
         data-testid="delete-confirmation-popover"
@@ -149,7 +138,7 @@ export function ApproveButton<Data>({
                 </>
               )}
             />
-          </Box>      
+          </Box>
           <Box>
             <Flex gap={4} alignItems="center" my="0.5rem">
               <Text>Alertas</Text>
@@ -220,8 +209,7 @@ export function ApproveButton<Data>({
                 onClick={handleAddDate}
               />
             </Flex>
-          </Box> 
-
+          </Box>
         </PopoverBody>
 
         <PopoverFooter borderBottomRadius="base" border={0} bg="blackAlpha.300">

@@ -1,10 +1,6 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Schedule,
-  ScheduleStatus,
-  ScheduleOpen,
-} from '@/features/schedules/types';
+import { ScheduleStatus, ScheduleOpen } from '@/features/schedules/types';
 import { ScheduleEditForm } from '@/features/schedules/components/schedule-edit-form';
 import { usePutEditSchedule } from '@/features/schedules/api/put-edit-schedule';
 

@@ -5,7 +5,6 @@ import {
   Spacer,
   Tag,
   Text,
-  Button,
   VStack,
 } from '@chakra-ui/react';
 import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';

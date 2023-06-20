@@ -15,4 +15,3 @@ describe('DeleteButton', () => {
     expect(button).toBeInTheDocument();
   });
 });
-

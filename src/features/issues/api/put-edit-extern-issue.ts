@@ -7,9 +7,12 @@ import { ApiError } from '@/config/lib/axios/types';
 import { SCHEDULE_CACHE_KEYS } from '@/features/schedules/constants/cache';
 import { PutUpdateExternIssueParams } from '@/features/issues/types';
 
-async function putUpdateExternIssue({ issueId }: PutUpdateExternIssueParams) {
+async function putUpdateExternIssue(data: PutUpdateExternIssueParams) {
+  const { issueId } = data;
+  console.log('json', JSON.stringify(data));
   const response = await api.put<boolean>(
-    `${ISSUES_ENDPOINT}/issuesOpen/${issueId}`
+    `${ISSUES_ENDPOINT}/issuesOpen/${issueId}`,
+    data
   );
   return response.data;
 }

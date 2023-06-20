@@ -19,11 +19,11 @@ const mockedExternIssue: IssueOpen = {
     id: '',
     name: '',
     description: '',
-    problem_types: []
+    problem_types: [],
   },
   problem_types: [],
   name: undefined,
-  ExternIssuename: undefined
+  ExternIssuename: undefined,
 };
 
 const mockedOnEditFunction = vi.fn(() => {});
@@ -33,7 +33,7 @@ describe('UserItem', () => {
   it('should display the name of the user correctly', async () => {
     const { findByText } = render(
       <ExternIssueItem
-      externIssue={mockedExternIssue}
+        externIssue={mockedExternIssue}
         isDeleting={false}
         onEdit={mockedOnEditFunction}
         onDelete={mockedOnDeleteFunction}
@@ -55,7 +55,9 @@ describe('UserItem', () => {
       />
     );
 
-    const EditButton = await queryByLabelText(`Editar ${mockedExternIssue.name}`);
+    const EditButton = await queryByLabelText(
+      `Editar ${mockedExternIssue.name}`
+    );
 
     if (EditButton) {
       fireEvent.click(EditButton);
