@@ -6,6 +6,7 @@ const category: Category = {
   id: '1',
   description: 'Descrição da Categoria',
   name: 'Categoria',
+  visible_user_external: false,
 };
 
 describe('CategoriaForm', () => {
