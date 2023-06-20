@@ -63,7 +63,7 @@ export const SideBarOpen = memo(() => {
         <Flex gap={2} justifyContent="space-between" alignItems="center">
           <FaRegUser size={25} />
           <Text maxWidth={140} noOfLines={1}>
-            {user?.name ?? 'UsuÃ¡rio Externo'}
+            {user?.name ?? 'Usuário Externo'}
           </Text>
           <Icon
             as={RiLogoutCircleFill}
