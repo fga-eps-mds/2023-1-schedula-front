@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/page-header';
 import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
 import { ListView } from '@/components/list';
 import { Schedule, ScheduleStatus } from '@/features/schedules/types';
-import { ScheduleItem } from '@/features/schedules/components/schedule-item-open';
+import { ScheduleItem } from '@/features/schedules/components/schedule-item';
 import { useDeleteSchedule } from '@/features/schedules/api/delete-schedule';
 import { ScheduleEditModal } from '@/features/schedules/components/schedule-edit-modal';
 
