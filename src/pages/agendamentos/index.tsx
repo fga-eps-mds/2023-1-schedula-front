@@ -15,7 +15,9 @@ export function Agendamentos() {
 
   const { data: schedules, isLoading, refetch } = useGetAllSchedules();
   const filteredSchedules = schedules
-    ? schedules.filter((schedule) => schedule.status.toString() !== 'RESOLVIDO')
+    ? schedules.filter(
+        (schedule) => schedule.status.toString().toUpperCase() !== 'RESOLVIDO'
+      )
     : [];
 
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
