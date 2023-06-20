@@ -19,10 +19,16 @@ export const formatDate = (
   };
 
   try {
+    const localDate = new Date(date);
+
+    const timezoneOffset = localDate.getTimezoneOffset();
+    const timezoneOffsetHours = timezoneOffset / 60;
+    localDate.setHours(localDate.getHours() + timezoneOffsetHours);
+
     const formatedDate = new Intl.DateTimeFormat(
       locale,
       formatMap[format] as Intl.DateTimeFormatOptions
-    ).format(new Date(date));
+    ).format(localDate);
 
     return formatedDate;
   } catch (error) {
