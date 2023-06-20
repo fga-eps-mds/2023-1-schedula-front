@@ -11,7 +11,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { MdEmail } from 'react-icons/md';
-import { tr } from 'date-fns/locale';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
