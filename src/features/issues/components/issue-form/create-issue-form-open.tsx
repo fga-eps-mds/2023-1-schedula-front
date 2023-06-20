@@ -111,7 +111,7 @@ export function CreateIssueForm() {
     : [];
 
   const buttonProps = {
-    type: 'submit',
+    type: 'submit' as const,
     form: 'create-issue-form',
     width: '100%',
     size: 'lg',
@@ -329,7 +329,7 @@ export function CreateIssueForm() {
         </Button>
       </form>
 
-      <ScheduleModal onClose={onClose} issue={createdIssue} isOpen={isOpen} />
+      <ScheduleModal issue={createdIssue} isOpen={isOpen} onClose={onClose} />
     </>
   );
 }
