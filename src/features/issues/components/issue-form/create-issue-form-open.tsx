@@ -11,6 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { MdEmail } from 'react-icons/md';
+import { tr } from 'date-fns/locale';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -58,7 +59,7 @@ export function CreateIssueForm() {
     });
 
   const validateEmailFormat = (value: string) => {
-    const emailRegex = /^[a-z0-9](.?[a-z0-9]){5,}@policiacivil.go.gov.br$/;
+    const emailRegex = /^[a-z0-9](.?[a-z0-9]){3,}@policiacivil.go.gov.br$/;
     return emailRegex.test(value) || 'Formato de e-mail inválido';
   };
 
@@ -79,12 +80,14 @@ export function CreateIssueForm() {
     };
   });
 
-  const problemCategoriesOptions = problem_categories?.map(({ name, id }) => {
-    return {
-      label: name ?? '',
-      value: id ?? '',
-    };
-  });
+  const problemCategoriesOptions = problem_categories
+    ?.filter((item) => item.visible_user_external)
+    .map(({ name, id }) => {
+      return {
+        label: name ?? '',
+        value: id ?? '',
+      };
+    });
 
   const city = watch('city_payload');
   const category = watch('problem_category_payload');
@@ -122,12 +125,16 @@ export function CreateIssueForm() {
 
   const problemTypesOptions = category
     ? problem_categories
-        ?.filter(({ id }) => id === category.value)
+        ?.filter(
+          (item) => item.visible_user_external && item.id === category.value
+        )
         .flatMap(({ problem_types }) =>
-          problem_types.map(({ id, name }) => ({
-            value: id ?? '',
-            label: name ?? '',
-          }))
+          problem_types
+            ?.filter((item) => item.visible_user_external)
+            .map(({ id, name }) => ({
+              value: id ?? '',
+              label: name ?? '',
+            }))
         )
     : [];
 
