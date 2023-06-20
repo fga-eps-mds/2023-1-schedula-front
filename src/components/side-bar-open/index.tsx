@@ -10,9 +10,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { BsSignpost2, BsTags, BsTelephonePlus } from 'react-icons/bs';
+import { BsTelephonePlus } from 'react-icons/bs';
 import { CalendarClock } from 'lucide-react';
-import { routes } from '@/constants/routes';
 import { useAuth } from '@/contexts/AuthContext';
 import { SideBarItem } from '@/components/side-bar/sidebar-item';
 
@@ -64,7 +63,7 @@ export const SideBarOpen = memo(() => {
         <Flex gap={2} justifyContent="space-between" alignItems="center">
           <FaRegUser size={25} />
           <Text maxWidth={140} noOfLines={1}>
-            {user?.name ?? 'Usuário Externo'}
+            {user?.name ?? 'UsuÃ¡rio Externo'}
           </Text>
           <Icon
             as={RiLogoutCircleFill}

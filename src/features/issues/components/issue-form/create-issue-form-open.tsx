@@ -6,15 +6,13 @@ import {
   Icon,
   InputLeftElement,
   Text,
-  Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Controller, useForm, useFormState } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { MdEmail } from 'react-icons/md';
-import { BiBold } from 'react-icons/bi';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -28,7 +26,6 @@ import {
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 import { maskPhoneField } from '@/utils/form-utils';
-import { useAuth } from '@/contexts/AuthContext';
 import { ScheduleModal } from '@/features/schedules/components/schedule-modal';
 
 interface Option {
@@ -39,14 +36,12 @@ interface Option {
 export function CreateIssueForm() {
   const navigate = useNavigate();
 
-  const { user } = useAuth();
-
   const [createdIssue, setCreatedIssue] = useState<IssueOpen>();
 
   const cityRef = useRef<Option | null>(null);
   const categoryRef = useRef<Option | null>(null);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
 
   const {
     register,
@@ -77,7 +72,7 @@ export function CreateIssueForm() {
   const { data: workstations, isLoading: isLoadingWorkstations } =
     useGetAllWorkstations();
 
-  const { data: phone, isLoading: isLoadingPhone } = useGetAllWorkstations();
+  const { isLoading: isLoadingPhone } = useGetAllWorkstations();
 
   const citiesOptions = cities?.map((city) => {
     return {
