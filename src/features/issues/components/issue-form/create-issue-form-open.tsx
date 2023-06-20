@@ -1,11 +1,9 @@
 import {
-  Box,
   Button,
   Grid,
   GridItem,
   Icon,
   InputLeftElement,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -90,7 +88,6 @@ export function CreateIssueForm() {
 
   const city = watch('city_payload');
   const category = watch('problem_category_payload');
-  const problemTypes = watch('problem_types_payload');
 
   const workstationsOptions = city
     ? workstations
@@ -112,6 +109,16 @@ export function CreateIssueForm() {
           label: workstation?.phone ?? '',
         }))
     : [];
+
+  const buttonProps = {
+    type: 'submit',
+    form: 'create-issue-form',
+    width: '100%',
+    size: 'lg',
+    mt: 8,
+    boxShadow: 'xl',
+    isLoading: isCreatingIssue,
+  };
 
   const problemTypesOptions = category
     ? problem_categories
@@ -308,25 +315,21 @@ export function CreateIssueForm() {
         </Grid>
 
         <Button
-          type="submit"
-          form="create-issue-form"
-          width="100%"
-          size="lg"
-          mt={8}
-          boxShadow="xl"
-          isLoading={isCreatingIssue}
-          {...(createdIssue && {
-            onClick: () => navigate('/agendamentos_abertos'),
-            bg: 'transparent',
-            border: '1px solid #F49320',
-            color: '#F49320',
-          })}
+          {...buttonProps}
+          {...(createdIssue
+            ? {
+                onClick: () => navigate('/agendamentos_abertos'),
+                bg: 'transparent',
+                border: '1px solid #F49320',
+                color: '#F49320',
+              }
+            : {})}
         >
           {!createdIssue ? 'Registrar Agendamento' : 'Ir para os agendamentos'}
         </Button>
       </form>
 
-      <ScheduleModal issue={createdIssue} isOpen={isOpen} onClose={onClose} />
+      <ScheduleModal onClose={onClose} issue={createdIssue} isOpen={isOpen} />
     </>
   );
 }
