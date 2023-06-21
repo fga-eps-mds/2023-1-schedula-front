@@ -44,14 +44,16 @@ export function Agendamentos() {
   }, [onClose]);
 
   const renderScheduleItem = useCallback(
-    (schedule: Schedule) => (
-      <ScheduleItem
-        schedule={schedule}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        isDeleting={isDeletingSchedule}
-      />
-    ),
+    (schedule: Schedule) => {
+      return (
+        <ScheduleItem
+          schedule={schedule}
+          onEdit={() => onEdit(schedule)}
+          onDelete={onDelete}
+          isDeleting={isDeletingSchedule}
+        />
+      );
+    },
     [onEdit, onDelete, isDeletingSchedule]
   );
 

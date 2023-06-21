@@ -19,10 +19,16 @@ export const formatDate = (
   };
 
   try {
+    const localDate = new Date(date);
+
+    const timezoneOffset = localDate.getTimezoneOffset();
+    const timezoneOffsetHours = timezoneOffset / 60;
+    localDate.setHours(localDate.getHours() + timezoneOffsetHours);
+
     const formatedDate = new Intl.DateTimeFormat(
       locale,
       formatMap[format] as Intl.DateTimeFormatOptions
-    ).format(new Date(date));
+    ).format(localDate);
 
     return formatedDate;
   } catch (error) {
@@ -32,6 +38,11 @@ export const formatDate = (
 
 export function parseSelectedDate(value: string) {
   const date = new Date(value);
+
+  const timezoneOffset = date.getTimezoneOffset();
+  const timezoneOffsetHours = timezoneOffset / 60;
+  date.setHours(date.getHours() + timezoneOffsetHours);
+
   const day = (date.getDate() < 10 ? '0' : '') + date.getDate();
   const month = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
   const year = date.getFullYear();

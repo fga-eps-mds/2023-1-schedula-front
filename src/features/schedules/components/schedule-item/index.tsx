@@ -42,13 +42,13 @@ export function ScheduleItem({
       case 'não resolvido':
         return 'gray';
       case 'em andamento':
-        return 'blue';
+        return 'green';
       case 'pendente':
         return 'yellow';
       case 'urgente':
         return 'red';
       default:
-        return 'green';
+        return 'blue';
     }
   }
 
