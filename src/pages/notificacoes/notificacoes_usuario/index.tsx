@@ -13,6 +13,7 @@ import { NotificationItem } from '@/features/notifications/components/notificati
 import { useGetAllNotification } from '@/features/notifications/api/get-all-notifications';
 import { ListView } from '@/components/list';
 import { NotificationPendencyModal } from '@/features/notifications/components/notification-pendency-modal';
+import { usePutUpdateNotifications } from '@/features/notifications/api/put-update-notifications';
 
 export function NotificacaoUsuario() {
   const { data: notifications, isLoading } = useGetAllNotification();
@@ -41,11 +42,15 @@ export function NotificacaoUsuario() {
 
   const user = JSON.parse(localStorage.getItem('@schedula:user') || '[]');
 
+  const notificationRead = notifications?.filter(
+    (notification) =>
+      notification.targetEmail === user.email && !notification.read
+  );
+
   const renderNotificationItem = useCallback(
     (notification: Notification) => (
       <NotificationItem
         notification={notification}
-        isviewing={false}
         onEdit={(notification, notificationStatus) =>
           onEdit(notification, notificationStatus)
         }
@@ -53,6 +58,33 @@ export function NotificacaoUsuario() {
     ),
     [onEdit]
   );
+
+  const { mutate: updateNotification } = usePutUpdateNotifications({
+    onSuccessCallBack: () => {},
+    showToast: false,
+  });
+
+  const [isNotificationRead, setIsNotificationRead] = useState(false);
+
+  useEffect(() => {
+    if (
+      !isNotificationRead &&
+      notificationRead &&
+      notificationRead.length > 0
+    ) {
+      notificationRead.forEach((notification) => {
+        updateNotification({
+          notificationId: notification.id,
+          data: {
+            read: true,
+            status: notification.status,
+            pendency: notification.pendency,
+          },
+        });
+      });
+      setIsNotificationRead(true);
+    }
+  }, [notificationRead, isNotificationRead, updateNotification]);
 
   const handleSearch = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

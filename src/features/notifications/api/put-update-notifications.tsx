@@ -22,8 +22,10 @@ function putUpdateNotifications({
 
 export function usePutUpdateNotifications({
   onSuccessCallBack,
+  showToast = true,
 }: {
   onSuccessCallBack?: () => void;
+  showToast?: boolean;
 }) {
   const queryClient = useQueryClient();
 
@@ -33,7 +35,7 @@ export function usePutUpdateNotifications({
         NOTIFICATIONS_CACHE_KEYS.allNotifications,
       ]);
 
-      toast.success('Notificação atualizado com sucesso!');
+      if (showToast) toast.success('Notificação atualizado com sucesso!');
 
       onSuccessCallBack?.();
     },
