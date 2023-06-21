@@ -69,4 +69,10 @@ export const routes: IRoute[] = [
     icon: TbBulb,
     allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
   },
+  {
+    label: 'Registrar Agendamento',
+    pathname: '/agendamento_externo/registrar',
+    icon: BsTelephonePlus,
+    allowedUsersPath: ['USER'],
+  },
 ];
