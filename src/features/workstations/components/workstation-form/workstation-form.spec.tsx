@@ -61,18 +61,8 @@ describe('WorkstationForm', () => {
 
   it('renders the form with initial values', () => {
     const selectedWorkstation = {
-      id: '1',
-      name: 'Goiais',
-      city: {
-        id: '1',
-        name: 'Goiais',
-        state: 'GO',
-      },
-      phone: '61983320355',
-      vpn: false,
-      ip: '1.3.2.4 ~ 1.2.3.4',
-      is_regional: false,
-      gateway: '1.1.1.1',
+      ...workstation,
+      is_regional: true,
     };
 
     render(
@@ -98,5 +88,40 @@ describe('WorkstationForm', () => {
     expect(screen.getByLabelText('Faixa - Fim')).toHaveValue('1.2.3.4');
     expect(screen.getByLabelText('Gateway')).toHaveValue('1.1.1.1');
     expect(screen.getByLabelText('VPN')).not.toBeChecked();
+    expect(screen.getByLabelText('Regional')).toBeChecked();
+  });
+
+  it('should able to delete a workstation', async () => {
+    const onSubmit = vi.fn();
+
+    const selectedWorkstation = {
+      name: 'Goiais',
+      id: '1',
+      destination: { label: 'Goiais', value: '1' },
+    } as any;
+
+    render(
+      <BrowserRouter>
+        <AuthProvider>
+          <ChakraProvider resetCSS theme={theme}>
+            <QueryClientProvider client={queryClient}>
+              <DeleteWorkstationForm
+                defaultValues={selectedWorkstation}
+                onSubmit={onSubmit}
+                isSubmitting={false}
+              />
+            </QueryClientProvider>
+          </ChakraProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    );
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Salvar'));
+    });
+
+    await waitFor(() => {
+      expect(onSubmit).toBeCalled();
+    });
   });
 });
