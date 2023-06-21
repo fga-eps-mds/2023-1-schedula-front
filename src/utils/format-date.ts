@@ -38,6 +38,11 @@ export const formatDate = (
 
 export function parseSelectedDate(value: string) {
   const date = new Date(value);
+
+  const timezoneOffset = date.getTimezoneOffset();
+  const timezoneOffsetHours = timezoneOffset / 60;
+  date.setHours(date.getHours() + timezoneOffsetHours);
+
   const day = (date.getDate() < 10 ? '0' : '') + date.getDate();
   const month = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
   const year = date.getFullYear();
