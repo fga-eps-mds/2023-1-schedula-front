@@ -128,9 +128,15 @@ export function NotificacaoUsuario() {
       />
 
       <ListView<Notification>
-        items={filteredNotifications.filter((notification) => {
-          return notification.targetEmail === user.email;
-        })}
+        items={filteredNotifications
+          .filter((notification) => {
+            return notification.targetEmail === user.email;
+          })
+          .sort((a, b) => {
+            return (
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+          })}
         render={renderNotificationItem}
         isLoading={isLoading}
       />
