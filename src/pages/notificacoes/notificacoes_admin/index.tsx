@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useState, useEffect } from 'react';
 import { Button, useDisclosure, HStack, Spinner } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';

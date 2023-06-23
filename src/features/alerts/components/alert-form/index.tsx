@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, FormControl, FormLabel, Textarea } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { ControlledSelect } from '@/components/form-fields';
