@@ -1,5 +1,6 @@
 export interface Notification {
   id: string;
+  sourceEmail: string;
   sourceName: string;
   targetName: string;
   targetEmail: string;
@@ -12,6 +13,7 @@ export interface Notification {
 
 export interface NotificationPayLoad {
   sourceName: string;
+  sourceEmail: string;
   targetName: string;
   targetEmail: string;
   message: string;

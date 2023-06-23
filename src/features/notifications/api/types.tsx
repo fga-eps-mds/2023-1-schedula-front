@@ -1,6 +1,7 @@
 export interface Notification {
   id: string;
   sourceName: string;
+  sourceEmail: string;
   targetName: string;
   targetEmail: string;
   message: string;
@@ -22,6 +23,7 @@ export interface PutUpdateNotificationsParams {
 export interface PutUpdateNotificationsResponse {
   id: string;
   sourceName: string;
+  sourceEmail: string;
   targetName: string;
   targetEmail: string;
   message: string;
