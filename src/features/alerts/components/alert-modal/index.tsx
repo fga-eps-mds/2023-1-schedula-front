@@ -39,7 +39,9 @@ export function AlertModal({
       const pendency = '';
       const read = false;
       const status = 'unsolved';
-      const createdAt = new Date();
+      const date = new Date();
+      date.setHours(date.getHours() - 3);
+      const createdAt = date;
       const payload: PostCreateAlertParams = {
         sourceName,
         targetName,
