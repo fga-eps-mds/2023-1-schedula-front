@@ -17,6 +17,7 @@ import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
 import { RegistrarAgendamento } from '@/pages/agendamento_externo/index';
 import { AgendamentosAbertos } from '@/pages/agendamentos_abertos';
 import { DefaultLayoutOpen } from '@/components/layout/default-layout-open';
+import { Notificacoes } from '@/pages/notificacoes';
 
 export function Router() {
   return (
@@ -127,6 +128,14 @@ export function Router() {
           element={
             <RequireAuth>
               <GerenciarTutoriais />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="notificacoes"
+          element={
+            <RequireAuth>
+              <Notificacoes />
             </RequireAuth>
           }
         />
