@@ -36,7 +36,7 @@ describe('NotificationSolvedForm', () => {
     );
 
     await act(async () => {
-      screen.getByText('Adicionar').click();
+      screen.getByText('Confirmar').click();
     });
 
     await waitFor(() => {
