@@ -11,7 +11,6 @@ import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateAlert(data: PostCreateAlertParams) {
-
   return api.post<PostCreateAlertResponse>(`${ALERT_ENDPOINT}/alerts`, data);
 }
 

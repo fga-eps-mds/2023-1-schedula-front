@@ -1,9 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import { useCallback, useState, useEffect, useMemo } from 'react';
-import { Button, Icon, Flex, useDisclosure, HStack, Spinner } from '@chakra-ui/react';
-import { Props, Select } from 'chakra-react-select';
-import { FaTags } from 'react-icons/fa';
-import { CloseIcon } from '@chakra-ui/icons';
+import { useCallback, useState, useEffect } from 'react';
+import { Button, useDisclosure, HStack, Spinner } from '@chakra-ui/react';
+import { Select } from 'chakra-react-select';
 import { PageHeader } from '@/components/page-header';
 import { useGetallAlerts } from '@/features/alerts/api/get-all-alerts';
 import { useDeleteAlert } from '@/features/alerts/api/delete-alerts';
@@ -21,10 +18,9 @@ import { AlertModal } from '@/features/alerts/components/alert-modal';
 
 export function NotificacaoAdmin() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: alerts, isLoading, isRefetching, refetch } = useGetallAlerts();
+  const { data: alerts, isLoading, refetch } = useGetallAlerts();
 
-  const { mutate: deleteAlert, isLoading: isRemovingAlert } =
-    useDeleteAlert();
+  const { mutate: deleteAlert, isLoading: isRemovingAlert } = useDeleteAlert();
 
   const [filteredAlerts, setFilteredAlerts] = useState<Alert[]>(alerts || []);
   const [selectedAlert, setSelectedAlert] = useState<string>('');
@@ -36,20 +32,34 @@ export function NotificacaoAdmin() {
     },
     [deleteAlert]
   );
-    
+
   const renderAlertItemManager = useCallback(
-    (alert: Alert) => <AlertItemManager alert={alert} isDeleting={isRemovingAlert} onDelete={() => {onDelete(alert.id)}} />,
-    []
+    (alert: Alert) => (
+      <AlertItemManager
+        alert={alert}
+        isDeleting={isRemovingAlert}
+        onDelete={() => {
+          onDelete(alert.id);
+        }}
+      />
+    ),
+    [isRemovingAlert, onDelete]
   );
 
-  const options = Object.entries(ALERTA_STATUS).map((status) => ({
+  const options: Array<{ label: string; value: string }> = Object.entries(
+    ALERTA_STATUS
+  ).map((status) => ({
     label: status[1],
     value: status[0],
   }));
 
   const handleSubmitAlert = () => {
     refetch();
-  }
+  };
+
+  const handleChangeFilter = (option: any) => {
+    setSelectedAlert(option?.value || '');
+  };
 
   useEffect(() => {
     if (alerts) {
@@ -94,12 +104,12 @@ export function NotificacaoAdmin() {
       </PageHeader>
 
       <HStack spacing={2} marginBottom={4}>
-        <div style={{ width: '18vw'}}>
+        <div style={{ width: '18vw' }}>
           <Select
             aria-label="Filtrar por status"
             placeholder="Status"
             options={options}
-            onChange={(option) => setSelectedAlert(option?.value || '')}
+            onChange={handleChangeFilter}
             isClearable
             isSearchable={false}
             chakraStyles={chakraStyles}

@@ -1,10 +1,8 @@
 import { Badge, HStack, VStack } from '@chakra-ui/react';
+import { CheckCircleIcon } from '@chakra-ui/icons';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { Item } from '@/components/list-item';
-import { ItemActions } from '@/components/list-item/list-item-actions';
-import { Permission } from '@/components/permission';
 import { Alert } from '../../type';
-import { CheckCircleIcon } from '@chakra-ui/icons';
 import { ALERTA_STATUS } from '@/constants/alertas';
 
 interface AlertItemManagerProps {
@@ -18,7 +16,6 @@ export function AlertItemManager({
   onDelete,
   isDeleting,
 }: AlertItemManagerProps) {
-
   const alertReadIcon = (read: boolean) => {
     if (read) {
       return <CheckCircleIcon color="orange.500" />;
@@ -33,13 +30,15 @@ export function AlertItemManager({
           {ALERTA_STATUS[status]}
         </Badge>
       );
-    } else if (status === 'pending') {
+    }
+    if (status === 'pending') {
       return (
         <Badge variant="outline" colorScheme="yellow">
           {ALERTA_STATUS[status]}
         </Badge>
       );
-    } else {
+    }
+    if (status === 'unsolved') {
       return (
         <Badge variant="outline" colorScheme="red">
           {ALERTA_STATUS[status]}
@@ -63,10 +62,9 @@ export function AlertItemManager({
           </VStack>
         }
       >
-        <HStack spacing={5} align={'center'} justifyItems={'center'}>
+        <HStack spacing={5} align="center" justifyItems="center">
           {alertStatusBadge(alert.status)}
           {alertReadIcon(alert.read)}
-
           <DeleteButton
             onClick={() => {
               if (alert.id) {

@@ -20,7 +20,6 @@ export function DeleteAlertModal({
   return (
     <Modal size="2xl" title="Atenção" onClose={onClose} {...props}>
       <DeleteAlertForm
-        alertsIds={alertsIds}
         onClose={onClose}
         onClear={onClear}
         onDelete={onDelete}

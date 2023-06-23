@@ -1,6 +1,5 @@
-import { HStack, IconButton, Button } from '@chakra-ui/react';
+import { HStack } from '@chakra-ui/react';
 import { Item } from '@/components/list-item';
-import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Alert } from '@/features/alerts/api/types';
 
 interface AlertItemProps {

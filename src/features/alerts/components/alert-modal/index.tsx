@@ -6,6 +6,7 @@ import { Alert, AlertPayload } from '../../type';
 import { usePostCreateAlert } from '../../api/post-create-alerts';
 import { PostCreateAlertParams } from '../../api/types';
 import { useAuth } from '@/contexts/AuthContext';
+import { useGetAllUsers } from '@/features/users/api/get-all-users';
 
 interface AlertModalProps extends Partial<ModalProps> {
   alert?: Alert;
@@ -14,44 +15,55 @@ interface AlertModalProps extends Partial<ModalProps> {
   handleSubmitAlert: () => void;
 }
 
-export function AlertModal({ onClose, alert, handleSubmitAlert, ...props }: AlertModalProps) {
+export function AlertModal({
+  onClose,
+  alert,
+  handleSubmitAlert,
+  ...props
+}: AlertModalProps) {
   const { mutate: createAlert, isLoading: isCreatingAlert } =
     usePostCreateAlert({
       onSuccessCallBack: onClose,
     });
 
+  const { data: users, isLoading: isLoadingUsers } = useGetAllUsers();
   const { user } = useAuth();
 
   const handleSubmit = useCallback(
     async ({ target, message }: AlertPayload) => {
-      const { label, value } = target
-      const targetName = label
-      const targetEmail = value
-      const sourceName = user?.name
-      const sourceEmail = user?.email
-      const pendency = ""
-      const read = false
-      const status = "unsolved"
-      const createdAt = new Date()
+      const { label, value } = target;
+      const targetName = label;
+      const targetEmail = value;
+      const sourceName = user?.name;
+      const sourceEmail = user?.email;
+      const pendency = '';
+      const read = false;
+      const status = 'unsolved';
+      const createdAt = new Date();
       const payload: PostCreateAlertParams = {
-        sourceName, targetName, sourceEmail, targetEmail, message, status, pendency, read, createdAt
+        sourceName,
+        targetName,
+        sourceEmail,
+        targetEmail,
+        message,
+        status,
+        pendency,
+        read,
+        createdAt,
       };
       createAlert(payload);
       handleSubmitAlert();
     },
-    [createAlert, alert]
+    [createAlert, handleSubmitAlert, user]
   );
 
   return (
-    <Modal
-      title="Criar alerta"
-      size="2xl"
-      onClose={onClose}
-      {...props}
-    >
+    <Modal title="Criar alerta" size="2xl" onClose={onClose} {...props}>
       <AlertForm
         onSubmit={handleSubmit}
         isSubmitting={isCreatingAlert}
+        users={users}
+        isLoadingUsers={isLoadingUsers}
       />
     </Modal>
   );

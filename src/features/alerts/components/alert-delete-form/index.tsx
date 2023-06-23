@@ -2,14 +2,12 @@ import { Button, Grid, ModalProps } from '@chakra-ui/react';
 import { useCallback } from 'react';
 
 interface DeleteAlertFormProps extends Partial<ModalProps> {
-  alertsIds: string[];
   onClose: () => void;
   onClear: () => void;
   onDelete: () => void;
 }
 
 export function DeleteAlertForm({
-  alertsIds,
   onClose,
   onClear,
   onDelete,
