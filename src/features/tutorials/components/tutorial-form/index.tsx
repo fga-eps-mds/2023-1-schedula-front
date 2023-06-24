@@ -123,8 +123,16 @@ export function TutorialForm({
             id="fileinput"
             label=""
             type="file"
-            // Call handleFile function when a file is selected before uploading
-            {...register('file', { required: 'Campo obrigatório' })}
+            Call handleFile function when a file is selected before uploading
+            {...register('file', {
+              validate: {
+                required: value => {
+                  isEditing ? true : value.length > 0;
+                },
+              },
+            })}
+
+            // {...register('file', {required: ()=>{if (isEditing) return true; return "Campo obrigatório"}})}
             accept="application/pdf"
             placeholder="Escolha um arquivo e jogue"
             errors={errors?.file}
