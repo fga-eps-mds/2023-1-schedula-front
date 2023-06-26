@@ -118,7 +118,7 @@ export function Tutoriais() {
           />
         </InputGroup>
         <Select
-          aria-label="Filtrar por status"
+          aria-label="Filtrar por categoria"
           placeholder={
             <Flex alignItems="center">
               <Icon as={FaTags} boxSize={4} mr={2} />
