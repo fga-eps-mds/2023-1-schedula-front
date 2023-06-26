@@ -136,7 +136,6 @@ export function Tutoriais() {
             _placeholder={{ color: 'gray.400' }}
           />
         </InputGroup>
-
         <Select
           aria-label="Filtrar por categoria"
           placeholder={

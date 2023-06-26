@@ -14,6 +14,9 @@ import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
 import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
+import { RegistrarAgendamento } from '@/pages/agendamento_externo/index';
+import { AgendamentosAbertos } from '@/pages/agendamentos_abertos';
+import { DefaultLayoutOpen } from '@/components/layout/default-layout-open';
 import { Notificacoes } from '@/pages/notificacoes';
 
 export function Router() {
@@ -140,6 +143,10 @@ export function Router() {
 
       {/* ROTAS PUBLICAS */}
       <Route path="/login" element={<Login />} />
+      <Route path="/" element={<DefaultLayoutOpen />}>
+        <Route path="/agendamento_externo" element={<RegistrarAgendamento />} />
+        <Route path="/agendamentos_abertos" element={<AgendamentosAbertos />} />
+      </Route>
       <Route path="*" element={<p>404</p>} />
     </Routes>
   );

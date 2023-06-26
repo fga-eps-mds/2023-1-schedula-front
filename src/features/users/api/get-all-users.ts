@@ -7,9 +7,9 @@ import { USERS_CACHE_KEYS } from '@/features/users/constants/cache';
 import { User } from '@/features/users/api/types';
 import { USERS_ENDPOINT } from '@/constants/requests';
 
-type GetAllUsersResponse = Array<User>;
+export type GetAllUsersResponse = Array<User>;
 
-const getAllUsers = async () =>
+export const getAllUsers = async () =>
   api
     .get<GetAllUsersResponse>(`${USERS_ENDPOINT}/users`)
     .then((response) => response.data)
