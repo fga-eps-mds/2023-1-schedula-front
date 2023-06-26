@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { Modal } from '@/components/modal';
 import { AlertForm } from '../alert-form';
@@ -27,6 +27,7 @@ export function AlertModal({
     });
 
   const { data: users, isLoading: isLoadingUsers } = useGetAllUsers();
+  const [filterBasicUsers, setFilterBasicUsers] = useState(users || []);
   const { user } = useAuth();
 
   const handleSubmit = useCallback(
@@ -59,12 +60,19 @@ export function AlertModal({
     [createAlert, handleSubmitAlert, user]
   );
 
+  useEffect(() => {
+    if (users) {
+      const filteredUsers = users.filter((user) => user.profile === 'BASIC');
+      setFilterBasicUsers(filteredUsers);
+    }
+  }, [users]);
+
   return (
     <Modal title="Criar alerta" size="2xl" onClose={onClose} {...props}>
       <AlertForm
         onSubmit={handleSubmit}
         isSubmitting={isCreatingAlert}
-        users={users}
+        users={filterBasicUsers}
         isLoadingUsers={isLoadingUsers}
       />
     </Modal>
