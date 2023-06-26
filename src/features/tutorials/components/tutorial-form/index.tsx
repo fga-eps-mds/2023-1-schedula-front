@@ -68,6 +68,13 @@ export function TutorialForm({
     };
   };
 
+  const handleChangeFile = (event: any) => {
+    const { files } = event.target;
+    if (files) {
+      setFileName(files[0]);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
       <Input
@@ -123,17 +130,13 @@ export function TutorialForm({
             id="fileinput"
             label=""
             type="file"
-            // Call handleFile function when a file is selected before uploading
-            {...register('file', { required: 'Campo obrigatório' })}
+            {...register('file', {
+              required: !isEditing,
+            })}
             accept="application/pdf"
             placeholder="Escolha um arquivo e jogue"
             errors={errors?.file}
-            onChange={(event) => {
-              const { files } = event.target;
-              if (files) {
-                setFileName(files[0]);
-              }
-            }}
+            onChange={handleChangeFile}
             style={{
               opacity: 0,
               position: 'absolute',
@@ -148,6 +151,9 @@ export function TutorialForm({
               ? 'Envie o arquivo novamente...'
               : 'Arraste e solte um arquivo...'}
           </span>
+          {errors.file && (
+            <span style={{ color: 'red' }}> Campo Obrigatório </span>
+          )}
         </span>
       </div>
 
