@@ -51,7 +51,7 @@ export function NotificationItem({
           backgroundColor={
             notification.status === 'pending' ? 'orange' : 'gray.100'
           }
-          label="Adicionar pendencia"
+          label="Adicionar pendência"
           icon={<AiOutlineClockCircle size={22} />}
           onClick={() => onEdit(notification, 'pending')}
           color={notification.status === 'pending' ? 'white' : 'gray.700'}

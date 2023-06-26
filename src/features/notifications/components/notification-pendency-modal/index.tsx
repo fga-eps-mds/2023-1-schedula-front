@@ -56,7 +56,6 @@ export function NotificationPendencyModal({
       <NotificationSolvedForm
         defaultValues={notification}
         onSubmit={handleSubmit}
-        isSubmitting={isUpdatingNotification}
         onClose={onClose}
       />
     );

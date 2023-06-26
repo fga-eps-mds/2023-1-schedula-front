@@ -1,10 +1,4 @@
-import {
-  screen,
-  render,
-  waitFor,
-  act,
-  fireEvent,
-} from '@testing-library/react';
+import { screen, render, waitFor, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { NotificationSolvedForm } from '.';
 import { Notification } from '../../types';
@@ -30,7 +24,6 @@ describe('NotificationSolvedForm', () => {
       <NotificationSolvedForm
         defaultValues={mockedNotification}
         onSubmit={mockedOnSubmit}
-        isSubmitting={false}
         onClose={() => {}}
       />
     );

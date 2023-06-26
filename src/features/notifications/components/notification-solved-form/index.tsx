@@ -6,17 +6,15 @@ import { Notification } from '../../api/types';
 interface NotificationFormProps {
   defaultValues?: Notification;
   onSubmit: (data: NotificationPayLoad) => void;
-  isSubmitting: boolean;
   onClose: () => void;
 }
 
 export function NotificationSolvedForm({
   defaultValues,
   onSubmit,
-  isSubmitting,
   onClose,
 }: NotificationFormProps) {
-  const { register, handleSubmit } = useForm<NotificationPayLoad>({
+  const { handleSubmit } = useForm<NotificationPayLoad>({
     defaultValues: {
       ...defaultValues,
     },

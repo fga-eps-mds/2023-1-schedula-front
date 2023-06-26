@@ -1,7 +1,5 @@
 import { Button, Textarea } from '@chakra-ui/react';
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { Input } from '@/components/form-fields';
 import { NotificationPayLoad } from '../../types';
 import { Notification } from '../../api/types';
 
