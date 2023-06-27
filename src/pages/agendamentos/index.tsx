@@ -2,7 +2,7 @@ import { HStack, useDisclosure } from '@chakra-ui/react';
 import { useCallback, useState, useEffect } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllSchedulesOpenDois } from '@/features/schedules/api/get-all-schedules-open2';
+import { useGetAllSchedulesOpen } from '@/features/schedules/api/get-all-schedules-open';
 import { ListView } from '@/components/list';
 import { ScheduleOpen, Schedule } from '@/features/schedules/types';
 import { ScheduleItem } from '@/features/schedules/components/schedule-item';
@@ -18,10 +18,10 @@ export function Agendamentos() {
   >();
 
   const {
-    data: openSchedulesDois,
-    isLoading: isLoadingOpenSchedulesDois,
-    refetch: refetchOpenSchedulesDois,
-  } = useGetAllSchedulesOpenDois();
+    data: openSchedules,
+    isLoading: isLoadingOpenSchedules,
+    refetch: refetchOpenSchedules,
+  } = useGetAllSchedulesOpen();
 
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
     useDeleteSchedule();
@@ -33,12 +33,6 @@ export function Agendamentos() {
     },
     [onOpen]
   );
-
-  // const externIssuesDois = externIssues?.filter(externIssue => externIssue.id)
-  // const scheduledIssues = openSchedulesDois.map(openSchedulesDois => openSchedulesDois.issue.id)
-
-  // console.log("scheduledIssues", scheduledIssues)
-  // console.log("externIssuesDois", externIssuesDois)
 
   const onDelete = useCallback(
     (id: string) => {
@@ -68,14 +62,14 @@ export function Agendamentos() {
     <>
       <PageHeader title="Agendamentos">
         <HStack spacing={2}>
-          <RefreshButton refresh={refetchOpenSchedulesDois} />
+          <RefreshButton refresh={refetchOpenSchedules} />
         </HStack>
       </PageHeader>
 
       <ListView<ScheduleOpen | Schedule>
-        items={openSchedulesDois}
+        items={openSchedules}
         render={renderScheduleItem}
-        isLoading={isLoadingOpenSchedulesDois}
+        isLoading={isLoadingOpenSchedules}
       />
 
       <ScheduleEditModal

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import {
   Box,
@@ -23,8 +23,13 @@ import { ActionButtonProps } from '../types';
 import { ActionButton } from '..';
 import { Input } from '@/components/form-fields/input';
 import { DeleteButton } from '../delete-button';
+import { IssuePayloadOpen } from '@/features/issues/types';
+import { parseSelectedDatetime } from '@/utils/format-date';
 
-type DeleteButtonProps<Data> = ActionButtonProps<Data>;
+interface ApproveButtonProps<Data> extends ActionButtonProps<Data> {
+  handleApproveHomolog: (justify: string) => void;
+  passDateTime: Date;
+}
 
 const tooltipStyle = {
   bg: 'green.500',
@@ -34,21 +39,22 @@ const tooltipStyle = {
 export function ApproveButton<Data>({
   label,
   onClick,
+  passDateTime,
   ...props
-}: DeleteButtonProps<Data>) {
+}: ApproveButtonProps<Data>) {
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [justification] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDelete = useCallback(async () => {
-    setIsLoading(true);
-    await (onClick as (justification: string) => void)?.(justification);
-    onClose?.();
-    setIsLoading(false);
-  }, [onClose, onClick, justification]);
+  const { control, watch, register } = useForm<IssuePayloadOpen>({
+    defaultValues: {
+      dateTime: passDateTime ?? '',
+    },
+  });
 
-  const { control } = useForm<IssuePayloadOpen>({});
+  const dateTime = parseSelectedDatetime(String(watch('dateTime')));
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -110,7 +116,7 @@ export function ApproveButton<Data>({
           <Box>
             <Controller
               control={control}
-              name="event_date"
+              name="passDateTime"
               rules={{
                 min: {
                   value: new Date().toISOString(),
@@ -123,14 +129,17 @@ export function ApproveButton<Data>({
               }) => (
                 <>
                   <Input
+                    {...register('dateTime', {
+                      required: 'Campo obrigatório',
+                    })}
                     label="Data do Evento"
                     type="datetime-local"
-                    name="event_date"
-                    id="event_date"
+                    name="dateTime"
+                    id="dateTime"
                     onChange={onChange}
                     ref={ref}
                     onBlur={onBlur}
-                    value={value}
+                    value={parseSelectedDatetime(String(watch('dateTime')))}
                   />
                   <Text color="red.100" mt=".5rem">
                     {error ? error.message : null}
@@ -167,6 +176,7 @@ export function ApproveButton<Data>({
                       }) => (
                         <Box w="full">
                           <Input
+                            label="alert_dates"
                             type="date"
                             name={`alert_dates.${index}.date`}
                             id={`alert_dates.${index}.date`}
@@ -215,7 +225,7 @@ export function ApproveButton<Data>({
         <PopoverFooter borderBottomRadius="base" border={0} bg="blackAlpha.300">
           <Flex justifyContent="space-between">
             <Button
-              onClick={() => handleDelete(justification)}
+              onClick={() => props.handleApproveHomolog(justification)}
               colorScheme="green"
               variant="solid"
               size="lg"

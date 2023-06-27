@@ -1,6 +1,6 @@
-import { Issue } from '@/features/issues/types';
+import { IssueOpen } from '@/features/issues/types';
 
-export type GetAllIssuesResponse = Array<Issue>;
+export type GetAllIssuesResponse = Array<IssueOpen>;
 
 export interface DeleteIssuesParams {
   id: string;

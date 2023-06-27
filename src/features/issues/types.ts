@@ -29,6 +29,8 @@ export interface ExternIssue {
   email: string;
   date: string;
   description: string;
+  alerts: Date[];
+  dateTime: Date;
   problem_category: {
     id: string;
     name: string;
@@ -84,11 +86,11 @@ export interface PostCreateExternIssueResponse {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
   dateTime: Date;
   alerts: Date[];
   description: string;
   cellphone: string;
+  date: string;
   problem_category: {
     id: string;
     name: string;
@@ -96,6 +98,16 @@ export interface PostCreateExternIssueResponse {
     problem_types: ProblemTypeOption[];
   };
   problem_types: ProblemTypeOption[];
+}
+
+export interface PostSendMailExternIssueParams {
+  targetMail: string;
+  justify: string;
+}
+
+export interface PostSendMailExternIssueResponse {
+  targetMail: string;
+  justify: string;
 }
 
 export interface PutUpdateIssueParams {
@@ -253,12 +265,13 @@ export interface PostCreateIssueResponseOpen {
 
 export interface IssuePayloadOpen {
   issueId: string;
+  date: Date;
   requester: string;
   cellphone: string;
   alerts: Date[];
   dateTime: Date;
   email: string;
-  phone: { label: string; value: string };
+  phone: string;
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };

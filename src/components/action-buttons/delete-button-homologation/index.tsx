@@ -19,7 +19,9 @@ import {
 import { ActionButtonProps } from '../types';
 import { ActionButton } from '..';
 
-type DeleteButtonProps<Data> = ActionButtonProps<Data>;
+interface DeleteButtonProps<Data> extends ActionButtonProps<Data> {
+  handleDeleteHomolog: (justify: string) => void;
+}
 
 const tooltipStyle = {
   bg: 'red.500',
@@ -35,13 +37,6 @@ export function DeleteButton<Data>({
   const [justification, setJustification] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleDelete = useCallback(async () => {
-    setIsLoading(true);
-    await (onClick as (justification: string) => void)?.(justification);
-    onClose?.();
-    setIsLoading(false);
-  }, [onClose, onClick, justification]);
 
   return (
     <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose} placement="auto">
@@ -100,7 +95,7 @@ export function DeleteButton<Data>({
               Cancelar
             </Button>
             <Button
-              onClick={() => handleDelete(justification)}
+              onClick={() => props.handleDeleteHomolog(justification)}
               colorScheme="red"
               variant="solid"
             >

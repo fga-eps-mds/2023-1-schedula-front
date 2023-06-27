@@ -40,9 +40,16 @@ export function ExternIssueItem({
   const navigate = useNavigate();
 
   const [externIssuesList, setExternIssuesList] = useState<ExternIssue[]>([]);
-  
-  const handleOnClick = (externIssue: ExternIssue, city: City, workstation: Workstation, problem_category: ProblemCategory) => {
-    history('/homologacao/editar', { state: { externIssue, city, workstation, problem_category } });
+
+  const handleOnClick = (
+    externIssue: ExternIssue,
+    city: City,
+    workstation: Workstation,
+    problem_category: ProblemCategory
+  ) => {
+    history('/homologacao/editar', {
+      state: { externIssue, city, workstation, problem_category },
+    });
   };
 
   const { data: cities } = useGetAllCities(0);
@@ -82,7 +89,6 @@ export function ExternIssueItem({
   };
 
   const handleApproveHomolog = (justify: string) => {
-
     const updatedExternIssue = { ...externIssue, isHomolog: true };
 
     sendMailExternIssue({
@@ -91,13 +97,13 @@ export function ExternIssueItem({
         '',
       targetMail: updatedExternIssue?.email,
     });
-    
+
     createSchedule({
       alerts: updatedExternIssue?.alerts ?? [],
       dateTime: updatedExternIssue?.dateTime ?? new Date(),
       description: updatedExternIssue?.description ?? '',
       issue_id: updatedExternIssue?.id ?? '',
-      status_e: 'NOT_RESOLVED'
+      status_e: 'NOT_RESOLVED',
     });
   };
 
@@ -179,7 +185,7 @@ export function ExternIssueItem({
             height="100%"
             textAlign="right"
           />
-          <HStack alignItems="start" spacing={4} height="75%" textAlign="right" >
+          <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
             <ApproveButton
               label="Aprovar Homologação"
               icon={<AiFillCheckCircle size={23} />}
@@ -188,11 +194,14 @@ export function ExternIssueItem({
               isLoading={isSendingMailExternIssue}
               color="green.500"
               tabIndex={0}
+              passDateTime={externIssue?.dateTime}
             />
             <ActionButton
               label="Editar Homologação"
               icon={<RiEdit2Fill size={23} />}
-              onClick={() => handleOnClick(externIssue, city, workstation, problem_category)}
+              onClick={() =>
+                handleOnClick(externIssue, city, workstation, problem_category)
+              }
               color="yellow.500"
               tabIndex={0}
             />

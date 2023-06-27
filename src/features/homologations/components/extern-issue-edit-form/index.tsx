@@ -9,12 +9,12 @@ import {
   InputLeftElement,
   Text,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { RiCellphoneFill } from 'react-icons/ri';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
@@ -24,7 +24,7 @@ import {
   IssuePayloadOpen,
   PutUpdateExternIssueParams,
 } from '@/features/issues/types';
-import { parseSelectedDatetime } from '@/utils/format-date';
+import { parseSelectedDatetime, parseSelectedDate } from '@/utils/format-date';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 import { maskPhoneField } from '@/utils/form-utils';
@@ -34,10 +34,7 @@ import { ActionButton } from '@/components/action-buttons';
 
 export function UpdateExternIssueForm() {
   const locate = useLocation();
-
-  const { user } = useAuth();
-  const externIssue = locate.state.externIssue;
-  const [alerts, setAlerts] = useState(externIssue?.alerts || []);
+  const { externIssue } = locate.state;
 
   const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
   const {
@@ -45,7 +42,6 @@ export function UpdateExternIssueForm() {
     control,
     handleSubmit,
     watch,
-    resetField,
     formState: { errors },
   } = useForm<IssuePayloadOpen>({
     defaultValues: {
@@ -61,12 +57,15 @@ export function UpdateExternIssueForm() {
         label: locate.state.problem_category.name ?? '',
         value: locate.state.problem_category.id ?? '',
       },
-      problem_types_payload: externIssue?.problem_types.map((type) => ({
-        label: type.name,
-        value: type.id,
-      })) || [],
-      alerts: alerts.map((alert) => ({ ...alert})),
-      dateTime: parseSelectedDatetime(locate.state.externIssue.dateTime) ?? '',
+      problem_types_payload:
+        externIssue?.problem_types.map((type) => ({
+          label: type.name,
+          value: type.id,
+        })) || [],
+      alert_dates: externIssue?.alerts.map((alert) => ({
+        date: parseSelectedDate(alert.date) ?? '',
+      })),
+      dateTime: locate.state.externIssue.dateTime ?? '',
       ...locate.state.externIssue,
     },
   });
@@ -74,6 +73,8 @@ export function UpdateExternIssueForm() {
   const [selectedProblemTypes, setSelectedProblemTypes] = useState(
     locate.state.problem_types_payload
   );
+
+  const [selectedAlerts, setSelectedAlerts] = useState(locate.state.alerts);
 
   const [selectedDateTime, setSelectedDateTime] = useState(
     locate.state.dateTime
@@ -105,10 +106,10 @@ export function UpdateExternIssueForm() {
   });
 
   const city = watch('city_payload');
-
-  const category = watch('problem_category_payload')
+  const category = watch('problem_category_payload');
   const problemTypes = watch('problem_types_payload');
-
+  //const alert_dates = watch('alert_dates');
+  
   const workstationsOptions = city
     ? workstations
         ?.filter((workstation) => workstation.city.id === city.value)
@@ -128,26 +129,8 @@ export function UpdateExternIssueForm() {
         }))
     : [];
 
-    useEffect(() => {
-      setAlerts(externIssue?.alerts || []);
-    }, [externIssue?.alerts]);
-
-  // useEffect(() => {
-  //   if (city !== cityRef.current) {
-  //     resetField('workstation_payload', { defaultValue: null });
-  //     cityRef.current = city;
-  //   }
-  // }, [city, resetField]);
-
-  // useEffect(() => {
-  //   if (category !== categoryRef.current) {
-  //     resetField('problem_types_payload', { defaultValue: null });
-  //     categoryRef.current = category;
-  //   }
-  // }, [category, resetField]);
-
-  
-  const event_date = parseSelectedDatetime(String(watch('dateTime')))
+  const dateTime = parseSelectedDatetime(String(watch('dateTime')));
+  // console.log('dt', dateTime)
 
   const onSubmit = useCallback(
     ({
@@ -155,8 +138,10 @@ export function UpdateExternIssueForm() {
       city_payload,
       phone,
       cellphone,
+      dateTime,
       email,
       alerts,
+      date,
       problem_category_payload,
       problem_types_payload,
       workstation_payload,
@@ -167,32 +152,28 @@ export function UpdateExternIssueForm() {
         issueId,
         phone,
         requester,
-        dateTime: parseSelectedDatetime(String(watch('dateTime'))),
-        alerts: alerts.map((alert) => ({ date: alert.date })),
+        dateTime,
+        alerts,
         cellphone,
         city_id: city_payload?.value,
         description,
-        date: new Date().toISOString(),
+        date: new Date(),
         problem_category_id: problem_category_payload?.value,
-        problem_types_ids:
-          problem_types_payload.map((type) => type.value)  ,
+        problem_types_ids: problem_types_payload.map((type) => type.value),
         workstation_id: workstation_payload?.value,
         email,
       };
 
       updateIssue(payload);
     },
-    [updateIssue, user?.email, locate.state.externIssue?.id]
+    [updateIssue, locate.state.externIssue?.id]
   );
-  
 
   useEffect(() => {
-    if (event_date) {
-      setSelectedDateTime(event_date)
+    if (dateTime) {
+      setSelectedDateTime(dateTime);
     }
-  }, [event_date])
-
-  console.log('ee', event_date)
+  }, [dateTime]);
 
   useEffect(() => {
     if (problemTypes) {
@@ -216,9 +197,6 @@ export function UpdateExternIssueForm() {
     },
     [remove]
   );
-
-  //console.log('problemTypes', problemTypes)
-  //console.log(externIssue)
 
   return (
     <form id="update-issue-form" onSubmit={handleSubmit(onSubmit)}>
@@ -385,7 +363,7 @@ export function UpdateExternIssueForm() {
                   onChange={onChange}
                   ref={ref}
                   onBlur={onBlur}
-                  value={value}
+                  value={parseSelectedDatetime(String(watch('dateTime')))}
                 />
                 <Text color="red.100" mt=".5rem">
                   {error ? error.message : null}
