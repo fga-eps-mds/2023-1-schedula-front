@@ -10,7 +10,7 @@ import {
 import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { formatDate } from '@/utils/format-date';
 import { ExternIssue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
@@ -20,6 +20,10 @@ import { ActionButton } from '@/components/action-buttons';
 import { DeleteButton } from '@/components/action-buttons/delete-button-homologation';
 import { ApproveButton } from '@/components/action-buttons/approve-button-homologation';
 import { usePostCreateScheduleOpen } from '@/features/homologations/api/post-create-schedule-open';
+import { usePostSendMailExternIssue } from '@/features/homologations/api/post-send-mail-extern-issue';
+import { ProblemCategory } from '@/features/problem/api/types';
+import { ProblemType } from '@/features/problem/problem-types/types';
+import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 
 interface ExternIssueItemProps {
   externIssue: ExternIssue;
@@ -34,12 +38,21 @@ export function ExternIssueItem({
 }: ExternIssueItemProps) {
   const history = useNavigate();
   const navigate = useNavigate();
-  const handleOnClick = (externIssue: ExternIssue) => {
-    history('/homologacao/editar', { state: { externIssue } });
+
+  const [externIssuesList, setExternIssuesList] = useState<ExternIssue[]>([]);
+  
+  const handleOnClick = (externIssue: ExternIssue, city: City, workstation: Workstation, problem_category: ProblemCategory) => {
+    history('/homologacao/editar', { state: { externIssue, city, workstation, problem_category } });
   };
+
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === externIssue?.city_id;
+  });
+
+  const { data: problems_categories } = useGetAllProblemCategories(0);
+  const problem_category = problems_categories?.find((problem_category) => {
+    return problem_category?.id === externIssue?.problem_category.id;
   });
 
   const { data: workstations } = useGetAllWorkstations();
@@ -52,20 +65,41 @@ export function ExternIssueItem({
       onSuccessCallBack: () => navigate('/agendamentos'),
     });
 
-  const handleSubmitOpen = useCallback(
-    ({ alert_dates, description, event_date }: ChamadoExternoEvent) => {
-      const alerts = alert_dates?.map((alert) => alert.date) || [];
+  const { mutate: sendMailExternIssue, isLoading: isSendingMailExternIssue } =
+    usePostSendMailExternIssue({
+      onSuccessCallBack: () => navigate('/homologacao'),
+    });
 
-      createSchedule({
-        alerts: alerts ?? [],
-        dateTime: event_date ?? new Date(),
-        description: description ?? '',
-        issue_id: externIssue?.id ?? '',
-        status_e: 'NOT_RESOLVED',
-      });
-    },
-    [createSchedule, externIssue?.id]
-  );
+  const handleDeleteHomolog = (justify: string) => {
+    sendMailExternIssue({
+      justify:
+        `Poxa... Seu agendamento criado na Polícia civil do Goiás foi REPROVADO. Aqui está a justificativa do administrador: ${justify}` ??
+        '',
+      targetMail: externIssue?.email,
+    });
+
+    onDelete(externIssue.id);
+  };
+
+  const handleApproveHomolog = (justify: string) => {
+
+    const updatedExternIssue = { ...externIssue, isHomolog: true };
+
+    sendMailExternIssue({
+      justify:
+        'Parabéns! Seu agendamento criado na Polícia Civil do Goiás foi APROVADO com sucesso!' ??
+        '',
+      targetMail: updatedExternIssue?.email,
+    });
+    
+    createSchedule({
+      alerts: updatedExternIssue?.alerts ?? [],
+      dateTime: updatedExternIssue?.dateTime ?? new Date(),
+      description: updatedExternIssue?.description ?? '',
+      issue_id: updatedExternIssue?.id ?? '',
+      status_e: 'NOT_RESOLVED'
+    });
+  };
 
   return (
     <Box>
@@ -145,26 +179,30 @@ export function ExternIssueItem({
             height="100%"
             textAlign="right"
           />
-          <HStack alignItems="start" spacing={4} height="75%" textAlign="right">
+          <HStack alignItems="start" spacing={4} height="75%" textAlign="right" >
             <ApproveButton
               label="Aprovar Homologação"
               icon={<AiFillCheckCircle size={23} />}
-              onClick={() => handleSubmitOpen(externIssue)}
+              handleApproveHomolog={handleApproveHomolog}
+              onClick={() => {}}
+              isLoading={isSendingMailExternIssue}
               color="green.500"
               tabIndex={0}
             />
             <ActionButton
               label="Editar Homologação"
               icon={<RiEdit2Fill size={23} />}
-              onClick={() => handleOnClick(externIssue)}
+              onClick={() => handleOnClick(externIssue, city, workstation, problem_category)}
               color="yellow.500"
               tabIndex={0}
             />
 
             <DeleteButton
               label="Homologação"
+              handleDeleteHomolog={handleDeleteHomolog}
               icon={<AiFillCloseCircle size={21} />}
-              onClick={() => onDelete(externIssue?.id)}
+              onClick={() => {}}
+              isLoading={isSendingMailExternIssue}
               color="red.500"
               tabIndex={0}
             />

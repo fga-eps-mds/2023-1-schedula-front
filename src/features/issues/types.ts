@@ -85,6 +85,10 @@ export interface PostCreateExternIssueResponse {
   workstation_id: string;
   email: string;
   date: string;
+  dateTime: Date;
+  alerts: Date[];
+  description: string;
+  cellphone: string;
   problem_category: {
     id: string;
     name: string;
@@ -283,6 +287,10 @@ export interface PutEditExternIssueParams {
     workstation_id: string;
     email: string;
     date: string;
+    dateTime: Date;
+    alerts: Date[];
+    description: string;
+    cellphone: string;
     problem_category: {
       id: string;
       name: string;

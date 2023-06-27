@@ -5,9 +5,9 @@ import { api } from '@/config/lib/axios';
 
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
-import { Issue } from '@/features/issues/types';
+import { IssueOpen } from '@/features/issues/types';
 
-type GetAllIssuesResponse = Array<Issue>;
+type GetAllIssuesResponse = Array<IssueOpen>;
 
 const getAllIssues = async () =>
   api

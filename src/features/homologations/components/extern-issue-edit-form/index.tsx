@@ -9,7 +9,7 @@ import {
   InputLeftElement,
   Text,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
@@ -24,9 +24,7 @@ import {
   IssuePayloadOpen,
   PutUpdateExternIssueParams,
 } from '@/features/issues/types';
-
 import { parseSelectedDatetime } from '@/utils/format-date';
-
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 import { maskPhoneField } from '@/utils/form-utils';
@@ -38,10 +36,10 @@ export function UpdateExternIssueForm() {
   const locate = useLocation();
 
   const { user } = useAuth();
+  const externIssue = locate.state.externIssue;
+  const [alerts, setAlerts] = useState(externIssue?.alerts || []);
 
-  const cityRef = useRef<Option | null>(null);
-  const categoryRef = useRef<Option | null>(null);
-
+  const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
   const {
     register,
     control,
@@ -50,16 +48,41 @@ export function UpdateExternIssueForm() {
     resetField,
     formState: { errors },
   } = useForm<IssuePayloadOpen>({
-    defaultValues: locate.state.externIssue,
-    event_date: parseSelectedDatetime(locate.state.externIssue?.dateTime ?? ''),
+    defaultValues: {
+      city_payload: {
+        label: locate.state.city.name ?? '',
+        value: locate.state.city.id ?? '',
+      },
+      workstation_payload: {
+        label: locate.state.workstation.name ?? '',
+        value: locate.state.workstation.id ?? '',
+      },
+      problem_category_payload: {
+        label: locate.state.problem_category.name ?? '',
+        value: locate.state.problem_category.id ?? '',
+      },
+      problem_types_payload: externIssue?.problem_types.map((type) => ({
+        label: type.name,
+        value: type.id,
+      })) || [],
+      alerts: alerts.map((alert) => ({ ...alert})),
+      dateTime: parseSelectedDatetime(locate.state.externIssue.dateTime) ?? '',
+      ...locate.state.externIssue,
+    },
   });
+
+  const [selectedProblemTypes, setSelectedProblemTypes] = useState(
+    locate.state.problem_types_payload
+  );
+
+  const [selectedDateTime, setSelectedDateTime] = useState(
+    locate.state.dateTime
+  );
 
   const { mutate: updateIssue, isLoading: isUpdatingIssue } =
     usePutUpdateExternIssue({
       onSuccessCallBack: () => {},
     });
-
-  const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
 
   const { data: problem_categories, isLoading: isLoadingProblems } =
     useGetAllProblemCategories();
@@ -82,7 +105,8 @@ export function UpdateExternIssueForm() {
   });
 
   const city = watch('city_payload');
-  const category = watch('problem_category_payload');
+
+  const category = watch('problem_category_payload')
   const problemTypes = watch('problem_types_payload');
 
   const workstationsOptions = city
@@ -104,19 +128,26 @@ export function UpdateExternIssueForm() {
         }))
     : [];
 
-  useEffect(() => {
-    if (city !== cityRef.current) {
-      resetField('workstation_payload', { defaultValue: null });
-      cityRef.current = city;
-    }
-  }, [city, resetField]);
+    useEffect(() => {
+      setAlerts(externIssue?.alerts || []);
+    }, [externIssue?.alerts]);
 
-  useEffect(() => {
-    if (category !== categoryRef.current) {
-      resetField('problem_types_payload', { defaultValue: null });
-      categoryRef.current = category;
-    }
-  }, [category, resetField]);
+  // useEffect(() => {
+  //   if (city !== cityRef.current) {
+  //     resetField('workstation_payload', { defaultValue: null });
+  //     cityRef.current = city;
+  //   }
+  // }, [city, resetField]);
+
+  // useEffect(() => {
+  //   if (category !== categoryRef.current) {
+  //     resetField('problem_types_payload', { defaultValue: null });
+  //     categoryRef.current = category;
+  //   }
+  // }, [category, resetField]);
+
+  
+  const event_date = parseSelectedDatetime(String(watch('dateTime')))
 
   const onSubmit = useCallback(
     ({
@@ -124,7 +155,7 @@ export function UpdateExternIssueForm() {
       city_payload,
       phone,
       cellphone,
-      dateTime,
+      email,
       alerts,
       problem_category_payload,
       problem_types_payload,
@@ -132,29 +163,42 @@ export function UpdateExternIssueForm() {
       description,
     }: IssuePayloadOpen) => {
       const issueId = locate.state.externIssue?.id ?? '';
-      // const city_payload_id = city_payload?.value ?? '';
-      // const phone = phone ?? locate.externIssue.phone;
       const payload: PutUpdateExternIssueParams = {
         issueId,
         phone,
         requester,
-        dateTime,
-        alerts,
+        dateTime: parseSelectedDatetime(String(watch('dateTime'))),
+        alerts: alerts.map((alert) => ({ date: alert.date })),
         cellphone,
         city_id: city_payload?.value,
         description,
         date: new Date().toISOString(),
         problem_category_id: problem_category_payload?.value,
         problem_types_ids:
-          problem_types_payload?.map((type) => type?.value) ?? [],
+          problem_types_payload.map((type) => type.value)  ,
         workstation_id: workstation_payload?.value,
-        email: user?.email ?? '',
+        email,
       };
 
       updateIssue(payload);
     },
     [updateIssue, user?.email, locate.state.externIssue?.id]
   );
+  
+
+  useEffect(() => {
+    if (event_date) {
+      setSelectedDateTime(event_date)
+    }
+  }, [event_date])
+
+  console.log('ee', event_date)
+
+  useEffect(() => {
+    if (problemTypes) {
+      setSelectedProblemTypes(problemTypes);
+    }
+  }, [problemTypes]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -173,8 +217,8 @@ export function UpdateExternIssueForm() {
     [remove]
   );
 
-  console.log(watch('requester'));
-  // console.log('kkk', isUpdatingIssue);
+  //console.log('problemTypes', problemTypes)
+  //console.log(externIssue)
 
   return (
     <form id="update-issue-form" onSubmit={handleSubmit(onSubmit)}>
@@ -252,6 +296,10 @@ export function UpdateExternIssueForm() {
         />
 
         <ControlledSelect
+          // defaultValue={{
+          //   label: city.name,
+          //   value: city.id,
+          // }}
           control={control}
           name="city_payload"
           id="city_payload"
@@ -261,6 +309,17 @@ export function UpdateExternIssueForm() {
           label="Cidade"
           rules={{ required: 'Campo obrigatório' }}
         />
+
+        {/* <Select
+          aria-label="Filtrar por cidade"
+          placeholder="Cidade"
+          options={citiesOptions}
+          onChange={(option) => setSelectedCity(option?.value || '')}
+          isClearable
+          isSearchable={false}
+          chakraStyles={chakraStyles}
+          components={customComponents}
+        /> */}
 
         <ControlledSelect
           control={control}
@@ -303,7 +362,7 @@ export function UpdateExternIssueForm() {
         <Box>
           <Controller
             control={control}
-            name="event_date"
+            name="dateTime"
             rules={{
               min: {
                 value: new Date().toISOString(),
@@ -316,10 +375,13 @@ export function UpdateExternIssueForm() {
             }) => (
               <>
                 <Input
+                  {...register('dateTime', {
+                    required: 'Campo obrigatório',
+                  })}
                   label="Data do Evento"
                   type="datetime-local"
-                  name="event_date"
-                  id="event_date"
+                  name="dateTime"
+                  id="dateTime"
                   onChange={onChange}
                   ref={ref}
                   onBlur={onBlur}

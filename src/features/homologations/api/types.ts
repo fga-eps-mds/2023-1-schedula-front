@@ -15,6 +15,8 @@ export interface PutEditIssuesParams {
     workstation_id: string;
     email: string;
     date: string;
+    dateTime: Date;
+    alerts: Date[];    
     problem_category: {
       id: string;
       name: string;

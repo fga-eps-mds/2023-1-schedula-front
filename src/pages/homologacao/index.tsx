@@ -10,6 +10,7 @@ import { ExternIssueItem } from '@/features/homologations/components/extern-issu
 import { useDeleteHomologation } from '@/features/homologations/api/delete-extern-issue';
 import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
 import { useGetAllSchedulesOpen } from '@/features/schedules/api/get-all-schedules-open';
+import { addItemToList, globalList } from './globalList';
 
 export function GerenciarHomologacao() {
   const {
@@ -37,6 +38,18 @@ export function GerenciarHomologacao() {
     [deleteIssues]
   );
 
+  useEffect(() => {
+
+    const storedList = localStorage.getItem("globalList");
+    
+    if (storedList) {
+      const parsedList = JSON.parse(storedList);
+      globalList.length = 0;
+      globalList.push(...parsedList);
+    }
+    
+  }, []);
+
   const renderExternIssueItem = useCallback(
     (externIssue: ExternIssue) => {
       // Verificar se o ID do Issue está na lista de schedules
@@ -46,6 +59,10 @@ export function GerenciarHomologacao() {
 
       // Se o ID estiver na lista de schedules, não renderizar o card
       if (isIssueScheduled) {
+        addItemToList(externIssue.id)
+      }
+
+      if (globalList.includes(externIssue.id)){
         return null;
       }
 
