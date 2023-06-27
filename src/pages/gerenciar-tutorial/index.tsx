@@ -252,6 +252,7 @@ export function GerenciarTutoriais() {
                 )}
               </Box>
             }
+            aria-label="Filtrar por categoria"
             onChange={handleStateChange}
             value={selectedState}
             options={options}
