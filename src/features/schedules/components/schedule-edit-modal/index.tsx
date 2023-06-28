@@ -40,7 +40,7 @@ export function ScheduleEditModal({
           issue_id: schedule?.issue.id ?? '',
           description: values.description ?? description,
           status_e: values.status_e.value ?? defaultStatus,
-          dateTime: values.date_time ?? dateTime,
+          dateTime: values.event_date ?? dateTime,
           alerts,
         },
       };

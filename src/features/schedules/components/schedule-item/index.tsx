@@ -16,6 +16,9 @@ import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { Permission } from '@/components/permission';
+import { useGetAllCities } from '@/features/cities/api/get-all-cities';
+import { useGetAllUsers } from '@/features/users/api/get-all-users';
+import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 
 interface ScheduleItemProps {
   schedule: Schedule;
@@ -39,15 +42,30 @@ export function ScheduleItem({
       case 'não resolvido':
         return 'gray';
       case 'em andamento':
-        return 'blue';
+        return 'green';
       case 'pendente':
         return 'yellow';
       case 'urgente':
         return 'red';
       default:
-        return 'green';
+        return 'blue';
     }
   }
+
+  const { data: cities } = useGetAllCities(0);
+  const city = cities?.find((city) => {
+    return city?.id === schedule.issue.city_id;
+  });
+
+  const { data: workstations } = useGetAllWorkstations();
+  const workstation = workstations?.find((workstation) => {
+    return workstation?.id === schedule.issue.workstation_id;
+  });
+
+  const { data: users } = useGetAllUsers();
+  const user = users?.find((user) => {
+    return user?.email === schedule.issue.email;
+  });
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -65,9 +83,15 @@ export function ScheduleItem({
           <HStack spacing={6}>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Agendado para:
+                Posto de Trabalho
               </Text>
-              <Text noOfLines={1}>{formatDate(scheduleDate)}</Text>
+              <Text noOfLines={1}>{workstation?.name}</Text>
+            </Box>
+            <Box>
+              <Text fontSize="sm" fontWeight="light" color="GrayText">
+                Local
+              </Text>
+              <Text noOfLines={1}>{city?.name}</Text>
             </Box>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
@@ -80,6 +104,18 @@ export function ScheduleItem({
                 Telefone:
               </Text>
               <Text noOfLines={1}>{schedule.issue.phone}</Text>
+            </Box>
+            <Box textAlign="center" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="light" color="GrayText">
+                Data
+              </Text>
+              <Text>{formatDate(scheduleDate, 'date')} </Text>
+            </Box>
+            <Box textAlign="center" fontWeight="medium">
+              <Text fontSize="sm" fontWeight="light" color="GrayText">
+                Hora
+              </Text>
+              <Text>{formatDate(scheduleDate, 'time')}</Text>
             </Box>
           </HStack>
         }
@@ -156,7 +192,7 @@ export function ScheduleItem({
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Atendente
               </Text>
-              <Text noOfLines={1}>{schedule.issue.email}</Text>
+              <Text noOfLines={1}>{user?.name}</Text>
             </Box>
           </HStack>
         </VStack>

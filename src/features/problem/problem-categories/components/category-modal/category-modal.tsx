@@ -27,19 +27,21 @@ export function CategoryModal({
   } = usePutUpdateProblemCategory({});
 
   const handleSubmit = useCallback(
-    ({ name, description }: CategoryPayload) => {
+    ({ name, description, visible_user_external }: CategoryPayload) => {
       if (category?.id) {
         updateProblemCategory({
           id: category.id,
           data: {
             name,
             description,
+            visible_user_external,
           },
         });
       } else {
         createProblemCategory({
           name,
           description,
+          visible_user_external,
         });
       }
 

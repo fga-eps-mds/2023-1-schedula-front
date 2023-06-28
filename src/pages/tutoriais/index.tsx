@@ -53,17 +53,6 @@ export function Tutoriais() {
     setSelectedCategory('');
   }, [tutorials]);
 
-  const handleCategoryChange = useCallback(
-    (selectedOption: Props<any>['value']) => {
-      if (selectedOption?.value === '') {
-        handleResetFilters();
-      } else {
-        setSelectedCategory(selectedOption?.value || '');
-      }
-    },
-    [handleResetFilters]
-  );
-
   useEffect(() => {
     let updatedTutorials = tutorials || [];
     if (selectedCategory) {
@@ -75,17 +64,9 @@ export function Tutoriais() {
     setFilteredTutorials(updatedTutorials);
   }, [tutorials, selectedCategory, handleResetFilters]);
 
-  const resetButton = selectedCategory ? (
-    <Button
-      variant="link"
-      colorScheme="gray"
-      size="xs"
-      onClick={handleResetFilters}
-      marginLeft={2}
-    >
-      <CloseIcon boxSize={3} />
-    </Button>
-  ) : null;
+  const handleChangeFilter = (option: any) => {
+    setSelectedCategory(option?.value || '');
+  };
 
   const options = useMemo(() => {
     const uniqueCategories = new Set(
@@ -136,19 +117,18 @@ export function Tutoriais() {
             _placeholder={{ color: 'gray.400' }}
           />
         </InputGroup>
-
         <Select
           aria-label="Filtrar por categoria"
           placeholder={
             <Flex alignItems="center">
               <Icon as={FaTags} boxSize={4} mr={2} />
-              Filtrar por categoria
-              {resetButton}
+              Categoria
             </Flex>
           }
-          onChange={handleCategoryChange}
-          value={selectedCategory}
           options={options}
+          onChange={handleChangeFilter}
+          isClearable
+          isSearchable={false}
           chakraStyles={chakraStyles}
           components={customComponents}
         />

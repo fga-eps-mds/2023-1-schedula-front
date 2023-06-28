@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Button,
   Grid,
   HStack,
@@ -169,13 +170,6 @@ export function GerenciarTutoriais() {
     setFilteredTutorials(updatedTutorials);
   }, [tutorials, selectedState]);
 
-  const handleStateChange = useCallback(
-    (selectedOption: Props<any>['value']) => {
-      setSelectedState(selectedOption?.value || '');
-    },
-    []
-  );
-
   const uniqueStates = new Set(
     tutorials?.map((tutorial) => tutorial.category.name)
   );
@@ -185,10 +179,9 @@ export function GerenciarTutoriais() {
     value: state,
   }));
 
-  const resetFilter = useCallback(() => {
-    setFilteredTutorials(tutorials || []);
-    setSelectedState('');
-  }, [tutorials, setSelectedState, setFilteredTutorials]);
+  const handleChangeFilter = (option: any) => {
+    setSelectedState(option?.value || '');
+  };
 
   return (
     <>
@@ -232,29 +225,17 @@ export function GerenciarTutoriais() {
 
         <div style={{ alignItems: 'center', marginTop: 7 }}>
           <Select
+            aria-label="Filtrar por status"
             placeholder={
-              <Box display="flex" alignItems="center">
+              <Flex alignItems="center">
                 <Icon as={FaTags} boxSize={4} mr={2} />
-                {selectedState ? (
-                  <>
-                    {selectedState}
-                    <Button
-                      variant="ghost"
-                      colorScheme="gray"
-                      size="xs"
-                      onClick={resetFilter}
-                    >
-                      <Icon as={FaTimes} boxSize={4} />
-                    </Button>
-                  </>
-                ) : (
-                  'Filtrar por categoria'
-                )}
-              </Box>
+                Categoria
+              </Flex>
             }
-            onChange={handleStateChange}
-            value={selectedState}
             options={options}
+            onChange={handleChangeFilter}
+            isClearable
+            isSearchable={false}
             chakraStyles={chakraStyles}
             components={customComponents}
           />

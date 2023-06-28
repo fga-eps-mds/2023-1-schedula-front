@@ -29,18 +29,20 @@ export function ProblemTypeModal({
     usePutUpdateProblemType({});
 
   const handleSubmit = useCallback(
-    async ({ name }: ProblemTypePayload) => {
+    async ({ name, visible_user_external }: ProblemTypePayload) => {
       if (problemType) {
         updateProblemType({
           id: problemType.id,
           data: {
             name,
+            visible_user_external,
             problem_category_id: categoryId,
           },
         });
       } else {
         createProblemType({
           name,
+          visible_user_external,
           problem_category_id: categoryId,
         });
       }

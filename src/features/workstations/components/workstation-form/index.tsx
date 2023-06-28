@@ -61,7 +61,7 @@ export function WorkstationForm({
         })
       ),
       city: {
-        label: selectedWorkstation?.city?.name ?? '',
+        label: selectedWorkstation?.city?.name ?? 'Cidade',
         value: selectedWorkstation?.city?.id ?? '',
       },
       gateway: selectedWorkstation?.gateway ?? '',
