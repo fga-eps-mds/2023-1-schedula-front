@@ -80,4 +80,10 @@ export const routes: IRoute[] = [
     icon: BsCardChecklist,
     allowedUsersPath: ['ADMIN'],
   },
+  {
+    label: 'Registrar Agendamento',
+    pathname: '/agendamento_externo/registrar',
+    icon: BsTelephonePlus,
+    allowedUsersPath: ['USER'],
+  },
 ];

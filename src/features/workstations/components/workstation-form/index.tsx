@@ -61,7 +61,7 @@ export function WorkstationForm({
         })
       ),
       city: {
-        label: selectedWorkstation?.city?.name ?? '',
+        label: selectedWorkstation?.city?.name ?? 'Cidade',
         value: selectedWorkstation?.city?.id ?? '',
       },
       gateway: selectedWorkstation?.gateway ?? '',
@@ -265,7 +265,7 @@ export function WorkstationForm({
                   label="Gateway"
                   errors={error}
                   value={value}
-                  placeholder="Gateway"
+                  placeholder="0.0.0.0"
                   onChange={(e) => onChange(e.target.value)}
                 />
               )}

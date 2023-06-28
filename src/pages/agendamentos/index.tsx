@@ -8,7 +8,6 @@ import { ScheduleOpen, Schedule } from '@/features/schedules/types';
 import { ScheduleItem } from '@/features/schedules/components/schedule-item';
 import { useDeleteSchedule } from '@/features/schedules/api/delete-schedule';
 import { ScheduleEditModal } from '@/features/schedules/components/schedule-edit-modal';
-import { useGetAllIssues } from '@/features/homologations/api/get-all-extern-issues';
 
 export function Agendamentos() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -16,13 +15,14 @@ export function Agendamentos() {
   const [scheduleToEdit, setScheduleToEdit] = useState<
     Schedule | ScheduleOpen
   >();
-
-  const {
-    data: openSchedules,
-    isLoading: isLoadingOpenSchedules,
-    refetch: refetchOpenSchedules,
-  } = useGetAllSchedules();
-
+  const { data: schedules, isLoading, refetch } = useGetAllSchedules();    
+  const filteredSchedules = schedules
+    ? schedules.filter(
+        (schedule) => schedule.status.toString().toUpperCase() !== 'RESOLVIDO'
+      )
+    : [];
+      
+      
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
     useDeleteSchedule();
 
@@ -55,6 +55,7 @@ export function Agendamentos() {
         isDeleting={isDeletingSchedule}
       />
     ),
+
     [onEdit, onDelete, isDeletingSchedule]
   );
 
@@ -62,14 +63,14 @@ export function Agendamentos() {
     <>
       <PageHeader title="Agendamentos">
         <HStack spacing={2}>
-          <RefreshButton refresh={refetchOpenSchedules} />
+          <RefreshButton refresh={refetch} />
         </HStack>
       </PageHeader>
 
-      <ListView<ScheduleOpen | Schedule>
-        items={openSchedules}
+      <ListView<Schedule | ScheduleOpen>
+        items={filteredSchedules}
         render={renderScheduleItem}
-        isLoading={isLoadingOpenSchedules}
+        isLoading={isLoading}
       />
 
       <ScheduleEditModal

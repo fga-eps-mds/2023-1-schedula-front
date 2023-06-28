@@ -40,6 +40,25 @@ export interface ExternIssue {
   problem_types: ProblemTypeOption[];
 }
 
+export interface IssueOpen {
+  id: string;
+  requester: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  email: string;
+  date: string;
+  cellphone: string;
+  description: string;
+  problem_category: {
+    id: string;
+    name: string;
+    description: string;
+    problem_types: ProblemTypeOption[];
+  };
+  problem_types: ProblemTypeOption[];
+}
+
 export interface PostCreateIssueParams {
   requester: string;
   phone: string;
@@ -62,6 +81,19 @@ export interface PostCreateExternIssueParams {
   problem_types_ids: string[];
 }
 
+export interface PostCreateIssueParamsOpen {
+  requester: string;
+  cellphone: string;
+  email: string;
+  phone: string;
+  city_id: string;
+  workstation_id: string;
+  date: string;
+  problem_category_id: string;
+  problem_types_ids: string[];
+  description: string;
+}
+
 export interface PostCreateIssueResponse {
   id: string;
   requester: string;
@@ -79,7 +111,7 @@ export interface PostCreateIssueResponse {
   problem_types: ProblemTypeOption[];
 }
 
-export interface PostCreateExternIssueResponse {
+export interface PostCreateIssueResponseOpen {
   id: string;
   requester: string;
   phone: string;
@@ -88,9 +120,9 @@ export interface PostCreateExternIssueResponse {
   email: string;
   dateTime: Date;
   alerts: Date[];
-  description: string;
-  cellphone: string;
   date: Date;
+  cellphone: string;
+  description: string;
   problem_category: {
     id: string;
     name: string;
@@ -186,10 +218,25 @@ export interface IssuePayload {
   issueId: string;
   requester: string;
   phone: string;
+
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
   problem_types_payload?: { label: string; value: string }[];
+}
+
+export interface IssuePayloadOpen {
+  issueId: string;
+  requester: string;
+  cellphone: string;
+  email: string;
+  phone: { label: string; value: string };
+
+  city_payload: { label: string; value: string };
+  workstation_payload: { label: string; value: string };
+  problem_category_payload: { label: string; value: string };
+  problem_types_payload?: { label: string; value: string }[];
+  description: string;
 }
 
 export interface ExternIssuePayload {

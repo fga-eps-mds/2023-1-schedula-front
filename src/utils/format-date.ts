@@ -23,7 +23,7 @@ export const formatDate = (
 
     const timezoneOffset = localDate.getTimezoneOffset();
     const timezoneOffsetHours = timezoneOffset / 60;
-    localDate.setHours(localDate.getHours());
+    localDate.setHours(localDate.getHours() + timezoneOffsetHours);
 
     const formatedDate = new Intl.DateTimeFormat(
       locale,
@@ -40,7 +40,8 @@ export function parseSelectedDate(value: string) {
   const date = new Date(value);
 
   const timezoneOffset = date.getTimezoneOffset();
-  date.setHours(date.getHours());
+  const timezoneOffsetHours = timezoneOffset / 60;
+  date.setHours(date.getHours() + timezoneOffsetHours);
 
   const day = (date.getDate() < 10 ? '0' : '') + date.getDate();
   const month = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
