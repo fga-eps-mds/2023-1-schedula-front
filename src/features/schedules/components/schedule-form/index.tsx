@@ -43,7 +43,12 @@ export function ScheduleForm({
     (workstation) => workstation.id === issue?.workstation_id
   )[0].name;
 
-  const { register, handleSubmit, control } = useForm<ChamadoEvent>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<ChamadoEvent>({
     defaultValues: {
       alert_dates: [{ date: new Date() }],
     },
@@ -185,7 +190,13 @@ export function ScheduleForm({
 
         <Flex w="100%" flexDirection="column">
           <FormLabel htmlFor="description">Descrição</FormLabel>
-          <Textarea {...register('description')} height="100%" />
+          <Textarea
+            {...register('description', { maxLength: 500 })}
+            height="100%"
+          />
+          {errors.description && errors.description.type === 'maxLength' && (
+            <span>Tamanho máximo é de 500 caracteres</span>
+          )}
         </Flex>
 
         <Button

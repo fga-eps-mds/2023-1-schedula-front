@@ -34,7 +34,7 @@ export function ScheduleEditModal({
           ]
         : 'PROGRESS';
 
-      editSchedule({
+      const data = {
         id: schedule?.id ?? '',
         data: {
           issue_id: schedule?.issue.id ?? '',
@@ -43,7 +43,9 @@ export function ScheduleEditModal({
           dateTime: values.event_date ?? dateTime,
           alerts,
         },
-      });
+      };
+
+      editSchedule(data);
     },
     [editSchedule, schedule]
   );
