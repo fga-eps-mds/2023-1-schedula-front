@@ -1,4 +1,4 @@
-import { IssueOpen } from '@/features/issues/types';
+import { IssueOpen, ProblemTypeOption } from '@/features/issues/types';
 
 export type GetAllIssuesResponse = Array<IssueOpen>;
 
@@ -14,9 +14,9 @@ export interface PutEditIssuesParams {
     city_id: string;
     workstation_id: string;
     email: string;
-    date: string;
+    date: Date;
     dateTime: Date;
-    alerts: Date[];    
+    alerts: Date[];
     problem_category: {
       id: string;
       name: string;

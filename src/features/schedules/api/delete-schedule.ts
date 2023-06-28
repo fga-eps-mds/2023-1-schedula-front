@@ -9,7 +9,7 @@ async function deleteSchedule({ id }: DeleteScheduleParams) {
   try {
     // Verifica se a issue está em /schedules
     await api.delete<boolean>(`${ISSUES_ENDPOINT}/schedules/${id}`);
-  } catch (error) {
+  } catch (error: string | any) {
     if (error.response?.status === 404) {
       // Se a issue não estiver em /schedules, procura em /schedules-open
       await api.delete<boolean>(`${ISSUES_ENDPOINT}/schedules-open/${id}`);

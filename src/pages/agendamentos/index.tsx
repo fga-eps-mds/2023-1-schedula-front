@@ -2,7 +2,7 @@ import { HStack, useDisclosure } from '@chakra-ui/react';
 import { useCallback, useState, useEffect } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllSchedulesOpen } from '@/features/schedules/api/get-all-schedules-open';
+import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
 import { ListView } from '@/components/list';
 import { ScheduleOpen, Schedule } from '@/features/schedules/types';
 import { ScheduleItem } from '@/features/schedules/components/schedule-item';
@@ -21,7 +21,7 @@ export function Agendamentos() {
     data: openSchedules,
     isLoading: isLoadingOpenSchedules,
     refetch: refetchOpenSchedules,
-  } = useGetAllSchedulesOpen();
+  } = useGetAllSchedules();
 
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
     useDeleteSchedule();

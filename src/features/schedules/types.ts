@@ -2,7 +2,7 @@ import { ExternIssue, Issue } from '@/features/issues/types';
 
 interface Alert {
   id: string;
-  date: string;
+  date: Date;
 }
 
 export enum ScheduleStatus {

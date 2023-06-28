@@ -10,7 +10,7 @@ const mockedExternIssue: IssueOpen = {
   phone: '',
   city_id: '',
   workstation_id: '',
-  date: '',
+  date: new Date(),
   cellphone: '',
   description: '',
   alerts: [],
@@ -35,7 +35,6 @@ describe('UserItem', () => {
       <ExternIssueItem
         externIssue={mockedExternIssue}
         isDeleting={false}
-        onEdit={mockedOnEditFunction}
         onDelete={mockedOnDeleteFunction}
       />
     );
@@ -50,7 +49,6 @@ describe('UserItem', () => {
       <ExternIssueItem
         externIssue={mockedExternIssue}
         isDeleting={false}
-        onEdit={mockedOnEditFunction}
         onDelete={mockedOnDeleteFunction}
       />
     );
@@ -70,7 +68,6 @@ describe('UserItem', () => {
       <ExternIssueItem
         externIssue={mockedExternIssue}
         isDeleting={false}
-        onEdit={mockedOnEditFunction}
         onDelete={mockedOnDeleteFunction}
       />
     );

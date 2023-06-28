@@ -15,7 +15,7 @@ async function putEditSchedule({ id, data }: PutEditScheduleParams) {
       data
     );
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     if (error.response?.status === 404) {
       // Se a atualização em /schedules retornar um erro 404, tenta em /schedules-open
       // console.log("resposta: ", data)

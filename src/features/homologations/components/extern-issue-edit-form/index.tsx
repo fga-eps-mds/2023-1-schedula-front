@@ -58,11 +58,11 @@ export function UpdateExternIssueForm() {
         value: locate.state.problem_category.id ?? '',
       },
       problem_types_payload:
-        externIssue?.problem_types.map((type) => ({
+        externIssue?.problem_types.map((type: { name: string; id: any }) => ({
           label: type.name,
           value: type.id,
         })) || [],
-      alert_dates: externIssue?.alerts.map((alert) => ({
+      alert_dates: externIssue?.alerts.map((alert: { date: string }) => ({
         date: parseSelectedDate(alert.date) ?? '',
       })),
       dateTime: locate.state.externIssue.dateTime ?? '',
@@ -108,8 +108,8 @@ export function UpdateExternIssueForm() {
   const city = watch('city_payload');
   const category = watch('problem_category_payload');
   const problemTypes = watch('problem_types_payload');
-  //const alert_dates = watch('alert_dates');
-  
+  // const alert_dates = watch('alert_dates');
+
   const workstationsOptions = city
     ? workstations
         ?.filter((workstation) => workstation.city.id === city.value)
@@ -184,11 +184,11 @@ export function UpdateExternIssueForm() {
   const { fields, append, remove } = useFieldArray({
     control,
     shouldUnregister: true,
-    name: 'alert_dates',
+    name: 'alerts',
   });
 
   const handleAddDate = useCallback(() => {
-    append({ date: '' });
+    append({ label: '', value: '' });
   }, [append]);
 
   const handleRemoveDate = useCallback(
@@ -384,7 +384,7 @@ export function UpdateExternIssueForm() {
                 <Flex key={field.id} gap={1}>
                   <Controller
                     control={control}
-                    name={`alert_dates.${index}.date`}
+                    name="alerts"
                     rules={{
                       min: {
                         value: new Date().toISOString(),
@@ -398,6 +398,7 @@ export function UpdateExternIssueForm() {
                     }) => (
                       <Box w="full">
                         <Input
+                          label="alerts"
                           type="date"
                           name={`alert_dates.${index}.date`}
                           id={`alert_dates.${index}.date`}

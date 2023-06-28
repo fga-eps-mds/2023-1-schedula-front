@@ -10,7 +10,7 @@ export interface Issue {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   problem_category: {
     id: string;
     name: string;
@@ -27,7 +27,7 @@ export interface ExternIssue {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   description: string;
   alerts: Date[];
   dateTime: Date;
@@ -46,7 +46,7 @@ export interface PostCreateIssueParams {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   problem_category_id: string;
   problem_types_ids: string[];
 }
@@ -57,7 +57,7 @@ export interface PostCreateExternIssueParams {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   problem_category_id: string;
   problem_types_ids: string[];
 }
@@ -69,7 +69,7 @@ export interface PostCreateIssueResponse {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   problem_category: {
     id: string;
     name: string;
@@ -90,7 +90,7 @@ export interface PostCreateExternIssueResponse {
   alerts: Date[];
   description: string;
   cellphone: string;
-  date: string;
+  date: Date;
   problem_category: {
     id: string;
     name: string;
@@ -215,7 +215,7 @@ export interface IssueOpen {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   cellphone: string;
   description: string;
   alerts: Date[];
@@ -238,7 +238,7 @@ export interface PostCreateIssueParamsOpen {
   dateTime: Date;
   city_id: string;
   workstation_id: string;
-  date: string;
+  date: Date;
   problem_category_id: string;
   problem_types_ids: string[];
   description: string;
@@ -251,7 +251,7 @@ export interface PostCreateIssueResponseOpen {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: Date;
   cellphone: string;
   description: string;
   problem_category: {
@@ -275,7 +275,7 @@ export interface IssuePayloadOpen {
   city_payload: { label: string; value: string };
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
-  problem_types_payload?: { label: string; value: string }[];
+  problem_types_payload: { label: string; value: string }[];
   description: string;
 }
 
@@ -299,7 +299,7 @@ export interface PutEditExternIssueParams {
     city_id: string;
     workstation_id: string;
     email: string;
-    date: string;
+    date: Date;
     dateTime: Date;
     alerts: Date[];
     description: string;

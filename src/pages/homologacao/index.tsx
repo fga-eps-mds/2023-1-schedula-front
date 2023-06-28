@@ -9,8 +9,8 @@ import { ListView } from '@/components/list';
 import { ExternIssueItem } from '@/features/homologations/components/extern-issue-item';
 import { useDeleteHomologation } from '@/features/homologations/api/delete-extern-issue';
 import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
-import { useGetAllSchedulesOpen } from '@/features/schedules/api/get-all-schedules-open';
 import { addItemToList, globalList } from './globalList';
+import { ItemProps } from '@/components/list-item';
 
 export function GerenciarHomologacao() {
   const {
@@ -20,7 +20,7 @@ export function GerenciarHomologacao() {
   } = useGetAllIssues();
 
   const { data: schedules, isLoading: isLoadingSchedules } =
-    useGetAllSchedulesOpen();
+    useGetAllSchedules();
 
   const scheduledIssues = schedules
     ? schedules.map((schedule) => schedule.issue.id)
@@ -39,15 +39,13 @@ export function GerenciarHomologacao() {
   );
 
   useEffect(() => {
+    const storedList = localStorage.getItem('globalList');
 
-    const storedList = localStorage.getItem("globalList");
-    
     if (storedList) {
       const parsedList = JSON.parse(storedList);
       globalList.length = 0;
       globalList.push(...parsedList);
     }
-    
   }, []);
 
   const renderExternIssueItem = useCallback(
@@ -59,11 +57,11 @@ export function GerenciarHomologacao() {
 
       // Se o ID estiver na lista de schedules, não renderizar o card
       if (isIssueScheduled) {
-        addItemToList(externIssue.id)
+        addItemToList(externIssue.id);
       }
 
-      if (globalList.includes(externIssue.id)){
-        return null;
+      if (globalList.includes(externIssue.id)) {
+        return null as unknown as JSX.Element;
       }
 
       return (
@@ -82,7 +80,7 @@ export function GerenciarHomologacao() {
       <PageHeader title="Homologação">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Permission allowedRoles={['ADMIN']} />
+          <Permission allowedRoles={['ADMIN']}>children={undefined}</Permission>
         </HStack>
       </PageHeader>
 

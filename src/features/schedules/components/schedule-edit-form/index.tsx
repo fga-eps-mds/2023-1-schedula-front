@@ -49,7 +49,7 @@ export function ScheduleEditForm({
     defaultValues: {
       event_date: parseSelectedDatetime(schedule?.dateTime ?? ''),
       alert_dates: schedule?.alerts.map((alert) => ({
-        date: parseSelectedDate(alert.date),
+        date: alert.date,
       })),
       description: schedule?.description,
       status_e: schedule?.status,
@@ -63,7 +63,7 @@ export function ScheduleEditForm({
   });
 
   const handleAddDate = useCallback(() => {
-    append({ date: '' });
+    append({ date: new Date() });
   }, [append]);
 
   const handleRemoveDate = useCallback(

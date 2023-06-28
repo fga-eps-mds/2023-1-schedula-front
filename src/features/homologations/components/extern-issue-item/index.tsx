@@ -43,9 +43,9 @@ export function ExternIssueItem({
 
   const handleOnClick = (
     externIssue: ExternIssue,
-    city: City,
-    workstation: Workstation,
-    problem_category: ProblemCategory
+    city: City | any,
+    workstation: Workstation | any,
+    problem_category: ProblemCategory | any
   ) => {
     history('/homologacao/editar', {
       state: { externIssue, city, workstation, problem_category },
@@ -57,7 +57,7 @@ export function ExternIssueItem({
     return city?.id === externIssue?.city_id;
   });
 
-  const { data: problems_categories } = useGetAllProblemCategories(0);
+  const { data: problems_categories } = useGetAllProblemCategories();
   const problem_category = problems_categories?.find((problem_category) => {
     return problem_category?.id === externIssue?.problem_category.id;
   });

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ScheduleStatus, ScheduleOpen } from '@/features/schedules/types';
 import { ScheduleEditForm } from '@/features/schedules/components/schedule-edit-form';
 import { usePutEditSchedule } from '@/features/schedules/api/put-edit-schedule';
@@ -13,13 +13,13 @@ export function ScheduleEditModal({
   schedule,
   onClose,
 }: ScheduleEditModalProps) {
-  const history = useHistory();
+  const history = useNavigate();
 
   const { mutate: editSchedule, isLoading: isEditingSchedule } =
     usePutEditSchedule({
       onSuccessCallBack: () => {
         onClose();
-        history.push('/homologacao/editar');
+        history('/homologacao/editar');
       },
     });
 

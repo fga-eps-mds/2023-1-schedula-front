@@ -24,7 +24,7 @@ import { ActionButton } from '..';
 import { Input } from '@/components/form-fields/input';
 import { DeleteButton } from '../delete-button';
 import { IssuePayloadOpen } from '@/features/issues/types';
-import { parseSelectedDatetime } from '@/utils/format-date';
+import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
 
 interface ApproveButtonProps<Data> extends ActionButtonProps<Data> {
   handleApproveHomolog: (justify: string) => void;
@@ -42,7 +42,6 @@ export function ApproveButton<Data>({
   passDateTime,
   ...props
 }: ApproveButtonProps<Data>) {
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [justification] = useState('');
 
@@ -63,7 +62,7 @@ export function ApproveButton<Data>({
   });
 
   const handleAddDate = useCallback(() => {
-    append({ date: '' });
+    append({ label: '', value: '' });
   }, [append]);
 
   const handleRemoveDate = useCallback(
@@ -116,7 +115,7 @@ export function ApproveButton<Data>({
           <Box>
             <Controller
               control={control}
-              name="passDateTime"
+              name="dateTime"
               rules={{
                 min: {
                   value: new Date().toISOString(),
@@ -162,7 +161,7 @@ export function ApproveButton<Data>({
                   <Flex key={field.id} gap={1}>
                     <Controller
                       control={control}
-                      name={`alert_dates.${index}.date`}
+                      name="alerts"
                       rules={{
                         min: {
                           value: new Date().toISOString(),
