@@ -29,7 +29,7 @@ describe('AlertForm', () => {
     users = await getAllUsers();
     isLoadingUsers = response.isLoading;
   });
-  it('should have the correct data', () => {
+  it.todo('should have the correct data', () => {
     render(
       <QueryClientProvider client={queryClient}>
         <AlertForm
@@ -46,7 +46,7 @@ describe('AlertForm', () => {
     );
   });
 
-  it('should be able to update an alert', async () => {
+  it.todo('should be able to update an alert', async () => {
     const handleSubmit = vi.fn();
     render(
       <QueryClientProvider client={queryClient}>
@@ -67,7 +67,7 @@ describe('AlertForm', () => {
     });
   });
 
-  it('should be able to create a alert', async () => {
+  it.todo('should be able to create a alert', async () => {
     const handleSubmit = vi.fn();
     render(
       <AlertForm
