@@ -38,7 +38,7 @@ describe('Issues page', () => {
     );
 
     const heading = await findByRole('heading');
-    expect(heading).toHaveTextContent('Atendimentos');
+    expect(heading).toHaveTextContent('Homologação');
   });
 
   it('should display a list', async () => {
