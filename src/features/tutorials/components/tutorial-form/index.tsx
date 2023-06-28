@@ -123,6 +123,7 @@ export function TutorialForm({
             id="fileinput"
             label=""
             type="file"
+            aria-label="Arquivo"
             // Call handleFile function when a file is selected before uploading
             {...register('file', { required: 'Campo obrigatório' })}
             accept="application/pdf"
