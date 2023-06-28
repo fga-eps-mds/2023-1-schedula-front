@@ -9,23 +9,20 @@ import { PutEditScheduleParams } from '@/features/schedules/api/types';
 
 async function putEditSchedule({ id, data }: PutEditScheduleParams) {
   try {
-    console.log('resposta: ', data);
     const response = await api.put<boolean>(
       `${ISSUES_ENDPOINT}/schedules/${id}`,
       data
     );
     return response.data;
   } catch (error: any) {
-    if (error.response?.status === 404) {
-      // Se a atualização em /schedules retornar um erro 404, tenta em /schedules-open
-      // console.log("resposta: ", data)
+    if (error.response?.status === 404 || error.response?.status === 500) {
       const response = await api.put<boolean>(
         `${ISSUES_ENDPOINT}/schedules-open/${id}`,
         data
       );
       return response.data;
     }
-    throw error; // Lança um erro caso ocorra um erro diferente de 404
+    throw error; // Lança um erro caso ocorra um erro diferente de 404 ou 500
   }
 }
 

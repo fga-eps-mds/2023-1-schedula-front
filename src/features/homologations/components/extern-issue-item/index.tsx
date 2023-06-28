@@ -10,7 +10,7 @@ import {
 import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { formatDate } from '@/utils/format-date';
 import { ExternIssue } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
@@ -22,7 +22,6 @@ import { ApproveButton } from '@/components/action-buttons/approve-button-homolo
 import { usePostCreateScheduleOpen } from '@/features/homologations/api/post-create-schedule-open';
 import { usePostSendMailExternIssue } from '@/features/homologations/api/post-send-mail-extern-issue';
 import { ProblemCategory } from '@/features/problem/api/types';
-import { ProblemType } from '@/features/problem/problem-types/types';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 
 interface ExternIssueItemProps {
@@ -38,8 +37,6 @@ export function ExternIssueItem({
 }: ExternIssueItemProps) {
   const history = useNavigate();
   const navigate = useNavigate();
-
-  const [externIssuesList, setExternIssuesList] = useState<ExternIssue[]>([]);
 
   const handleOnClick = (
     externIssue: ExternIssue,
@@ -67,10 +64,9 @@ export function ExternIssueItem({
     return workstation?.id === externIssue?.workstation_id;
   });
 
-  const { mutate: createSchedule, isLoading: isCreatingSchedule } =
-    usePostCreateScheduleOpen({
-      onSuccessCallBack: () => navigate('/agendamentos'),
-    });
+  const { mutate: createSchedule } = usePostCreateScheduleOpen({
+    onSuccessCallBack: () => navigate('/agendamentos'),
+  });
 
   const { mutate: sendMailExternIssue, isLoading: isSendingMailExternIssue } =
     usePostSendMailExternIssue({

@@ -77,12 +77,13 @@ export function GerenciarHomologacao() {
 
   return (
     <>
-      <PageHeader title="Homologação">
-        <HStack spacing={2}>
-          <RefreshButton refresh={refetch} />
-          <Permission allowedRoles={['ADMIN']}>children={undefined}</Permission>
-        </HStack>
-      </PageHeader>
+      <Permission allowedRoles={['ADMIN']}>
+        <PageHeader title="Homologação">
+          <HStack spacing={2}>
+            <RefreshButton refresh={refetch} />
+          </HStack>
+        </PageHeader>
+      </Permission>
 
       <ListView<ExternIssue>
         items={externIssues}

@@ -65,7 +65,7 @@ export function UpdateExternIssueForm() {
       alert_dates: externIssue?.alerts.map((alert: { date: string }) => ({
         date: parseSelectedDate(alert.date) ?? '',
       })),
-      dateTime: locate.state.externIssue.dateTime ?? '',
+      dateTime: parseSelectedDatetime(locate.state.externIssue.dateTime) ?? '',
       ...locate.state.externIssue,
     },
   });
@@ -108,7 +108,6 @@ export function UpdateExternIssueForm() {
   const city = watch('city_payload');
   const category = watch('problem_category_payload');
   const problemTypes = watch('problem_types_payload');
-  // const alert_dates = watch('alert_dates');
 
   const workstationsOptions = city
     ? workstations
@@ -130,7 +129,7 @@ export function UpdateExternIssueForm() {
     : [];
 
   const dateTime = parseSelectedDatetime(String(watch('dateTime')));
-  // console.log('dt', dateTime)
+  console.log('dt', dateTime);
 
   const onSubmit = useCallback(
     ({
@@ -169,11 +168,11 @@ export function UpdateExternIssueForm() {
     [updateIssue, locate.state.externIssue?.id]
   );
 
-  useEffect(() => {
-    if (dateTime) {
-      setSelectedDateTime(dateTime);
-    }
-  }, [dateTime]);
+  // useEffect(() => {
+  //   if (dateTime) {
+  //     setSelectedDateTime(dateTime);
+  //   }
+  // }, [dateTime]);
 
   useEffect(() => {
     if (problemTypes) {
@@ -398,7 +397,7 @@ export function UpdateExternIssueForm() {
                     }) => (
                       <Box w="full">
                         <Input
-                          label="alerts"
+                          label={`Alerta ${index + 1}`}
                           type="date"
                           name={`alert_dates.${index}.date`}
                           id={`alert_dates.${index}.date`}

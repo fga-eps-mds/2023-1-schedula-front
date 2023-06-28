@@ -25,7 +25,7 @@ import {
   ScheduleStatus,
   ScheduleOpen,
 } from '@/features/schedules/types';
-import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
+import { parseSelectedDatetime } from '@/utils/format-date';
 import { ControlledSelect } from '@/components/form-fields';
 
 interface ScheduleEditFormProps {
