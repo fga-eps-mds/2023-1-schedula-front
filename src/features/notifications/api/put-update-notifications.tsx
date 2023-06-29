@@ -15,7 +15,7 @@ function putUpdateNotifications({
   data,
 }: PutUpdateNotificationsParams) {
   return api.put<PutUpdateNotificationsResponse>(
-    `${ALERTS_ENDPOINT}/alerts/${notificationId}`,
+    `${ALERTS_ENDPOINT}/notifications/${notificationId}`,
     data
   );
 }

@@ -9,12 +9,12 @@ import {
 } from '@/features/alerts/api/types';
 
 function deleteAlert({ alertId }: DeleteAlertParams) {
-  return api.delete<boolean>(`${ALERT_ENDPOINT}/alerts/${alertId}`);
+  return api.delete<boolean>(`${ALERT_ENDPOINT}/notifications/${alertId}`);
 }
 
 function deleteAlerts({ alertsIds }: DeleteAlertsParams) {
   return api.delete<boolean>(
-    `${ALERT_ENDPOINT}/alerts/delete-alerts/${alertsIds}`
+    `${ALERT_ENDPOINT}/notifications/delete-alerts/${alertsIds}`
   );
 }
 

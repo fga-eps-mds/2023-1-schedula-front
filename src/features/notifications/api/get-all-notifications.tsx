@@ -11,7 +11,7 @@ export type GetAllNotificationsResponse = Array<Notification>;
 
 export const getAllNotifications = async () =>
   api
-    .get<GetAllNotificationsResponse>(`${ALERTS_ENDPOINT}/alerts`)
+    .get<GetAllNotificationsResponse>(`${ALERTS_ENDPOINT}/notifications`)
     .then((response) => response.data)
     .catch((err) => {
       const errMessage =
@@ -23,7 +23,7 @@ export const getAllNotifications = async () =>
 
 const getNotification = async (notificationId: string) =>
   api
-    .get<Notification>(`${ALERTS_ENDPOINT}/alerts/${notificationId}`)
+    .get<Notification>(`${ALERTS_ENDPOINT}/notifications/${notificationId}`)
     .then((response) => response.data)
     .catch(() => {
       toast.error(

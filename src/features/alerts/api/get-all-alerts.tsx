@@ -13,7 +13,7 @@ let errorShown = false; // Variável para controlar se o erro já foi mostrado
 
 export const getAllAlerts = async () =>
   api
-    .get<GetAllAlertsResponse>(`${ALERT_ENDPOINT}/alerts`)
+    .get<GetAllAlertsResponse>(`${ALERT_ENDPOINT}/notifications`)
     .then((response) => response.data)
     .catch((err) => {
       const errMessage =
@@ -28,7 +28,7 @@ export const getAllAlerts = async () =>
 
 const getAlert = async (alertId: string) =>
   api
-    .get<Alert>(`${ALERT_ENDPOINT}/alerts/${alertId}`)
+    .get<Alert>(`${ALERT_ENDPOINT}/notifications/${alertId}`)
     .then((response) => response.data)
     .catch(() => {
       toast.error(
