@@ -53,8 +53,6 @@ export function GerenciarHomologacao() {
         (schedule) => schedule.issue.id === externIssue.id
       );
 
-      console.log(globalList);
-
       // Se o ID estiver na lista de schedules, não renderizar o card
       if (isIssueScheduled) {
         addItemToList(externIssue.id);

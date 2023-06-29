@@ -9,7 +9,6 @@ import { PutUpdateExternIssueParams } from '@/features/issues/types';
 
 async function putUpdateExternIssue(data: PutUpdateExternIssueParams) {
   const { issueId } = data;
-  console.log('json', JSON.stringify(data));
   const response = await api.put<boolean>(
     `${ISSUES_ENDPOINT}/issuesOpen/${issueId}`,
     data

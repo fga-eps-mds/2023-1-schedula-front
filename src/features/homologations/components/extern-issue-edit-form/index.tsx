@@ -115,8 +115,6 @@ export function UpdateExternIssueForm() {
   const city = watch('city_payload');
   const category = watch('problem_category_payload');
   const problemTypes = watch('problem_types_payload');
-  // console.log(watch('phone'))
-  // const phone = watch('phone');
 
   const workstationsOptions = city
     ? workstations
