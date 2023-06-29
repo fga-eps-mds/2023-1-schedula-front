@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useCallback } from 'react';
 import {
@@ -22,10 +21,10 @@ import { useGetCity } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstationsCache } from '@/features/workstations/api/get-all-workstations';
 import {
   Schedule,
-  ScheduleStatus,
   ScheduleOpen,
+  ScheduleStatus,
 } from '@/features/schedules/types';
-import { parseSelectedDatetime } from '@/utils/format-date';
+import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
 import { ControlledSelect } from '@/components/form-fields';
 
 interface ScheduleEditFormProps {
@@ -54,7 +53,7 @@ export function ScheduleEditForm({
     defaultValues: {
       event_date: parseSelectedDatetime(schedule?.dateTime ?? ''),
       alert_dates: schedule?.alerts.map((alert) => ({
-        date: alert.date,
+        date: parseSelectedDate(String(alert.date)),
       })),
       description: schedule?.description,
       status_e: schedule?.status,
@@ -68,7 +67,7 @@ export function ScheduleEditForm({
   });
 
   const handleAddDate = useCallback(() => {
-    append({ date: new Date() });
+    append({ date: '' });
   }, [append]);
 
   const handleRemoveDate = useCallback(
@@ -157,7 +156,7 @@ export function ScheduleEditForm({
                           ref={ref}
                           onBlur={onBlur}
                           w="full"
-                          value={value}
+                          value={String(value)}
                         />
                         <Text color="red.100" mt=".5rem">
                           {error ? error.message : null}
