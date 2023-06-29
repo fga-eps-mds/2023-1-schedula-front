@@ -10,6 +10,7 @@ describe('ApproveButton', () => {
     const { getByText, getByLabelText } = render(
       <ApproveButton
         label="Aprovar"
+        onClick={handleApproveHomolog}
         handleApproveHomolog={handleApproveHomolog}
         passDateTime={passDateTime}
       />
@@ -24,7 +25,7 @@ describe('ApproveButton', () => {
     expect(handleApproveHomolog).toHaveBeenCalledTimes(1);
 
     // Verificar se o campo de data está presente e tem o valor correto
-    const dateTimeInput = getByLabelText('Data do Evento');
+    const dateTimeInput = getByLabelText('Data do Evento') as HTMLInputElement;
     expect(dateTimeInput).toBeInTheDocument();
     expect(dateTimeInput.value).toEqual(
       passDateTime.toISOString().substring(0, 16)
@@ -38,6 +39,7 @@ describe('ApproveButton', () => {
     const { getByText, getByLabelText, getAllByLabelText } = render(
       <ApproveButton
         label="Aprovar"
+        onClick={handleApproveHomolog}
         handleApproveHomolog={handleApproveHomolog}
         passDateTime={passDateTime}
       />

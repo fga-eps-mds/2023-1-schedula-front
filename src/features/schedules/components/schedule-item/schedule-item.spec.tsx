@@ -41,8 +41,8 @@ const mockedSchedule: Schedule = {
   description: 'Está com problema na rede do wifi',
   status: ScheduleStatus.PROGRESS,
   alerts: [
-    { id: '1', date: '2021-10-10' },
-    { id: '2', date: '2021-10-10' },
+    { id: '1', date: new Date() },
+    { id: '2', date: new Date() },
   ],
   issue: {
     id: '1',
@@ -51,7 +51,7 @@ const mockedSchedule: Schedule = {
     city_id: '1',
     workstation_id: '1',
     email: 'example@example.com',
-    date: '2021-10-10',
+    date: new Date(),
     problem_category: {
       id: '1',
       name: 'problema 1',

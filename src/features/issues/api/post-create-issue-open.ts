@@ -2,29 +2,26 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { api } from '@/config/lib/axios';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
-import {
-  PostCreateIssueParamsOpen,
-  PostCreateIssueResponseOpen,
-} from '@/features/issues/types';
+import { IssueOpen, PostCreateIssueParamsOpen } from '@/features/issues/types';
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateIssue(data: PostCreateIssueParamsOpen) {
   return api
-    .post<PostCreateIssueResponseOpen>(`${ISSUES_ENDPOINT}/issuesOpen`, data)
+    .post<IssueOpen>(`${ISSUES_ENDPOINT}/issuesOpen`, data)
     .then((response) => response.data);
 }
 
 export function usePostCreateIssueOpen({
   onSuccessCallBack,
 }: {
-  onSuccessCallBack?: (data: PostCreateIssueResponseOpen) => void;
+  onSuccessCallBack?: (data: IssueOpen) => void;
 }) {
   const queryClient = useQueryClient();
 
   return useMutation(postCreateIssue, {
-    onSuccess(data: PostCreateIssueResponseOpen) {
+    onSuccess(data: IssueOpen) {
       queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
 
       toast.success('Agendamento Externo criado com sucesso!');

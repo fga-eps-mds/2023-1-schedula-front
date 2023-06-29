@@ -149,6 +149,10 @@ export function CreateIssueForm() {
     }
   }, [category, city, resetField]);
 
+  const handlePhone = ({ value }: any) => {
+    return value;
+  };
+
   const onSubmit = useCallback(
     ({
       city_payload,
@@ -163,16 +167,18 @@ export function CreateIssueForm() {
     }: IssuePayloadOpen) => {
       const payload: PostCreateIssueParamsOpen = {
         requester,
-        phone: phone?.value,
+        phone: handlePhone(phone),
         cellphone,
         email,
         city_id: city_payload?.value,
-        date: new Date().toISOString(),
+        date: new Date(),
         problem_category_id: problem_category_payload?.value,
         problem_types_ids:
           problem_types_payload?.map((type) => type?.value) ?? [],
         workstation_id: workstation_payload?.value,
         description,
+        // alerts: [],
+        // dateTime: new Date(),
       };
 
       createIssue(payload);

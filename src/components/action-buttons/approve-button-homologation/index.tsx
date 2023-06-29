@@ -58,7 +58,7 @@ export function ApproveButton<Data>({
   const { fields, append, remove } = useFieldArray({
     control,
     shouldUnregister: true,
-    name: 'alert_dates',
+    name: 'problem_types_payload',
   });
 
   const handleAddDate = useCallback(() => {
@@ -184,7 +184,7 @@ export function ApproveButton<Data>({
                             ref={ref}
                             onBlur={onBlur}
                             w="full"
-                            value={value}
+                            value={value?.[0]?.toISOString() || ''}
                           />
                           <Text color="red.400" mt=".5rem">
                             {error ? error.message : null}

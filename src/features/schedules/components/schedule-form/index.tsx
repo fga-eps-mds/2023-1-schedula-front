@@ -17,7 +17,7 @@ import {
   Input,
 } from '@chakra-ui/react';
 import { FaPlus } from 'react-icons/fa';
-import { Issue } from '@/features/issues/types';
+import { Issue, IssueOpen } from '@/features/issues/types';
 import { ActionButton } from '@/components/action-buttons';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 
@@ -27,7 +27,7 @@ import { useGetCity } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstationsCache } from '@/features/workstations/api/get-all-workstations';
 
 interface EventFormProps {
-  issue?: Issue | undefined;
+  issue?: Issue | IssueOpen | undefined;
   onSubmit: SubmitHandler<ChamadoEvent>;
   isSubmitting: boolean;
 }

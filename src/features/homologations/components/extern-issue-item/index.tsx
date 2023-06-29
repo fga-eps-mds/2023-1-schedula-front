@@ -12,7 +12,7 @@ import { RiEdit2Fill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { formatDate } from '@/utils/format-date';
-import { ExternIssue } from '@/features/issues/types';
+import { ExternIssue, IssueOpen } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
@@ -25,7 +25,7 @@ import { ProblemCategory } from '@/features/problem/api/types';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 
 interface ExternIssueItemProps {
-  externIssue: ExternIssue;
+  externIssue: IssueOpen;
   onDelete: (externIssueId: string) => void;
   isDeleting: boolean;
 }
@@ -39,7 +39,7 @@ export function ExternIssueItem({
   const navigate = useNavigate();
 
   const handleOnClick = (
-    externIssue: ExternIssue,
+    externIssue: IssueOpen,
     city: City | any,
     workstation: Workstation | any,
     problem_category: ProblemCategory | any
@@ -85,7 +85,7 @@ export function ExternIssueItem({
   };
 
   const handleApproveHomolog = (justify: string) => {
-    const updatedExternIssue = { ...externIssue, isHomolog: true };
+    const updatedExternIssue = { ...externIssue };
 
     sendMailExternIssue({
       justify:
@@ -134,21 +134,29 @@ export function ExternIssueItem({
             </Box>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Telefone
+                Celular
               </Text>
-              <Text noOfLines={1}>{externIssue?.phone}</Text>
+              <Text noOfLines={1}>{externIssue?.cellphone}</Text>
             </Box>
             <Box textAlign="center" fontWeight="medium">
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Data
               </Text>
-              <Text>{formatDate(externIssue?.date, 'date')} </Text>
+              <Text>
+                {externIssue?.dateTime
+                  ? formatDate(externIssue?.dateTime, 'date')
+                  : '-'}
+              </Text>
             </Box>
             <Box textAlign="center" fontWeight="medium">
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Hora
               </Text>
-              <Text>{formatDate(externIssue?.date, 'time')}</Text>
+              <Text>
+                {externIssue?.dateTime
+                  ? formatDate(externIssue?.dateTime, 'time')
+                  : '-'}
+              </Text>
             </Box>
             <HStack gap={4} mt={2} flexWrap="wrap">
               {externIssue?.problem_types?.map((problem) => (

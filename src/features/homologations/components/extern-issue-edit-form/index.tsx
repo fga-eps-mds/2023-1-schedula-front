@@ -21,6 +21,7 @@ import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { usePutUpdateExternIssue } from '@/features/issues/api/put-edit-extern-issue';
 import {
+  IssueOpen,
   IssuePayloadOpen,
   PutUpdateExternIssueParams,
 } from '@/features/issues/types';
@@ -35,6 +36,8 @@ import { ActionButton } from '@/components/action-buttons';
 export function UpdateExternIssueForm() {
   const locate = useLocation();
   const { externIssue } = locate.state;
+
+  const externIssueOpen = externIssue as IssueOpen;
 
   const { data: cities, isLoading: isLoadingCities } = useGetAllCities(0);
   const {
@@ -62,10 +65,12 @@ export function UpdateExternIssueForm() {
           label: type.name,
           value: type.id,
         })) || [],
-      alert_dates: externIssue?.alerts.map((alert: { date: string }) => ({
-        date: parseSelectedDate(alert.date) ?? '',
+      alert_dates: externIssueOpen?.alerts.map((alert) => ({
+        date: alert,
       })),
       dateTime: parseSelectedDatetime(locate.state.externIssue.dateTime) ?? '',
+      phone: locate.state.externIssue.phone ?? '',
+      // cellphone: maskPhoneField(locate.state.externIssue.cellphone) ?? '',
       ...locate.state.externIssue,
     },
   });
@@ -73,6 +78,8 @@ export function UpdateExternIssueForm() {
   const [selectedProblemTypes, setSelectedProblemTypes] = useState(
     locate.state.problem_types_payload
   );
+
+  const { isLoading: isLoadingPhone } = useGetAllWorkstations();
 
   const [selectedAlerts, setSelectedAlerts] = useState(locate.state.alerts);
 
@@ -108,6 +115,8 @@ export function UpdateExternIssueForm() {
   const city = watch('city_payload');
   const category = watch('problem_category_payload');
   const problemTypes = watch('problem_types_payload');
+  // console.log(watch('phone'))
+  // const phone = watch('phone');
 
   const workstationsOptions = city
     ? workstations
@@ -129,7 +138,6 @@ export function UpdateExternIssueForm() {
     : [];
 
   const dateTime = parseSelectedDatetime(String(watch('dateTime')));
-  console.log('dt', dateTime);
 
   const onSubmit = useCallback(
     ({
@@ -149,11 +157,11 @@ export function UpdateExternIssueForm() {
       const issueId = locate.state.externIssue?.id ?? '';
       const payload: PutUpdateExternIssueParams = {
         issueId,
-        phone,
+        phone: phone ?? watch('phone'),
         requester,
         dateTime,
         alerts,
-        cellphone,
+        cellphone: maskPhoneField(cellphone) ?? '',
         city_id: city_payload?.value,
         description,
         date: new Date(),
@@ -165,14 +173,8 @@ export function UpdateExternIssueForm() {
 
       updateIssue(payload);
     },
-    [updateIssue, locate.state.externIssue?.id]
+    [updateIssue, locate.state.externIssue?.id, watch]
   );
-
-  // useEffect(() => {
-  //   if (dateTime) {
-  //     setSelectedDateTime(dateTime);
-  //   }
-  // }, [dateTime]);
 
   useEffect(() => {
     if (problemTypes) {
@@ -180,10 +182,22 @@ export function UpdateExternIssueForm() {
     }
   }, [problemTypes]);
 
+  const workstation_payload = watch('workstation_payload');
+
+  const phoneOptions = workstation_payload
+    ? workstations
+
+        ?.filter((workstation) => workstation.id === workstation_payload.value)
+        .map((workstation) => ({
+          value: workstation?.phone ?? '',
+          label: workstation?.phone ?? '',
+        }))
+    : [];
+
   const { fields, append, remove } = useFieldArray({
     control,
     shouldUnregister: true,
-    name: 'alerts',
+    name: 'alerts' as any,
   });
 
   const handleAddDate = useCallback(() => {
@@ -233,6 +247,7 @@ export function UpdateExternIssueForm() {
               label="Telefone"
               placeholder="(00) 0000-0000"
               value={value}
+              disabled
               errors={error}
               onChange={(e) => onChange(maskPhoneField(e.target.value))}
               leftElement={
@@ -258,18 +273,35 @@ export function UpdateExternIssueForm() {
           }
         />
 
-        <Input
-          label="Celular"
-          {...register('cellphone', {
+        <Controller
+          control={control}
+          name="cellphone"
+          defaultValue=""
+          rules={{
             required: 'Campo obrigatório',
-          })}
-          errors={errors?.cellphone}
-          placeholder="(00) 00000-0000"
-          leftElement={
-            <InputLeftElement>
-              <Icon as={RiCellphoneFill} fontSize={20} />
-            </InputLeftElement>
-          }
+            maxLength: {
+              value: 15,
+              message: 'Número inválido',
+            },
+          }}
+          render={({
+            field: { ref, value, onChange },
+            fieldState: { error },
+          }) => (
+            <Input
+              ref={ref}
+              label="Celular"
+              placeholder="(00) 0000-0000"
+              value={value}
+              errors={error}
+              onChange={(e) => onChange(maskPhoneField(e.target.value))}
+              leftElement={
+                <InputLeftElement>
+                  <Icon as={BsTelephoneFill} fontSize={20} />
+                </InputLeftElement>
+              }
+            />
+          )}
         />
 
         <ControlledSelect
@@ -352,9 +384,7 @@ export function UpdateExternIssueForm() {
             }) => (
               <>
                 <Input
-                  {...register('dateTime', {
-                    required: 'Campo obrigatório',
-                  })}
+                  {...register('dateTime')}
                   label="Data do Evento"
                   type="datetime-local"
                   name="dateTime"
@@ -406,7 +436,8 @@ export function UpdateExternIssueForm() {
                           ref={ref}
                           onBlur={onBlur}
                           w="full"
-                          value={value}
+                          // value={value}
+                          value={value?.[0]?.toISOString() || ''}
                         />
                         <Text color="red.400" mt=".5rem">
                           {error ? error.message : null}

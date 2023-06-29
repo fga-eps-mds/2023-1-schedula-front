@@ -4,7 +4,7 @@ import { api } from '@/config/lib/axios';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
 import {
   PostCreateExternIssueParams,
-  PostCreateExternIssueResponse,
+  PostCreateIssueResponseOpen,
 } from '@/features/issues/types';
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { toast } from '@/utils/toast';
@@ -12,19 +12,19 @@ import { ApiError } from '@/config/lib/axios/types';
 
 function postCreateExternIssue(data: PostCreateExternIssueParams) {
   return api
-    .post<PostCreateExternIssueResponse>(`${ISSUES_ENDPOINT}/issuesOpen`, data)
+    .post<PostCreateIssueResponseOpen>(`${ISSUES_ENDPOINT}/issuesOpen`, data)
     .then((response) => response.data);
 }
 
 export function usePostCreateExternIssue({
   onSuccessCallBack,
 }: {
-  onSuccessCallBack?: (data: PostCreateExternIssueResponse) => void;
+  onSuccessCallBack?: (data: PostCreateIssueResponseOpen) => void;
 }) {
   const queryClient = useQueryClient();
 
   return useMutation(postCreateExternIssue, {
-    onSuccess(data: PostCreateExternIssueResponse) {
+    onSuccess(data: PostCreateIssueResponseOpen) {
       queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
 
       toast.success('Atendimento criado com sucesso!');

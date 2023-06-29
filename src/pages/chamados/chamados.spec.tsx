@@ -107,7 +107,7 @@ describe('sortIssues', () => {
         city_id: '123',
         workstation_id: '123',
         email: 'mockerson@mock.com',
-        date: '2023-06-15T15:30:45.500Z',
+        date: new Date(),
         problem_category: {
           id: '123',
           name: 'mockCategory',
@@ -123,7 +123,7 @@ describe('sortIssues', () => {
         city_id: '123',
         workstation_id: '123',
         email: 'mockerson@mock.com',
-        date: '2023-06-14T15:30:45.500Z',
+        date: new Date(),
         problem_category: {
           id: '123',
           name: 'mockCategory',
@@ -139,7 +139,7 @@ describe('sortIssues', () => {
         city_id: '123',
         workstation_id: '123',
         email: 'mockerson@mock.com',
-        date: '2023-06-16T15:30:45.500Z',
+        date: new Date(),
         problem_category: {
           id: '123',
           name: 'mockCategory',

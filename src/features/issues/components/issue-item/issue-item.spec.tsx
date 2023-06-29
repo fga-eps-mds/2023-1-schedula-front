@@ -11,7 +11,7 @@ const mockedIssue: Issue = {
   city_id: '123',
   workstation_id: '123',
   email: 'mcok@email.com',
-  date: '2021-10-10',
+  date: new Date(),
   problem_category: {
     id: '1',
     name: 'Category Mock',

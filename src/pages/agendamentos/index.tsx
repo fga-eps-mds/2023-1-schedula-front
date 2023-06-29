@@ -2,7 +2,10 @@ import { HStack, useDisclosure } from '@chakra-ui/react';
 import { useCallback, useState, useEffect } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
+import {
+  useGetAllSchedules,
+  useGetAllSchedulesOpen,
+} from '@/features/schedules/api/get-all-schedules';
 import { ListView } from '@/components/list';
 import { ScheduleOpen, Schedule } from '@/features/schedules/types';
 import { ScheduleItem } from '@/features/schedules/components/schedule-item';
@@ -15,14 +18,37 @@ export function Agendamentos() {
   const [scheduleToEdit, setScheduleToEdit] = useState<
     Schedule | ScheduleOpen
   >();
-  const { data: schedules, isLoading, refetch } = useGetAllSchedules();    
-  const filteredSchedules = schedules
-    ? schedules.filter(
+  const {
+    data: schedules,
+    isLoading: isLoadingSchedules,
+    refetch: refetchSchedules,
+  } = useGetAllSchedules();
+  const {
+    data: schedulesOpen,
+    isLoading: isLoadingSchedulesOpen,
+    refetch: refetchSchedulesOpen,
+  } = useGetAllSchedulesOpen();
+
+  const isLoading = isLoadingSchedules || isLoadingSchedulesOpen;
+
+  const refetch = useCallback(async () => {
+    refetchSchedules();
+    refetchSchedulesOpen();
+  }, [refetchSchedules, refetchSchedulesOpen]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  const allSchedules =
+    schedules && schedulesOpen ? [...schedules, ...schedulesOpen] : [];
+
+  const filteredSchedules = allSchedules
+    ? allSchedules.filter(
         (schedule) => schedule.status.toString().toUpperCase() !== 'RESOLVIDO'
       )
     : [];
-      
-      
+
   const { mutate: deleteSchedule, isLoading: isDeletingSchedule } =
     useDeleteSchedule();
 

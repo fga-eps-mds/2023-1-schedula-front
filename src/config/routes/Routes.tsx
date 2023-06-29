@@ -146,6 +146,7 @@ export function Router() {
           element={
             <RequireAuth>
               <EditarChamadoExterno />
+            </RequireAuth>
           }
         />
         <Route
@@ -156,7 +157,7 @@ export function Router() {
             </RequireAuth>
           }
         />
-
+      </Route>
       {/* ROTAS PUBLICAS */}
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<DefaultLayoutOpen />}>

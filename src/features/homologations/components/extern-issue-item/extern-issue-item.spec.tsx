@@ -1,9 +1,9 @@
 import { fireEvent, render, act } from '@testing-library/react';
 import { vi } from 'vitest';
-import { ExternIssueItem } from '.';
-import { IssueOpen } from '@/features/issues/types';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ExternIssueItem } from '.';
+import { IssueOpen } from '@/features/issues/types';
 
 const mockedExternIssue: IssueOpen = {
   id: '1',
@@ -12,7 +12,7 @@ const mockedExternIssue: IssueOpen = {
   phone: '',
   city_id: '',
   workstation_id: '',
-  date: new Date(),
+  date: new Date().toISOString(),
   cellphone: '',
   description: '',
   alerts: [],
@@ -24,10 +24,10 @@ const mockedExternIssue: IssueOpen = {
     problem_types: [],
   },
   problem_types: [],
-  name: 'Usuário Teste',
-  ExternIssuename: 'testeexternissue',
 };
 
+const name = 'Usuário Teste';
+const ExternIssuename = 'testeexternissue';
 const mockedOnEditFunction = vi.fn(() => {});
 const mockedOnDeleteFunction = vi.fn((userId: string) => userId);
 const queryClient = new QueryClient();
@@ -36,37 +36,33 @@ describe('UserItem', () => {
   it('should display the name of the user correctly', async () => {
     const { getByText } = render(
       <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-      <ExternIssueItem
-        externIssue={mockedExternIssue}
-        isDeleting={false}
-        onDelete={mockedOnDeleteFunction}
-      />
-      </MemoryRouter>
+        <MemoryRouter>
+          <ExternIssueItem
+            externIssue={mockedExternIssue}
+            isDeleting={false}
+            onDelete={mockedOnDeleteFunction}
+          />
+        </MemoryRouter>
       </QueryClientProvider>
     );
 
-    const name = await getByText(
-    mockedExternIssue.name
-    );
-    expect(name).toBeInTheDocument();
+    const name_2 = await getByText(name);
+    expect(name_2).toBeInTheDocument();
   });
   it('should be able to edit a ExternIssue', async () => {
     const { queryByLabelText } = render(
       <QueryClientProvider client={queryClient}>
-      <MemoryRouter>
-      <ExternIssueItem
-        externIssue={mockedExternIssue}
-        isDeleting={false}
-        onDelete={mockedOnDeleteFunction}
-      />
-      </MemoryRouter>
+        <MemoryRouter>
+          <ExternIssueItem
+            externIssue={mockedExternIssue}
+            isDeleting={false}
+            onDelete={mockedOnDeleteFunction}
+          />
+        </MemoryRouter>
       </QueryClientProvider>
     );
 
-    const EditButton = await queryByLabelText(
-      `Editar ${mockedExternIssue.name}`
-    );
+    const EditButton = await queryByLabelText(`Editar ${name}`);
 
     if (EditButton) {
       fireEvent.click(EditButton);
@@ -77,23 +73,25 @@ describe('UserItem', () => {
   it('should be able to delete a ExternIssue', async () => {
     const { queryByLabelText } = render(
       <QueryClientProvider client={queryClient}>
-      <MemoryRouter>     
-      <ExternIssueItem
-        externIssue={mockedExternIssue}
-        isDeleting={false}
-        onDelete={mockedOnDeleteFunction}
-      />
-      </MemoryRouter>
+        <MemoryRouter>
+          <ExternIssueItem
+            externIssue={mockedExternIssue}
+            isDeleting={false}
+            onDelete={mockedOnDeleteFunction}
+          />
+        </MemoryRouter>
       </QueryClientProvider>
     );
 
     const deleteButton = queryByLabelText('Homologação');
-      if(deleteButton){
+    if (deleteButton) {
       fireEvent.click(deleteButton);
       expect(mockedOnDeleteFunction).toHaveBeenCalledWith({
         ExternIssueId: mockedExternIssue.id,
       });
     }
-
   });
 });
+function getByLabelText(name: any) {
+  throw new Error('Function not implemented.');
+}

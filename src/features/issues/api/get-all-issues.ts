@@ -7,35 +7,34 @@ import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
 import { Issue, IssueOpen } from '@/features/issues/types';
 
-type GetAllIssuesResponse = Array<Issue | IssueOpen>;
+type GetAllIssuesOpenResponse = Array<IssueOpen>;
 
-const getAllIssues = async () => {
-  const issuesPromise = api.get<GetAllIssuesResponse>(
-    `${ISSUES_ENDPOINT}/issues`
-  );
-  const issuesOpenPromise = api.get<GetAllIssuesResponse>(
-    `${ISSUES_ENDPOINT}/issuesOpen`
-  );
+const getAllIssuesOpen = async () =>
+  api
+    .get<GetAllIssuesOpenResponse>(`${ISSUES_ENDPOINT}/issuesOpen`)
+    .then((response) => response.data)
+    .catch(() => {
+      toast.error(
+        'Não foi possível carregar os chamados. Tente novamente mais tarde!'
+      );
+      return [] as GetAllIssuesOpenResponse;
+    });
 
-  try {
-    const [issuesResponse, issuesOpenResponse] = await Promise.all([
-      issuesPromise,
-      issuesOpenPromise,
-    ]);
+export const useGetAllIssuesOpen = () =>
+  useQuery([ISSUES_CACHE_KEYS.allIssuesOpen], getAllIssuesOpen);
 
-    const issues = issuesResponse.data;
-    const issuesOpen = issuesOpenResponse.data;
+type GetAllIssuesResponse = Array<Issue>;
 
-    const combinedIssues = issues.concat(issuesOpen);
-
-    return combinedIssues;
-  } catch (error) {
-    toast.error(
-      'Não foi possível carregar os chamados. Tente novamente mais tarde!'
-    );
-    return [] as GetAllIssuesResponse;
-  }
-};
+const getAllIssues = async () =>
+  api
+    .get<GetAllIssuesResponse>(`${ISSUES_ENDPOINT}/issues`)
+    .then((response) => response.data)
+    .catch(() => {
+      toast.error(
+        'Não foi possível carregar os chamados. Tente novamente mais tarde!'
+      );
+      return [] as GetAllIssuesResponse;
+    });
 
 export const useGetAllIssues = () =>
   useQuery([ISSUES_CACHE_KEYS.allIssues], getAllIssues);
