@@ -9,11 +9,13 @@ import { ListaProblemas } from '@/pages/categorias/problemas';
 import { RequireAuth } from '@/config/routes/require-auth';
 import { DefaultLayout } from '@/components/layout/default-layout';
 import { RegistrarChamado } from '@/pages/chamados/registrar';
+import { EditarChamadoExterno } from '@/pages/homologacao/editar-agendamentos-externos';
 import { Agendamentos } from '@/pages/agendamentos';
 import { ScheduleExport } from '@/pages/exportacao_agendamentos';
 import { Tutoriais } from '@/pages/tutoriais';
 import { CategoriasTutorial } from '@/pages/categorias_de_tutorial';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
+import { GerenciarHomologacao } from '@/pages/homologacao';
 import { RegistrarAgendamento } from '@/pages/agendamento_externo/index';
 import { AgendamentosAbertos } from '@/pages/agendamentos_abertos';
 import { DefaultLayoutOpen } from '@/components/layout/default-layout-open';
@@ -132,6 +134,22 @@ export function Router() {
           }
         />
         <Route
+          path="homologacao"
+          element={
+            <RequireAuth>
+              <GerenciarHomologacao />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="homologacao/editar"
+          element={
+            <RequireAuth>
+              <EditarChamadoExterno />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="notificacoes"
           element={
             <RequireAuth>
@@ -140,7 +158,6 @@ export function Router() {
           }
         />
       </Route>
-
       {/* ROTAS PUBLICAS */}
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<DefaultLayoutOpen />}>
