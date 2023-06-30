@@ -1,4 +1,4 @@
-import { ExternIssue, Issue } from '@/features/issues/types';
+import { ExternIssue, Issue, IssueOpen } from '@/features/issues/types';
 
 interface Alert {
   id: string;

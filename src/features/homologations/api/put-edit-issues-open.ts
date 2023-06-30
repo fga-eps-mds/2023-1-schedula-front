@@ -4,10 +4,42 @@ import { api } from '@/config/lib/axios';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
 import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
+import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
+import { PutEditIssuesParams } from '@/features/homologations/api/types';
+import { PutUpdateIssueParamsOpen } from '@/features/issues/types';
 import { SCHEDULE_CACHE_KEYS } from '@/features/schedules/constants/cache';
-import { PutUpdateExternIssueParams } from '@/features/issues/types';
 
-async function putUpdateExternIssue(data: PutUpdateExternIssueParams) {
+async function putUpdateHomologIssues(id: string) {
+  const response = await api.put<boolean>(
+    `${ISSUES_ENDPOINT}/issuesOpen/homolog/${id}`
+  );
+
+  return response.data;
+}
+
+export function usePutUpdateHomologIssues({
+  onSuccessCallBack,
+}: {
+  onSuccessCallBack?: () => void;
+}) {
+  const queryClient = useQueryClient();
+
+  return useMutation(putUpdateHomologIssues, {
+    onSuccess() {
+      queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
+      queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
+
+      onSuccessCallBack?.();
+    },
+    onError(error: AxiosError<ApiError>) {
+      const errorMessage = Array.isArray(error?.response?.data?.message)
+        ? error?.response?.data?.message[0]
+        : error?.response?.data?.message;
+    },
+  });
+}
+
+async function putUpdateExternIssue(data: PutUpdateIssueParamsOpen) {
   const { issueId } = data;
   const response = await api.put<boolean>(
     `${ISSUES_ENDPOINT}/issuesOpen/${issueId}`,

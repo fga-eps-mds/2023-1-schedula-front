@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { GerenciarHomologacao } from '@/pages/homologacao';
-import { EditarChamadoExterno } from '@/pages/homologacao/editar-atendimentos-externos';
+import { EditarChamadoExterno } from '@/pages/homologacao/editar-agendamentos-externos';
 
 import 'intersection-observer';
 

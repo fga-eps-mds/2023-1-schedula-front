@@ -2,12 +2,12 @@ import { HStack } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllIssues } from '@/features/homologations/api/get-all-extern-issues';
+import { useGetAllIssues } from '@/features/homologations/api/get-all-issues-open';
 import { IssueOpen } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
-import { ExternIssueItem } from '@/features/homologations/components/extern-issue-item';
-import { useDeleteHomologation } from '@/features/homologations/api/delete-extern-issue';
+import { ExternIssueItem } from '@/features/homologations/components/issue-open-item';
+import { useDeleteHomologation } from '@/features/homologations/api/delete-issue-open';
 
 export function GerenciarHomologacao() {
   const {

@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '@/components/page-header';
-import { UpdateExternIssueForm } from '@/features/homologations/components/extern-issue-edit-form';
+import { UpdateExternIssueForm } from '@/features/homologations/components/issue-open-edit-form';
 
 export function EditarChamadoExterno() {
   const navigate = useNavigate();

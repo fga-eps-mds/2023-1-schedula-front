@@ -19,10 +19,10 @@ import { ActionButton } from '@/components/action-buttons';
 import { DeleteButton } from '@/components/action-buttons/delete-button-homologation';
 import { ApproveButton } from '@/components/action-buttons/approve-button-homologation';
 import { usePostCreateScheduleOpen } from '@/features/homologations/api/post-create-schedule-open';
-import { usePostSendMailExternIssue } from '@/features/homologations/api/post-send-mail-extern-issue';
+import { usePostSendMailExternIssue } from '@/features/homologations/api/post-send-mail-issue-open';
 import { ProblemCategory } from '@/features/problem/api/types';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
-import { usePutUpdateHomologIssues } from '../../api/put-edit-extern-issues-homolog';
+import { usePutUpdateHomologIssues } from '../../api/put-edit-issues-open';
 
 interface ExternIssueItemProps {
   externIssue: IssueOpen;
@@ -79,9 +79,7 @@ export function ExternIssueItem({
 
   const handleDeleteHomolog = (justify: string) => {
     sendMailExternIssue({
-      justify:
-        `Poxa... Seu agendamento criado na Polícia civil do Goiás foi REPROVADO. Aqui está a justificativa do administrador: ${justify}` ??
-        '',
+      justify: `Poxa... Seu agendamento criado na Polícia civil do Goiás foi REPROVADO. Aqui está a justificativa do administrador: ${justify}`,
       targetMail: externIssue?.email,
     });
 
@@ -97,8 +95,7 @@ export function ExternIssueItem({
 
     sendMailExternIssue({
       justify:
-        'Parabéns! Seu agendamento criado na Polícia Civil do Goiás foi APROVADO com sucesso!' ??
-        '',
+        'Parabéns! Seu agendamento criado na Polícia Civil do Goiás foi APROVADO com sucesso!',
       targetMail: updatedExternIssue?.email,
     });
 

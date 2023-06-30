@@ -13,23 +13,21 @@ import { useCallback, useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
-import { RiCellphoneFill } from 'react-icons/ri';
 import { useLocation } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
-import { usePutUpdateExternIssue } from '@/features/issues/api/put-edit-extern-issue';
+import { usePutUpdateExternIssue } from '@/features/homologations/api/put-edit-issues-open';
 import {
   IssueOpen,
   IssuePayloadOpen,
-  PutUpdateExternIssueParams,
+  PutUpdateIssueParamsOpen,
 } from '@/features/issues/types';
-import { parseSelectedDatetime, parseSelectedDate } from '@/utils/format-date';
+import { parseSelectedDatetime } from '@/utils/format-date';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 import { maskPhoneField } from '@/utils/form-utils';
-import { useAuth } from '@/contexts/AuthContext';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ActionButton } from '@/components/action-buttons';
 
@@ -47,6 +45,8 @@ export function UpdateExternIssueForm() {
     watch,
     formState: { errors },
   } = useForm<IssuePayloadOpen>({
+    // define alguns valores padrão para os campos abaixo.
+
     defaultValues: {
       city_payload: {
         label: locate.state.city.name ?? '',
@@ -70,21 +70,12 @@ export function UpdateExternIssueForm() {
       })),
       dateTime: parseSelectedDatetime(locate.state.externIssue.dateTime) ?? '',
       phone: locate.state.externIssue.phone ?? '',
-      // cellphone: maskPhoneField(locate.state.externIssue.cellphone) ?? '',
       ...locate.state.externIssue,
     },
   });
 
   const [selectedProblemTypes, setSelectedProblemTypes] = useState(
     locate.state.problem_types_payload
-  );
-
-  const { isLoading: isLoadingPhone } = useGetAllWorkstations();
-
-  const [selectedAlerts, setSelectedAlerts] = useState(locate.state.alerts);
-
-  const [selectedDateTime, setSelectedDateTime] = useState(
-    locate.state.dateTime
   );
 
   const { mutate: updateIssue, isLoading: isUpdatingIssue } =
@@ -135,8 +126,6 @@ export function UpdateExternIssueForm() {
         }))
     : [];
 
-  const dateTime = parseSelectedDatetime(String(watch('dateTime')));
-
   const onSubmit = useCallback(
     ({
       requester,
@@ -146,14 +135,13 @@ export function UpdateExternIssueForm() {
       dateTime,
       email,
       alerts,
-      date,
       problem_category_payload,
       problem_types_payload,
       workstation_payload,
       description,
     }: IssuePayloadOpen) => {
       const issueId = locate.state.externIssue?.id ?? '';
-      const payload: PutUpdateExternIssueParams = {
+      const payload: PutUpdateIssueParamsOpen = {
         issueId,
         phone: phone ?? watch('phone'),
         requester,
@@ -179,18 +167,6 @@ export function UpdateExternIssueForm() {
       setSelectedProblemTypes(problemTypes);
     }
   }, [problemTypes]);
-
-  const workstation_payload = watch('workstation_payload');
-
-  const phoneOptions = workstation_payload
-    ? workstations
-
-        ?.filter((workstation) => workstation.id === workstation_payload.value)
-        .map((workstation) => ({
-          value: workstation?.phone ?? '',
-          label: workstation?.phone ?? '',
-        }))
-    : [];
 
   const { fields, append, remove } = useFieldArray({
     control,

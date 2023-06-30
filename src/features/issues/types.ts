@@ -40,11 +40,6 @@ export interface ExternIssue {
   problem_types: ProblemTypeOption[];
 }
 
-interface Alert {
-  id: string;
-  date: Date;
-}
-
 export interface IssueOpen {
   id: string;
   requester: string;
@@ -68,17 +63,6 @@ export interface IssueOpen {
 }
 
 export interface PostCreateIssueParams {
-  requester: string;
-  phone: string;
-  city_id: string;
-  workstation_id: string;
-  email: string;
-  date: Date;
-  problem_category_id: string;
-  problem_types_ids: string[];
-}
-
-export interface PostCreateExternIssueParams {
   requester: string;
   phone: string;
   city_id: string;
@@ -127,12 +111,12 @@ export interface PostCreateIssueResponseOpen {
   problem_types: ProblemTypeOption[];
 }
 
-export interface PostSendMailExternIssueParams {
+export interface PostSendMailIssueParamsOpen {
   targetMail: string;
   justify: string;
 }
 
-export interface PostSendMailExternIssueResponse {
+export interface PostSendMailIssueResponseOpen {
   targetMail: string;
   justify: string;
 }
@@ -151,7 +135,7 @@ export interface PutUpdateIssueParams {
   description: string;
 }
 
-export interface PutUpdateExternIssueParams {
+export interface PutUpdateIssueParamsOpen {
   issueId: string;
   requester: string;
   phone: string;
@@ -167,44 +151,6 @@ export interface PutUpdateExternIssueParams {
   alerts: Date[];
 }
 
-export interface PutUpdateExternIssueResponse {
-  id: string;
-  requester: string;
-  phone: string;
-  city_id: string;
-  workstation_id: string;
-  email: string;
-  date: Date;
-  dateTime: Date;
-  description: string;
-  cellphone: string;
-  alerts: Date[];
-  problem_category: {
-    id: string;
-    name: string;
-    description: string;
-    problem_types: ProblemTypeOption[];
-  };
-  problem_types: ProblemTypeOption[];
-}
-
-export interface PutUpdateIssueResponse {
-  id: string;
-  requester: string;
-  phone: string;
-  city_id: string;
-  workstation_id: string;
-  email: string;
-  date: Date;
-  problem_category: {
-    id: string;
-    name: string;
-    description: string;
-    problem_types: ProblemTypeOption[];
-  };
-  problem_types: ProblemTypeOption[];
-}
-
 export interface DeleteIssueParams {
   issueId: string;
 }
@@ -217,20 +163,6 @@ export interface IssuePayload {
   workstation_payload: { label: string; value: string };
   problem_category_payload: { label: string; value: string };
   problem_types_payload?: { label: string; value: string }[];
-}
-
-export interface ExternIssuePayload {
-  issueId: string;
-  requester: string;
-  phone: string;
-  city_payload: { label: string; value: string };
-  workstation_payload: { label: string; value: string };
-  problem_category_payload: { label: string; value: string };
-  problem_types_payload?: { label: string; value: string }[];
-  dateTime: Date;
-  alerts: Date[];
-  description: string;
-  cellphone: string;
 }
 
 export interface PostCreateIssueParamsOpen {
@@ -274,27 +206,4 @@ export interface PostCreateScheduleParams {
 
 export interface PostCreateScheduleResponse {
   id: string;
-}
-
-export interface PutEditExternIssueParams {
-  id: string;
-  data: {
-    requester: string;
-    phone: string;
-    city_id: string;
-    workstation_id: string;
-    email: string;
-    date: Date;
-    dateTime: Date;
-    alerts: Date[];
-    description: string;
-    cellphone: string;
-    problem_category: {
-      id: string;
-      name: string;
-      description: string;
-      problem_types: ProblemTypeOption[];
-    };
-    problem_types: ProblemTypeOption[];
-  };
 }
