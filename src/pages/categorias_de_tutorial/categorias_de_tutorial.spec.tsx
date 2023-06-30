@@ -13,7 +13,7 @@ import {
   GetAllCategoryTutorialResponse,
 } from '@/features/categories-tutorial/api/get-all-categories-tutorial';
 
-describe('Tutorial Categorie Page', () => {
+describe('Tutorial Category Page', () => {
   const queryClient = new QueryClient();
   let categories: GetAllCategoryTutorialResponse;
 
@@ -21,7 +21,7 @@ describe('Tutorial Categorie Page', () => {
     categories = await getAllCategoryTutorial(0);
   });
 
-  it('should have a button to register a tutorial categorie', async () => {
+  it('should have a button to register a tutorial category', async () => {
     const { queryByText } = render(
       <BrowserRouter>
         <AuthProvider>
@@ -77,7 +77,7 @@ describe('Tutorial Categorie Page', () => {
     expect(pageTitle).toBeInTheDocument();
   });
 
-  it('should have a button to cofirm register a tutorial categorie', async () => {
+  it('should have a button to cofirm register a tutorial category', async () => {
     const { queryByText } = render(
       <BrowserRouter>
         <AuthProvider>
@@ -94,8 +94,8 @@ describe('Tutorial Categorie Page', () => {
     if (btn) {
       expect(btn).toBeInTheDocument();
       const btn1 = await queryByText('Criar categoria');
-      if (btn) {
-        expect(btn).toBeInTheDocument();
+      if (btn1) {
+        expect(btn1).toBeInTheDocument();
       }
     }
   });
