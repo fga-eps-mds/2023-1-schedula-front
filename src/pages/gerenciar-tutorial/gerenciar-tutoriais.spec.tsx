@@ -1,7 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { GerenciarTutoriais } from '@/pages/gerenciar-tutorial';
 import { theme } from '@/styles/theme';
@@ -164,5 +165,42 @@ describe('Manage-Tutorial Page', () => {
 
     const button = await findByRole('button', { name: 'Atualizar Dados' });
     expect(button).toBeInTheDocument();
+  });
+  it('it should not call "Selecionar tutoriais"', () => {
+    const handleSelectMock = vi.fn();
+    render(
+      <BrowserRouter>
+        <AuthProvider>
+          <ChakraProvider resetCSS theme={theme}>
+            <QueryClientProvider client={queryClient}>
+              <GerenciarTutoriais />
+            </QueryClientProvider>
+          </ChakraProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    );
+
+    expect(handleSelectMock).not.toHaveBeenCalled();
+  });
+  it('it should not call "limpar"', () => {
+    const resetSelectedTutorialsMock = vi.fn();
+    render(
+      <BrowserRouter>
+        <AuthProvider>
+          <ChakraProvider resetCSS theme={theme}>
+            <QueryClientProvider client={queryClient}>
+              <GerenciarTutoriais />
+            </QueryClientProvider>
+          </ChakraProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    );
+
+    // Tem que chamar duas vezes o botão "Selecionar tutoriais"
+    fireEvent.click(screen.getByText('Selecionar tutoriais'));
+
+    fireEvent.click(screen.getByText('Selecionar tutoriais'));
+
+    expect(resetSelectedTutorialsMock).not.toHaveBeenCalled();
   });
 });

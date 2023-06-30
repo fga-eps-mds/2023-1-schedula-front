@@ -45,29 +45,4 @@ describe('TutorialDeleteForm', () => {
       expect(btn).toBeInTheDocument();
     }
   });
-
-  // it('renders the form with initial values', () => {
-  //     const selectedTutorial = {
-  //       ...mockedTutorial,
-  //     };
-
-  //     render(
-  //       <BrowserRouter>
-  //         <AuthProvider>
-  //           <ChakraProvider resetCSS theme={theme}>
-  //             <QueryClientProvider client={queryClient}>
-  //             <DeleteTutorialForm tutorialsIds={mockedTutorial}
-  //             onClose={onClose}
-  //             onClear={onClear}
-  //             onDelete={onDelete}/>
-  //             </QueryClientProvider>
-  //           </ChakraProvider>
-  //         </AuthProvider>
-  //       </BrowserRouter>
-  //     );
-
-  //     expect(screen.getByLabelText('Nome do tutorial')).toHaveValue('Criar ponto de rede');
-  //     expect(screen.getByLabelText('Categoria')).toBeInTheDocument();
-  //     expect(screen.getByLabelText('Arquivo')).toBeInTheDocument();
-  //   });
 });

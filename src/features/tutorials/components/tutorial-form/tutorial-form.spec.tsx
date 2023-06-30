@@ -80,45 +80,4 @@ describe('TutorialForm', () => {
     expect(screen.getByLabelText('Categoria')).toBeInTheDocument();
     expect(screen.getByLabelText('Arquivo')).toBeInTheDocument();
   });
-
-  // it('should be able to update a tutorial', async () => {
-  //   const handleSubmit = vi.fn();
-  //   render(
-  //     <BrowserRouter>
-  //     <AuthProvider>
-  //       <ChakraProvider resetCSS theme={theme}>
-  //         <QueryClientProvider client={queryClient}>
-  //           <TutorialForm defaultValues={mockedTutorial}
-  //             onSubmit={handleSubmit}
-  //             isSubmitting={false} />
-  //         </QueryClientProvider>
-  //       </ChakraProvider>
-  //     </AuthProvider>
-  //   </BrowserRouter>
-  //   );
-
-  //   await act(async () => screen.getByText('Salvar Tutorial').click());
-
-  //   await waitFor(() => {
-  //     expect(handleSubmit).toHaveBeenCalled();
-  //   });
-  // });
-
-  // it('should be able to create a categoryTutorial', async () => {
-  //   const handleSubmit = vi.fn();
-  //   render(
-  //     <TutorialForm onSubmit={handleSubmit} isSubmitting={false} />
-  //   );
-
-  //   await act(async () => {
-  //     fireEvent.change(screen.getByLabelText('Nome'), {
-  //       target: { value: 'Rede' },
-  //     });
-  //     screen.getByText('Criar categoria').click();
-  //   });
-
-  //   await waitFor(() => {
-  //     expect(handleSubmit).toHaveBeenCalled();
-  //   });
-  // });
 });
