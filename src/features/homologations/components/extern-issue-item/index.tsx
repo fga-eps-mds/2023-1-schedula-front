@@ -10,9 +10,8 @@ import {
 import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';
 import { RiEdit2Fill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { formatDate } from '@/utils/format-date';
-import { ExternIssue, IssueOpen } from '@/features/issues/types';
+import { IssueOpen } from '@/features/issues/types';
 import { Item } from '@/components/list-item';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
@@ -23,6 +22,7 @@ import { usePostCreateScheduleOpen } from '@/features/homologations/api/post-cre
 import { usePostSendMailExternIssue } from '@/features/homologations/api/post-send-mail-extern-issue';
 import { ProblemCategory } from '@/features/problem/api/types';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
+import { usePutUpdateHomologIssues } from '../../api/put-edit-extern-issues-homolog';
 
 interface ExternIssueItemProps {
   externIssue: IssueOpen;
@@ -68,6 +68,10 @@ export function ExternIssueItem({
     onSuccessCallBack: () => navigate('/agendamentos'),
   });
 
+  const { mutate: updateIssueOpenHomolog } = usePutUpdateHomologIssues({
+    onSuccessCallBack: () => {},
+  });
+
   const { mutate: sendMailExternIssue, isLoading: isSendingMailExternIssue } =
     usePostSendMailExternIssue({
       onSuccessCallBack: () => navigate('/homologacao'),
@@ -86,6 +90,10 @@ export function ExternIssueItem({
 
   const handleApproveHomolog = (justify: string) => {
     const updatedExternIssue = { ...externIssue };
+
+    const issueOpenId = updatedExternIssue?.id ?? '';
+
+    updateIssueOpenHomolog(issueOpenId);
 
     sendMailExternIssue({
       justify:

@@ -7,6 +7,41 @@ import { ApiError } from '@/config/lib/axios/types';
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { PutEditIssuesParams } from '@/features/homologations/api/types';
 
+async function putUpdateHomologIssues(id: string) {
+  const response = await api.put<boolean>(
+    `${ISSUES_ENDPOINT}/issuesOpen/homolog/${id}`
+  );
+
+  return response.data;
+}
+
+export function usePutUpdateHomologIssues({
+  onSuccessCallBack,
+}: {
+  onSuccessCallBack?: () => void;
+}) {
+  const queryClient = useQueryClient();
+
+  return useMutation(putUpdateHomologIssues, {
+    onSuccess() {
+      queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
+      queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
+
+      toast.success('Homologado com sucesso!');
+      onSuccessCallBack?.();
+    },
+    onError(error: AxiosError<ApiError>) {
+      const errorMessage = Array.isArray(error?.response?.data?.message)
+        ? error?.response?.data?.message[0]
+        : error?.response?.data?.message;
+      toast.error(
+        errorMessage ?? '',
+        'Houve um problema ao tentar homologar o agendamento.'
+      );
+    },
+  });
+}
+
 async function putEditExternIssues({ id, data }: PutEditIssuesParams) {
   const response = await api.put<boolean>(
     `${ISSUES_ENDPOINT}/issuesOpen/${id}`,

@@ -27,7 +27,7 @@ export function usePostCreateExternIssue({
     onSuccess(data: PostCreateIssueResponseOpen) {
       queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
 
-      toast.success('Atendimento criado com sucesso!');
+      toast.success('Agendamento criado com sucesso!');
 
       onSuccessCallBack?.(data);
     },
@@ -37,7 +37,7 @@ export function usePostCreateExternIssue({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar criar um atendimento.'
+        'Houve um problema ao tentar criar um agendamento.'
       );
     },
   });

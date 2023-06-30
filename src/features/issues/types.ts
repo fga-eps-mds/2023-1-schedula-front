@@ -52,7 +52,7 @@ export interface IssueOpen {
   city_id: string;
   workstation_id: string;
   email: string;
-  date: string;
+  date: string | Date;
   dateTime: Date;
   alerts: Date[];
   cellphone: string;
@@ -64,6 +64,7 @@ export interface IssueOpen {
     problem_types: ProblemTypeOption[];
   };
   problem_types: ProblemTypeOption[];
+  isHomolog?: boolean;
 }
 
 export interface PostCreateIssueParams {

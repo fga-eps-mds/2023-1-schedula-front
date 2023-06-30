@@ -3,14 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/homologations/api/get-all-extern-issues';
-import { ExternIssue, IssueOpen } from '@/features/issues/types';
+import { IssueOpen } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
 import { ExternIssueItem } from '@/features/homologations/components/extern-issue-item';
 import { useDeleteHomologation } from '@/features/homologations/api/delete-extern-issue';
-import { useGetAllSchedulesOpen } from '@/features/schedules/api/get-all-schedules';
-import { addItemToList, globalList } from './globalList';
-import { ItemProps } from '@/components/list-item';
 
 export function GerenciarHomologacao() {
   const {
@@ -19,12 +16,15 @@ export function GerenciarHomologacao() {
     refetch,
   } = useGetAllIssues();
 
-  const { data: schedules, isLoading: isLoadingSchedules } =
-    useGetAllSchedulesOpen();
+  const [externIssuesHomologList, setExternIssuesHomologList] = useState<
+    Array<IssueOpen> | any
+  >([]);
 
-  const scheduledIssues = schedules
-    ? schedules.map((schedule) => schedule.issue.id)
-    : [];
+  useEffect(() => {
+    if (externIssues) {
+      setExternIssuesHomologList(externIssues);
+    }
+  }, [isLoadingExternIssues, externIssues]);
 
   const { mutate: deleteIssues, isLoading: isDeletingIssue } =
     useDeleteHomologation();
@@ -36,29 +36,9 @@ export function GerenciarHomologacao() {
     [deleteIssues]
   );
 
-  useEffect(() => {
-    const storedList = localStorage.getItem('globalList');
-
-    if (storedList) {
-      const parsedList = JSON.parse(storedList);
-      globalList.length = 0;
-      globalList.push(...parsedList);
-    }
-  }, []);
-
   const renderExternIssueItem = useCallback(
     (externIssue: IssueOpen) => {
-      // Verificar se o ID do Issue está na lista de schedules
-      const isIssueScheduled = schedules?.some(
-        (schedule) => schedule.issue.id === externIssue.id
-      );
-
-      // Se o ID estiver na lista de schedules, não renderizar o card
-      if (isIssueScheduled) {
-        addItemToList(externIssue.id);
-      }
-
-      if (globalList.includes(externIssue.id)) {
+      if (externIssue.isHomolog) {
         return null as unknown as JSX.Element;
       }
 
@@ -70,7 +50,7 @@ export function GerenciarHomologacao() {
         />
       );
     },
-    [schedules, onDelete, isDeletingIssue]
+    [onDelete, isDeletingIssue]
   );
 
   return (

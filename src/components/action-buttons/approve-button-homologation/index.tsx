@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import {
   Box,
@@ -24,7 +24,7 @@ import { ActionButton } from '..';
 import { Input } from '@/components/form-fields/input';
 import { DeleteButton } from '../delete-button';
 import { IssuePayloadOpen } from '@/features/issues/types';
-import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
+import { parseSelectedDatetime } from '@/utils/format-date';
 
 interface ApproveButtonProps<Data> extends ActionButtonProps<Data> {
   handleApproveHomolog: (justify: string) => void;
@@ -52,8 +52,6 @@ export function ApproveButton<Data>({
       dateTime: passDateTime ?? '',
     },
   });
-
-  const dateTime = parseSelectedDatetime(String(watch('dateTime')));
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -123,7 +121,7 @@ export function ApproveButton<Data>({
                 },
               }}
               render={({
-                field: { onChange, onBlur, ref, value },
+                field: { onChange, onBlur, ref },
                 fieldState: { error },
               }) => (
                 <>

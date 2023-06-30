@@ -14,7 +14,7 @@ export interface PutEditIssuesParams {
     city_id: string;
     workstation_id: string;
     email: string;
-    date: Date;
+    date: Date | string;
     dateTime: Date;
     alerts: Date[];
     problem_category: {
@@ -24,5 +24,6 @@ export interface PutEditIssuesParams {
       problem_types: ProblemTypeOption[];
     };
     problem_types: ProblemTypeOption[];
+    isHomolog?: boolean;
   };
 }
