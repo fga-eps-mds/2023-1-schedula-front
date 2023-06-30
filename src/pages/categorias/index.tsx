@@ -48,7 +48,7 @@ function ProblemCategories() {
     (category: ProblemCategory) => (
       <CategoryItem
         category={category}
-        onEdit={onEdit}
+        onEdit={() => onEdit(category)}
         onDelete={onDelete}
         isDeleting={isRemovingProblemCategory}
       />

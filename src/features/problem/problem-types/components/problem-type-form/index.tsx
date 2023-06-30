@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Button, VStack } from '@chakra-ui/react';
+import { Button, VStack, Checkbox } from '@chakra-ui/react';
 
 import { Input } from '@/components/form-fields';
 import {
@@ -32,6 +32,14 @@ export function ProblemForm({ defaultValues, onSubmit }: ProblemFormProps) {
           })}
           errors={errors?.name}
         />
+        <Checkbox
+          size="md"
+          width="full"
+          colorScheme="orange"
+          {...register('visible_user_external')}
+        >
+          Visível para usuário externo
+        </Checkbox>
         <Button type="submit" size="lg" width="100%" isLoading={isSubmitting}>
           Registrar
         </Button>

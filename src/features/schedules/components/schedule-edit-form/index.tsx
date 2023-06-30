@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useCallback } from 'react';
 import {
@@ -20,12 +19,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { IssueInfo } from '@/features/issues/components/issue-info';
 import { useGetCity } from '@/features/cities/api/get-all-cities';
 import { useGetAllWorkstationsCache } from '@/features/workstations/api/get-all-workstations';
-import { Schedule, ScheduleStatus } from '@/features/schedules/types';
+import {
+  Schedule,
+  ScheduleOpen,
+  ScheduleStatus,
+} from '@/features/schedules/types';
 import { parseSelectedDate, parseSelectedDatetime } from '@/utils/format-date';
 import { ControlledSelect } from '@/components/form-fields';
 
 interface ScheduleEditFormProps {
-  schedule?: Schedule;
+  schedule?: Schedule | ScheduleOpen;
   onSubmit: any;
   isSubmitting: boolean;
 }
@@ -41,11 +44,16 @@ export function ScheduleEditForm({
     (workstation) => workstation.id === schedule?.issue?.workstation_id
   )[0].name;
 
-  const { register, handleSubmit, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       event_date: parseSelectedDatetime(schedule?.dateTime ?? ''),
       alert_dates: schedule?.alerts.map((alert) => ({
-        date: parseSelectedDate(alert.date),
+        date: parseSelectedDate(String(alert.date)),
       })),
       description: schedule?.description,
       status_e: schedule?.status,
@@ -148,7 +156,7 @@ export function ScheduleEditForm({
                           ref={ref}
                           onBlur={onBlur}
                           w="full"
-                          value={value}
+                          value={String(value)}
                         />
                         <Text color="red.100" mt=".5rem">
                           {error ? error.message : null}
@@ -186,7 +194,13 @@ export function ScheduleEditForm({
 
         <Flex w="100%" flexDirection="column">
           <FormLabel htmlFor="description">Descrição</FormLabel>
-          <Textarea {...register('description')} height="100%" />
+          <Textarea
+            {...register('description', { maxLength: 500 })}
+            height="100%"
+          />
+          {errors.description && errors.description.type === 'maxLength' && (
+            <span>Tamanho máximo é de 500 caracteres</span>
+          )}
         </Flex>
 
         <ControlledSelect

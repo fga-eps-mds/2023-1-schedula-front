@@ -5,7 +5,23 @@ import { api } from '@/config/lib/axios';
 
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
-import { Issue } from '@/features/issues/types';
+import { Issue, IssueOpen } from '@/features/issues/types';
+
+type GetAllIssuesOpenResponse = Array<IssueOpen>;
+
+const getAllIssuesOpen = async () =>
+  api
+    .get<GetAllIssuesOpenResponse>(`${ISSUES_ENDPOINT}/issuesOpen`)
+    .then((response) => response.data)
+    .catch(() => {
+      toast.error(
+        'Não foi possível carregar os chamados. Tente novamente mais tarde!'
+      );
+      return [] as GetAllIssuesOpenResponse;
+    });
+
+export const useGetAllIssuesOpen = () =>
+  useQuery([ISSUES_CACHE_KEYS.allIssuesOpen], getAllIssuesOpen);
 
 type GetAllIssuesResponse = Array<Issue>;
 

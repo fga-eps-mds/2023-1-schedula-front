@@ -133,7 +133,7 @@ export function CreateIssueForm() {
         requester,
         phone,
         city_id: city_payload?.value,
-        date: new Date().toISOString(),
+        date: new Date(),
         problem_category_id: problem_category_payload?.value,
         problem_types_ids:
           problem_types_payload?.map((type) => type?.value) ?? [],

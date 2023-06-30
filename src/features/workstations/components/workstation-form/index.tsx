@@ -61,7 +61,7 @@ export function WorkstationForm({
         })
       ),
       city: {
-        label: selectedWorkstation?.city?.name ?? '',
+        label: selectedWorkstation?.city?.name ?? 'Cidade',
         value: selectedWorkstation?.city?.id ?? '',
       },
       gateway: selectedWorkstation?.gateway ?? '',
@@ -94,7 +94,7 @@ export function WorkstationForm({
     };
   };
 
-  const defaultWorkstationCity = (city: City | undefined) => {
+  const defaultWorkstationCity = (city: City | undefined | any) => {
     return {
       label: city?.name ?? '',
       value: city?.id ?? '',

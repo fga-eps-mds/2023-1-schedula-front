@@ -9,28 +9,25 @@ import {
 } from '@chakra-ui/react';
 import { formatDate } from '@/utils/format-date';
 import { Item } from '@/components/list-item';
-import { Schedule } from '@/features/schedules/types';
+import { ScheduleOpen } from '@/features/schedules/types';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { Permission } from '@/components/permission';
-import { useGetAllCities } from '@/features/cities/api/get-all-cities';
-import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
-import { useGetAllUsers } from '@/features/users/api/get-all-users';
 
-interface ScheduleItemProps {
-  schedule: Schedule;
-  onEdit: (schedule: Schedule) => void;
+interface ScheduleOpenItemProps {
+  schedule: ScheduleOpen;
+  onEdit: (schedule: ScheduleOpen) => void;
   onDelete: (scheduleId: string) => void;
   isDeleting: boolean;
 }
 
-export function ScheduleItem({
+export function ScheduleOpenItem({
   schedule,
   onEdit,
   onDelete,
   isDeleting,
-}: ScheduleItemProps) {
+}: ScheduleOpenItemProps) {
   const scheduleDate = schedule?.dateTime
     ? new Date(schedule.dateTime)
     : new Date();
@@ -50,21 +47,6 @@ export function ScheduleItem({
     }
   }
 
-  const { data: cities } = useGetAllCities(0);
-  const city = cities?.find((city) => {
-    return city?.id === schedule.issue.city_id;
-  });
-
-  const { data: workstations } = useGetAllWorkstations();
-  const workstation = workstations?.find((workstation) => {
-    return workstation?.id === schedule.issue.workstation_id;
-  });
-
-  const { data: users } = useGetAllUsers();
-  const user = users?.find((user) => {
-    return user?.email === schedule.issue.email;
-  });
-
   return (
     <Box>
       <HStack spacing={2}>
@@ -79,15 +61,9 @@ export function ScheduleItem({
           <HStack spacing={6}>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Posto de Trabalho
+                Agendado para:
               </Text>
-              <Text noOfLines={1}>{workstation?.name}</Text>
-            </Box>
-            <Box>
-              <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Local
-              </Text>
-              <Text noOfLines={1}>{city?.name}</Text>
+              <Text noOfLines={1}>{formatDate(scheduleDate)}</Text>
             </Box>
             <Box>
               <Text fontSize="sm" fontWeight="light" color="GrayText">
@@ -100,18 +76,6 @@ export function ScheduleItem({
                 Telefone:
               </Text>
               <Text noOfLines={1}>{schedule.issue.phone}</Text>
-            </Box>
-            <Box textAlign="center" fontWeight="medium">
-              <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Data
-              </Text>
-              <Text>{formatDate(scheduleDate, 'date')} </Text>
-            </Box>
-            <Box textAlign="center" fontWeight="medium">
-              <Text fontSize="sm" fontWeight="light" color="GrayText">
-                Hora
-              </Text>
-              <Text>{formatDate(scheduleDate, 'time')}</Text>
             </Box>
           </HStack>
         }
@@ -166,7 +130,7 @@ export function ScheduleItem({
               <Text fontSize="sm" fontWeight="light" color="GrayText">
                 Atendente
               </Text>
-              <Text noOfLines={1}>{user?.name}</Text>
+              <Text noOfLines={1}>{schedule.issue.email}</Text>
             </Box>
           </HStack>
         </VStack>
