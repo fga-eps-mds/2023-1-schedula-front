@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/page-header';
-import { CreateIssueForm } from '@/features/issues/components/issue-form/create-issue-form-open';
+import { CreateIssueForm } from '@/features/homologations/components/issue-open-form/create-issue-form-open';
 
 export function RegistrarAgendamento() {
   return (

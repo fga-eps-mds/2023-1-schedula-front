@@ -3,31 +3,34 @@ import { AxiosError } from 'axios';
 import { api } from '@/config/lib/axios';
 import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
 import {
-  PostCreateIssueParamsOpen,
-  PostCreateIssueResponseOpen,
+  PostSendMailIssueParamsOpen,
+  PostSendMailIssueResponseOpen,
 } from '@/features/issues/types';
 import { ISSUES_CACHE_KEYS } from '@/features/issues/constants/cache';
 import { toast } from '@/utils/toast';
 import { ApiError } from '@/config/lib/axios/types';
 
-function postCreateIssue(data: PostCreateIssueParamsOpen) {
+function postSendMailExternIssue(data: PostSendMailIssueParamsOpen) {
   return api
-    .post<PostCreateIssueResponseOpen>(`${ISSUES_ENDPOINT}/issuesOpen`, data)
+    .post<PostSendMailIssueResponseOpen>(
+      `${ISSUES_ENDPOINT}/issuesOpen/email`,
+      data
+    )
     .then((response) => response.data);
 }
 
-export function usePostCreateIssueOpen({
+export function usePostSendMailExternIssue({
   onSuccessCallBack,
 }: {
-  onSuccessCallBack?: (data: PostCreateIssueResponseOpen) => void;
+  onSuccessCallBack?: (data: PostSendMailIssueResponseOpen) => void;
 }) {
   const queryClient = useQueryClient();
 
-  return useMutation(postCreateIssue, {
-    onSuccess(data: PostCreateIssueResponseOpen) {
+  return useMutation(postSendMailExternIssue, {
+    onSuccess(data: PostSendMailIssueResponseOpen) {
       queryClient.invalidateQueries([ISSUES_CACHE_KEYS.allIssues]);
 
-      toast.success('Agendamento Externo criado com sucesso!');
+      toast.success('E-mail enviado com sucesso!');
 
       onSuccessCallBack?.(data);
     },
@@ -37,7 +40,7 @@ export function usePostCreateIssueOpen({
         : error?.response?.data?.message;
       toast.error(
         errorMessage ?? '',
-        'Houve um problema ao tentar criar um agendamento externo.'
+        'Houve um problema ao tentar enviar o e-mail.'
       );
     },
   });

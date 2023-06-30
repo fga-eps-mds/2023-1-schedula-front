@@ -2,12 +2,12 @@ import { useCallback } from 'react';
 import { ModalProps } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from '@/components/modal';
-import { Issue } from '@/features/issues/types';
+import { Issue, IssueOpen } from '@/features/issues/types';
 import { usePostCreateSchedule } from '@/features/issues/api/post-create-schedule';
 import { ScheduleForm } from '@/features/schedules/components/schedule-form';
 
 interface ScheduleModalProps extends Partial<ModalProps> {
-  issue?: Issue;
+  issue?: Issue | IssueOpen;
   isOpen: boolean;
   onClose: () => void;
 }

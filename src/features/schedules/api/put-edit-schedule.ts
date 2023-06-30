@@ -8,11 +8,22 @@ import { SCHEDULE_CACHE_KEYS } from '@/features/schedules/constants/cache';
 import { PutEditScheduleParams } from '@/features/schedules/api/types';
 
 async function putEditSchedule({ id, data }: PutEditScheduleParams) {
-  const response = await api.put<boolean>(
-    `${ISSUES_ENDPOINT}/schedules/${id}`,
-    data
-  );
-  return response.data;
+  try {
+    const response = await api.put<boolean>(
+      `${ISSUES_ENDPOINT}/schedules/${id}`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.status === 404 || error.response?.status === 500) {
+      const response = await api.put<boolean>(
+        `${ISSUES_ENDPOINT}/schedules-open/${id}`,
+        data
+      );
+      return response.data;
+    }
+    throw error; // Lança um erro caso ocorra um erro diferente de 404 ou 500
+  }
 }
 
 export function usePutEditSchedule({
@@ -24,7 +35,6 @@ export function usePutEditSchedule({
 
   return useMutation(putEditSchedule, {
     onSuccess() {
-      queryClient.invalidateQueries([SCHEDULE_CACHE_KEYS.allSchedules]);
       queryClient.invalidateQueries([SCHEDULE_CACHE_KEYS.allSchedules]);
 
       toast.success('Agendamento atualizado com sucesso!');

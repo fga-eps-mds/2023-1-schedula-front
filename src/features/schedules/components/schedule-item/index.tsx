@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { formatDate } from '@/utils/format-date';
 import { Item } from '@/components/list-item';
-import { Schedule } from '@/features/schedules/types';
+import { Schedule, ScheduleOpen } from '@/features/schedules/types';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { EditButton } from '@/components/action-buttons/edit-button';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
@@ -21,7 +21,7 @@ import { useGetAllUsers } from '@/features/users/api/get-all-users';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 
 interface ScheduleItemProps {
-  schedule: Schedule;
+  schedule: Schedule | ScheduleOpen;
   onEdit: (schedule: Schedule) => void;
   onDelete: (scheduleId: string) => void;
   isDeleting: boolean;

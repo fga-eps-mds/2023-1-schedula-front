@@ -1,5 +1,10 @@
 import { IconType } from 'react-icons';
-import { BsSignpost2, BsTags, BsTelephonePlus } from 'react-icons/bs';
+import {
+  BsSignpost2,
+  BsTags,
+  BsTelephonePlus,
+  BsCardChecklist,
+} from 'react-icons/bs';
 import { FaUsersCog } from 'react-icons/fa';
 import { FiMapPin } from 'react-icons/fi';
 import { MdOutlineViewAgenda } from 'react-icons/md';
@@ -68,6 +73,12 @@ export const routes: IRoute[] = [
     pathname: '/tutoriais',
     icon: TbBulb,
     allowedUsersPath: ['ADMIN', 'BASIC', 'USER'],
+  },
+  {
+    label: 'Homologação',
+    pathname: '/homologacao',
+    icon: BsCardChecklist,
+    allowedUsersPath: ['ADMIN'],
   },
   {
     label: 'Registrar Agendamento',

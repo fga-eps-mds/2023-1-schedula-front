@@ -94,7 +94,7 @@ export function WorkstationForm({
     };
   };
 
-  const defaultWorkstationCity = (city: City | undefined) => {
+  const defaultWorkstationCity = (city: City | undefined | any) => {
     return {
       label: city?.name ?? '',
       value: city?.id ?? '',

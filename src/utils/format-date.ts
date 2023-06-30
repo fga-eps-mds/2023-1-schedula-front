@@ -52,11 +52,15 @@ export function parseSelectedDate(value: string) {
 
 export function parseSelectedDatetime(value: string) {
   const date = new Date(value);
+
+  const timezoneOffset = date.getTimezoneOffset();
+  date.setHours(date.getHours());
+
   const day = (date.getDate() < 10 ? '0' : '') + date.getDate();
   const month = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
   const year = date.getFullYear();
-  const hour = date.getUTCHours();
-  const minutes = date.getUTCMinutes();
+  const hour = date.getHours();
+  const minutes = date.getMinutes();
 
   return String(
     `${year}-${month}-${day}T${hour < 10 ? `0${hour}` : hour}:${

@@ -38,7 +38,7 @@ export function TutorialForm({
   });
 
   const { data: categories, isLoading: isLoadingCategories } =
-    useGetAllCategoryTutorial();
+    useGetAllCategoryTutorial(0);
 
   const categoryOptions = categories?.map((category) => ({
     label: category?.name,
@@ -66,6 +66,13 @@ export function TutorialForm({
       label: category?.name ?? '',
       value: category?.id ?? '',
     };
+  };
+
+  const handleChangeFile = (event: any) => {
+    const { files } = event.target;
+    if (files) {
+      setFileName(files[0]);
+    }
   };
 
   return (
@@ -124,17 +131,13 @@ export function TutorialForm({
             label=""
             type="file"
             aria-label="Arquivo"
-            // Call handleFile function when a file is selected before uploading
-            {...register('file', { required: 'Campo obrigatório' })}
+            {...register('file', {
+              required: !isEditing,
+            })}
             accept="application/pdf"
             placeholder="Escolha um arquivo e jogue"
             errors={errors?.file}
-            onChange={(event) => {
-              const { files } = event.target;
-              if (files) {
-                setFileName(files[0]);
-              }
-            }}
+            onChange={handleChangeFile}
             style={{
               opacity: 0,
               position: 'absolute',
@@ -149,6 +152,9 @@ export function TutorialForm({
               ? 'Envie o arquivo novamente...'
               : 'Arraste e solte um arquivo...'}
           </span>
+          {errors.file && (
+            <span style={{ color: 'red' }}> Campo Obrigatório </span>
+          )}
         </span>
       </div>
 
