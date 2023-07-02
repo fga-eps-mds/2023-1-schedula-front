@@ -1,16 +1,17 @@
 import {
   Button,
   HStack,
+  Tooltip,
   Skeleton,
   Tag,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
+import { IoArrowBackCircleOutline } from 'react-icons/all';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-
 import { ProblemTypeModal } from '@/features/problem/problem-types/components/problem-type-modal';
 import { useDeleteProblemType } from '@/features/problem/problem-types/api/delete-problem-type';
 import { ProblemType } from '@/features/problem/problem-types/types';
@@ -22,7 +23,7 @@ import { Permission } from '@/components/permission';
 export function ListaProblemas() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { id: categoryId } = useParams();
-
+  const navigate = useNavigate();
   const [problemTypeToEdit, setProblemTypeToEdit] = useState<ProblemType>();
 
   const {
@@ -82,6 +83,21 @@ export function ListaProblemas() {
         }
       >
         <HStack spacing={2}>
+          <Tooltip
+            label="Voltar para Tutoriais"
+            placement="top"
+            color="white"
+            bg="gray"
+          >
+            <span>
+              {' '}
+              <IoArrowBackCircleOutline
+                style={{ cursor: 'pointer' }}
+                size={35}
+                onClick={() => navigate('/categorias')}
+              />
+            </span>
+          </Tooltip>
           <RefreshButton refresh={refetch} />
           <Permission allowedRoles={['ADMIN', 'BASIC']}>
             <Button onClick={onOpen}>Novo Tipo de Problema</Button>
