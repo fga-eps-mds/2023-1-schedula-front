@@ -84,7 +84,7 @@ export function ListaProblemas() {
       >
         <HStack spacing={2}>
           <Tooltip
-            label="Voltar para Tutoriais"
+            label="Voltar para Categorias de Problema"
             placement="top"
             color="white"
             bg="gray"
