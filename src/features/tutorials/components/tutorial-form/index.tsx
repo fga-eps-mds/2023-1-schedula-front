@@ -130,6 +130,7 @@ export function TutorialForm({
             id="fileinput"
             label=""
             type="file"
+            aria-label="Arquivo"
             {...register('file', {
               required: !isEditing,
             })}
