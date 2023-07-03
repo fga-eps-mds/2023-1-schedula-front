@@ -1,6 +1,6 @@
 import { HStack, useDisclosure, Button } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
@@ -55,12 +55,19 @@ export function AgendamentosAbertos() {
     [onEdit, onDelete, isDeletingSchedule]
   );
 
+  const navigate = useNavigate();
+
   return (
     <>
       <PageHeader title="Agendamentos Abertos">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button variant="primary">Novo Agendamento</Button>
+          <Button
+            variant="primary"
+            onClick={() => navigate('/agendamento_externo')}
+          >
+            Novo Agendamento
+          </Button>
         </HStack>
       </PageHeader>
 

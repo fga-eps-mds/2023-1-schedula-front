@@ -209,6 +209,7 @@ export function ApproveButton<Data>({
                 label="Adicionar Alerta"
                 icon={<FaPlus />}
                 variant="outline"
+                disabled
                 color="primary"
                 tooltipProps={{
                   placement: 'bottom',
