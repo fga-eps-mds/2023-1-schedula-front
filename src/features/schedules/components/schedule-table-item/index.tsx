@@ -7,12 +7,14 @@ interface ScheduleTableItemProps {
   schedule: Schedule | ScheduleOpen;
   selectedSchedules: (Schedule | ScheduleOpen)[];
   setSelectedSchedules: Dispatch<SetStateAction<(Schedule | ScheduleOpen)[]>>;
+  workstation: Workstation | any;
 }
 
 export function ScheduleTableItem({
   schedule,
   selectedSchedules,
   setSelectedSchedules,
+  workstation,
 }: ScheduleTableItemProps) {
   const isChecked = useMemo(() => {
     return selectedSchedules.findIndex((i) => i.id === schedule.id) !== -1;
@@ -42,8 +44,10 @@ export function ScheduleTableItem({
         />
       </Td>
       <Td>{currentStatus ?? ''}</Td>
+      <Td>{schedule?.issue?.email}</Td>
       <Td>{schedule?.issue?.requester ?? ''}</Td>
       <Td>{formatDate(schedule?.dateTime ?? '')}</Td>
+      <Td>{workstation.name}</Td>
       <Td>{schedule?.issue?.phone ?? ''}</Td>
       <Td>{schedule?.description ?? ''}</Td>
     </Tr>
