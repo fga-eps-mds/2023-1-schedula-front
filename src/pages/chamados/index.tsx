@@ -1,6 +1,6 @@
-import { Button, HStack } from '@chakra-ui/react';
+import { Button, HStack, useDisclosure } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
@@ -9,6 +9,7 @@ import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
 import { IssueItem } from '@/features/issues/components/issue-item';
 import { useDeleteIssue } from '@/features/issues/api/delete-issue';
+import { ScheduleModal } from '@/features/schedules/components/schedule-modal';
 
 export function sortIssues(issues: Issue[] | undefined): Issue[] {
   if (!issues) {
@@ -40,15 +41,28 @@ export function Chamados() {
     [deleteIssue]
   );
 
+  const [issueToCreate, setIssueToCreate] = useState<Issue>();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const onCreate = useCallback(
+    (issue: Issue) => {
+      setIssueToCreate(issue);
+      onOpen();
+    },
+    [onOpen]
+  );
+
   const renderIssueItem = useCallback(
     (issue: Issue) => (
       <IssueItem
         issue={issue}
         onDelete={onDelete}
         isDeleting={isRemovingIssue}
+        onOpen={() => onCreate(issue)}
       />
     ),
-    [onDelete, isRemovingIssue]
+    [onDelete, isRemovingIssue, onCreate]
   );
 
   return (
@@ -69,6 +83,8 @@ export function Chamados() {
         render={renderIssueItem}
         isLoading={isLoadingIssues}
       />
+
+      <ScheduleModal issue={issueToCreate} isOpen={isOpen} onClose={onClose} />
     </>
   );
 }

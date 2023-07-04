@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   HStack,
   Spacer,
   Tag,
@@ -19,9 +20,15 @@ interface IssueItemProps {
   issue: Issue;
   onDelete: (issueId: string) => void;
   isDeleting: boolean;
+  onOpen?: () => void;
 }
 
-export function IssueItem({ issue, onDelete, isDeleting }: IssueItemProps) {
+export function IssueItem({
+  issue,
+  onDelete,
+  isDeleting,
+  onOpen,
+}: IssueItemProps) {
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
@@ -107,6 +114,8 @@ export function IssueItem({ issue, onDelete, isDeleting }: IssueItemProps) {
                   }}
                 >
                   <ItemActions item={city}>
+                    <Button onClick={onOpen}>Gerar Agendamento</Button>
+
                     <DeleteButton
                       onClick={() => onDelete(issue.id)}
                       label="atendimento"
