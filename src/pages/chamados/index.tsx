@@ -1,6 +1,17 @@
-import { Button, HStack, useDisclosure } from '@chakra-ui/react';
+import {
+  Button,
+  HStack,
+  Box,
+  Input,
+  Text,
+  Flex,
+  Divider,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useCallback, useState } from 'react';
+import { TiFilter } from 'react-icons/ti';
+import { IoClose } from 'react-icons/io5';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
@@ -30,7 +41,6 @@ export function Chamados() {
     isLoading: isLoadingIssues,
     refetch,
   } = useGetAllIssues();
-  const sortedIssues = sortIssues(issues);
 
   const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
 
@@ -65,6 +75,48 @@ export function Chamados() {
     [onDelete, isRemovingIssue, onCreate]
   );
 
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [isFiltering, setIsFiltering] = useState(false);
+
+  const handleStartDateChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setStartDate(event.target.value);
+    },
+    []
+  );
+
+  const handleEndDateChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setEndDate(event.target.value);
+    },
+    []
+  );
+
+  const applyFilter = useCallback(() => {
+    setIsFiltering(true);
+  }, []);
+
+  const clearFilter = useCallback(() => {
+    setIsFiltering(false);
+    setStartDate(null);
+    setEndDate(null);
+  }, []);
+
+  let filteredIssues = issues;
+
+  if (isFiltering) {
+    filteredIssues = filteredIssues?.filter((issue) => {
+      const issueDate = new Date(issue.date).toISOString().split('T')[0];
+      return (
+        (!startDate || issueDate >= startDate) &&
+        (!endDate || issueDate <= endDate)
+      );
+    });
+  }
+
+  filteredIssues = sortIssues(filteredIssues);
+
   return (
     <>
       <PageHeader title="Atendimentos">
@@ -78,8 +130,48 @@ export function Chamados() {
         </HStack>
       </PageHeader>
 
+      <Flex direction={['column', 'row']} align="center">
+        <Text color="gray.500" mr={2}>
+          <b>Data inicial</b>
+        </Text>
+        <Box mb={[4, 0]} mr={4}>
+          <Input
+            type="date"
+            onChange={handleStartDateChange}
+            value={startDate || ''}
+            placeholder="Data inicial"
+          />
+        </Box>
+        <Text color="gray.500" mr={2}>
+          <b>Data final</b>
+        </Text>
+        <Box mb={[4, 0]} mr={4}>
+          <Input
+            type="date"
+            onChange={handleEndDateChange}
+            value={endDate || ''}
+            placeholder="Data final"
+          />
+        </Box>
+        <Button leftIcon={<TiFilter />} onClick={applyFilter} mr={2}>
+          Aplicar Filtro
+        </Button>
+        {isFiltering && (
+          <Button
+            leftIcon={<IoClose />}
+            onClick={clearFilter}
+            variant="outline"
+            color="primary"
+          >
+            Limpar Filtro
+          </Button>
+        )}
+      </Flex>
+
+      <Divider my={5} />
+
       <ListView<Issue>
-        items={sortedIssues}
+        items={filteredIssues}
         render={renderIssueItem}
         isLoading={isLoadingIssues}
       />
