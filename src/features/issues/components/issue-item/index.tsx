@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   HStack,
   Spacer,
   Tag,
@@ -14,18 +15,31 @@ import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
+import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
 
 interface IssueItemProps {
   issue: Issue;
   onDelete: (issueId: string) => void;
   isDeleting: boolean;
+  onOpen?: () => void;
 }
 
-export function IssueItem({ issue, onDelete, isDeleting }: IssueItemProps) {
+export function IssueItem({
+  issue,
+  onDelete,
+  isDeleting,
+  onOpen,
+}: IssueItemProps) {
   const { data: cities } = useGetAllCities(0);
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
   });
+
+  const { data: schedules } = useGetAllSchedules();
+
+  const isIssueScheduled = schedules?.some(
+    (schedule) => schedule.issue.id === issue.id
+  );
 
   return (
     <Box>
@@ -107,6 +121,12 @@ export function IssueItem({ issue, onDelete, isDeleting }: IssueItemProps) {
                   }}
                 >
                   <ItemActions item={city}>
+                    {!isIssueScheduled ? (
+                      <Button onClick={onOpen}>Gerar Agendamento</Button>
+                    ) : (
+                      (null as any)
+                    )}
+
                     <DeleteButton
                       onClick={() => onDelete(issue.id)}
                       label="atendimento"

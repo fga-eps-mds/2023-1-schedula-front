@@ -1,22 +1,50 @@
 import { HStack, useDisclosure, Button } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
-import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
+import {
+  useGetAllSchedules,
+  useGetAllSchedulesOpen,
+} from '@/features/schedules/api/get-all-schedules';
 import { ListView } from '@/components/list';
-import { Schedule, ScheduleStatus } from '@/features/schedules/types';
+import {
+  Schedule,
+  ScheduleStatus,
+  ScheduleOpen,
+} from '@/features/schedules/types';
 import { ScheduleItem } from '@/features/schedules/components/schedule-item';
 import { useDeleteSchedule } from '@/features/schedules/api/delete-schedule';
 import { ScheduleEditModal } from '@/features/schedules/components/schedule-edit-modal';
 
 export function AgendamentosAbertos() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [scheduleToEdit, setScheduleToEdit] = useState<Schedule | undefined>();
+  const [scheduleToEdit, setScheduleToEdit] = useState<
+    ScheduleOpen | Schedule
+  >();
 
-  const { data: schedules, isLoading, refetch } = useGetAllSchedules();
+  const {
+    refetch: refetchSchedulesOpen,
+    data: schedulesOpen,
+    isLoading: isLoadingSchedulesOpen,
+  } = useGetAllSchedulesOpen();
+  const {
+    refetch: refetchSchedules,
+    data: schedules,
+    isLoading: isLoadingSchedules,
+  } = useGetAllSchedules();
 
-  const filteredSchedules = schedules?.filter(
+  const isLoading = isLoadingSchedulesOpen || isLoadingSchedules;
+
+  const refetch = useCallback(async () => {
+    refetchSchedulesOpen();
+    refetchSchedules();
+  }, [refetchSchedulesOpen, refetchSchedules]);
+
+  const allSchedules =
+    schedules && schedulesOpen ? [...schedules, ...schedulesOpen] : [];
+
+  const filteredSchedules = allSchedules?.filter(
     (schedule) => schedule.status !== ('RESOLVIDO' as ScheduleStatus)
   );
 
@@ -44,7 +72,7 @@ export function AgendamentosAbertos() {
   }, [onClose]);
 
   const renderScheduleItem = useCallback(
-    (schedule: Schedule) => (
+    (schedule: ScheduleOpen | Schedule) => (
       <ScheduleItem
         schedule={schedule}
         onEdit={onEdit}
@@ -55,16 +83,23 @@ export function AgendamentosAbertos() {
     [onEdit, onDelete, isDeletingSchedule]
   );
 
+  const navigate = useNavigate();
+
   return (
     <>
       <PageHeader title="Agendamentos Abertos">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
-          <Button variant="primary">Novo Agendamento</Button>
+          <Button
+            variant="primary"
+            onClick={() => navigate('/agendamento_externo')}
+          >
+            Novo Agendamento
+          </Button>
         </HStack>
       </PageHeader>
 
-      <ListView<Schedule>
+      <ListView<Schedule | ScheduleOpen>
         items={
           filteredSchedules && filteredSchedules.length > 0
             ? filteredSchedules

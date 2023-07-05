@@ -79,9 +79,8 @@ export function ScheduleForm({
           applicant_phone={issue?.phone ?? ''}
           city={city?.name ?? ''}
           problem={
-            issue?.problem_category.problem_types
-              .map((problem) => problem.name)
-              .join(' - ') ?? ''
+            issue?.problem_types.map((problem) => problem.name).join(' - ') ??
+            ''
           }
           category={issue?.problem_category.name ?? ''}
           workstation={workstation ?? ''}
