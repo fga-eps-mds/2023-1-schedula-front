@@ -438,6 +438,7 @@ export function UpdateExternIssueForm() {
               label="Adicionar Alerta"
               icon={<FaPlus />}
               variant="outline"
+              disabled
               color="primary"
               tooltipProps={{
                 placement: 'bottom',
