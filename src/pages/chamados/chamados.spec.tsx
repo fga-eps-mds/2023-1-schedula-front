@@ -98,109 +98,31 @@ describe('sortIssues', () => {
     expect(sortedIssues).toEqual([]);
   });
 
-  // it('should sort issues in descending order based on the date property', () => {
-  //   const issues: Issue[] = [
-  //     {
-  //       id: '1',
-  //       requester: 'Mockerson',
-  //       phone: '61988554474',
-  //       city_id: '123',
-  //       workstation_id: '123',
-  //       email: 'mockerson@mock.com',
-  //       date: new Date(),
-  //       problem_category: {
-  //         id: '123',
-  //         name: 'mockCategory',
-  //         description: 'mockDesc',
-  //         problem_types: [],
-  //       },
-  //       problem_types: [],
-  //     },
-  //     {
-  //       id: '2',
-  //       requester: 'Mockerson',
-  //       phone: '61988554474',
-  //       city_id: '123',
-  //       workstation_id: '123',
-  //       email: 'mockerson@mock.com',
-  //       date: new Date(),
-  //       problem_category: {
-  //         id: '123',
-  //         name: 'mockCategory',
-  //         description: 'mockDesc',
-  //         problem_types: [],
-  //       },
-  //       problem_types: [],
-  //     },
-  //     {
-  //       id: '3',
-  //       requester: 'Mockerson',
-  //       phone: '61988554474',
-  //       city_id: '123',
-  //       workstation_id: '123',
-  //       email: 'mockerson@mock.com',
-  //       date: new Date(),
-  //       problem_category: {
-  //         id: '123',
-  //         name: 'mockCategory',
-  //         description: 'mockDesc',
-  //         problem_types: [],
-  //       },
-  //       problem_types: [],
-  //     },
-  //   ];
+  it('should sort the issues in descending order based on the date', () => {
+    const issues: Issue[] = [
+      { id: '1', date: '2021-09-01' },
+      { id: '2', date: '2021-08-15' },
+      { id: '3', date: '2021-08-30' },
+    ];
 
-  //   const sortedIssues = sortIssues(issues);
+    const sortedIssues = sortIssues(issues);
 
-  //   expect(sortedIssues).toEqual([
-  //     {
-  //       id: '3',
-  //       requester: 'Mockerson',
-  //       phone: '61988554474',
-  //       city_id: '123',
-  //       workstation_id: '123',
-  //       email: 'mockerson@mock.com',
-  //       date: '2023-06-16T15:30:45.500Z',
-  //       problem_category: {
-  //         id: '123',
-  //         name: 'mockCategory',
-  //         description: 'mockDesc',
-  //         problem_types: [],
-  //       },
-  //       problem_types: [],
-  //     },
-  //     {
-  //       id: '1',
-  //       requester: 'Mockerson',
-  //       phone: '61988554474',
-  //       city_id: '123',
-  //       workstation_id: '123',
-  //       email: 'mockerson@mock.com',
-  //       date: '2023-06-15T15:30:45.500Z',
-  //       problem_category: {
-  //         id: '123',
-  //         name: 'mockCategory',
-  //         description: 'mockDesc',
-  //         problem_types: [],
-  //       },
-  //       problem_types: [],
-  //     },
-  //     {
-  //       id: '2',
-  //       requester: 'Mockerson',
-  //       phone: '61988554474',
-  //       city_id: '123',
-  //       workstation_id: '123',
-  //       email: 'mockerson@mock.com',
-  //       date: '2023-06-14T15:30:45.500Z',
-  //       problem_category: {
-  //         id: '123',
-  //         name: 'mockCategory',
-  //         description: 'mockDesc',
-  //         problem_types: [],
-  //       },
-  //       problem_types: [],
-  //     },
-  //   ]);
-  // });
+    expect(sortedIssues).toEqual([
+      { id: '1', date: '2021-09-01' },
+      { id: '3', date: '2021-08-30' },
+      { id: '2', date: '2021-08-15' },
+    ]);
+  });
+
+  it('should return the same array when the issues are already sorted', () => {
+    const issues: Issue[] = [
+      { id: '1', date: '2021-09-01' },
+      { id: '2', date: '2021-08-30' },
+      { id: '3', date: '2021-08-15' },
+    ];
+
+    const sortedIssues = sortIssues(issues);
+
+    expect(sortedIssues).toEqual(issues);
+  });
 });
