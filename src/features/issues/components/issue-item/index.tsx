@@ -15,6 +15,7 @@ import { useGetAllCities } from '@/features/cities/api/get-all-cities';
 import { DeleteButton } from '@/components/action-buttons/delete-button';
 import { ItemActions } from '@/components/list-item/list-item-actions';
 import { Permission } from '@/components/permission';
+import { useGetAllSchedules } from '@/features/schedules/api/get-all-schedules';
 
 interface IssueItemProps {
   issue: Issue;
@@ -33,6 +34,12 @@ export function IssueItem({
   const city = cities?.find((city) => {
     return city?.id === issue?.city_id;
   });
+
+  const { data: schedules } = useGetAllSchedules();
+
+  const isIssueScheduled = schedules?.some(
+    (schedule) => schedule.issue.id === issue.id
+  );
 
   return (
     <Box>
@@ -114,7 +121,11 @@ export function IssueItem({
                   }}
                 >
                   <ItemActions item={city}>
-                    <Button onClick={onOpen}>Gerar Agendamento</Button>
+                    {!isIssueScheduled ? (
+                      <Button onClick={onOpen}>Gerar Agendamento</Button>
+                    ) : (
+                      (null as any)
+                    )}
 
                     <DeleteButton
                       onClick={() => onDelete(issue.id)}
