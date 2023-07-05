@@ -225,7 +225,7 @@ export function GerenciarTutoriais() {
 
         <div style={{ alignItems: 'center', marginTop: 7 }}>
           <Select
-            aria-label="Filtrar por status"
+            aria-label="Filtrar por categoria"
             placeholder={
               <Flex alignItems="center">
                 <Icon as={FaTags} boxSize={4} mr={2} />
