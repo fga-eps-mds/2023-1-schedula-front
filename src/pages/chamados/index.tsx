@@ -9,6 +9,7 @@ import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
 import { IssueItem } from '@/features/issues/components/issue-item';
 import { useDeleteIssue } from '@/features/issues/api/delete-issue';
+import { ISSUES_ENDPOINT } from '@/features/issues/constants/requests';
 
 export function sortIssues(issues: Issue[] | undefined): Issue[] {
   if (!issues) {
@@ -29,9 +30,16 @@ export function Chamados() {
     isLoading: isLoadingIssues,
     refetch,
   } = useGetAllIssues();
+  const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
   const sortedIssues = sortIssues(issues);
 
-  const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
+  const handleExport = useCallback(() => {
+    const startDate = '2021-01-01';
+    const endDate = '2021-12-31';
+    const fileUrl = `${ISSUES_ENDPOINT}/report/${startDate}/${endDate}`;
+
+    window.open(fileUrl, '_blank');
+  }, []);
 
   const onDelete = useCallback(
     (issueId: string) => {
@@ -56,6 +64,12 @@ export function Chamados() {
       <PageHeader title="Atendimentos">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
+          <Button
+            onClick={handleExport}
+            variant="outline"
+          >
+            Exportar
+          </Button>
           <Permission allowedRoles={['ADMIN', 'BASIC']}>
             <Link to="/chamados/registrar">
               <Button variant="primary">Novo Atendimento</Button>
