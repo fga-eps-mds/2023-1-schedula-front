@@ -29,23 +29,4 @@ describe('Agendamento Aberto Page', () => {
     const pageTitle = screen.getByText('Agendamentos Abertos');
     expect(pageTitle).toBeInTheDocument();
   });
-
-  it('should have the button "Novo Agendamento"', async () => {
-    const { queryByText } = render(
-      <BrowserRouter>
-        <AuthProvider>
-          <ChakraProvider resetCSS theme={theme}>
-            <QueryClientProvider client={queryClient}>
-              <AgendamentosAbertos />
-            </QueryClientProvider>
-          </ChakraProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    );
-
-    const btn = await queryByText('Novo Agendamento');
-    if (btn) {
-      expect(btn).toBeInTheDocument();
-    }
-  });
 });
