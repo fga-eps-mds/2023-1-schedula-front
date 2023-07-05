@@ -54,7 +54,6 @@ export function ScheduleExport() {
         schedule.issue.phone,
         schedule.description,
       ];
-      console.log(workstation);
       tableRows.push(ticketData);
     });
 
