@@ -20,26 +20,26 @@ import { ScheduleEditModal } from '@/features/schedules/components/schedule-edit
 export function AgendamentosAbertos() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [scheduleToEdit, setScheduleToEdit] = useState<
-    Schedule | ScheduleOpen
+    ScheduleOpen | Schedule
   >();
 
   const {
-    data: schedules,
-    isLoading: isLoadingSchedules,
-    refetch: refetchSchedules,
-  } = useGetAllSchedules();
-  const {
+    refetch: refetchSchedulesOpen,
     data: schedulesOpen,
     isLoading: isLoadingSchedulesOpen,
-    refetch: refetchSchedulesOpen,
   } = useGetAllSchedulesOpen();
+  const {
+    refetch: refetchSchedules,
+    data: schedules,
+    isLoading: isLoadingSchedules,
+  } = useGetAllSchedules();
 
-  const isLoading = isLoadingSchedules || isLoadingSchedulesOpen;
+  const isLoading = isLoadingSchedulesOpen || isLoadingSchedules;
 
   const refetch = useCallback(async () => {
-    refetchSchedules();
     refetchSchedulesOpen();
-  }, [refetchSchedules, refetchSchedulesOpen]);
+    refetchSchedules();
+  }, [refetchSchedulesOpen, refetchSchedules]);
 
   const allSchedules =
     schedules && schedulesOpen ? [...schedules, ...schedulesOpen] : [];
