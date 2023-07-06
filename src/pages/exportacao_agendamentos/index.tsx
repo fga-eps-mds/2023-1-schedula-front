@@ -28,15 +28,15 @@ export function ScheduleExport() {
 
   function handleExportSchedules() {
     // eslint-disable-next-line new-cap
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
 
     const tableColumn = [
-      'Status',
-      'Atendente',
-      'Solicitante',
       'Data',
       'Posto de Trabalho',
-      'Telefone',
+      'Status',
+      'Solicitante',
+      'Telefone do Posto',
+      'Telefone do Solicitante',
       'Descrição',
     ];
     const tableRows: string[][] = [];
@@ -46,11 +46,11 @@ export function ScheduleExport() {
         return workstation?.id === schedule?.issue.workstation_id;
       });
       const ticketData: string[] | any = [
-        schedule.status,
-        schedule.issue.email,
-        schedule.issue.requester,
         formatDate(schedule.dateTime),
-        workstation?.name,
+        `${workstation?.name} - ${workstation?.city.name}`,
+        schedule.status,
+        schedule.issue.requester,
+        workstation?.phone,
         schedule.issue.phone,
         schedule.description,
       ];
@@ -60,13 +60,18 @@ export function ScheduleExport() {
     /* Cria a tabela e altera as margens do documento */
     (doc as any).autoTable(tableColumn, tableRows, {
       startY: 20,
-      margin: 3,
+      margin: 10,
       columnStyles: {
-        1: { cellWidth: 40 },
-        6: { minCellWidth: 50 },
+        1: { cellWidth: 40 }, // Define o tamanho das colunas
+        2: { cellWidth: 30 },
+        3: { cellWidth: 40 },
+        4: { cellWidth: 30 },
+        5: { cellWidth: 30 },
+        6: { minCellWidth: 40 },
       },
     });
-    doc.text('Lista de agendamentos', 3, 15);
+
+    doc.text('Lista de agendamentos', 10, 15);
     doc.save(`agendamentos.pdf`);
   }
 
@@ -87,12 +92,12 @@ export function ScheduleExport() {
           <Thead>
             <Tr>
               <Th />
-              <Th>Status</Th>
-              <Th>Atendente</Th>
-              <Th>Solicitante</Th>
               <Th>Data</Th>
               <Th>Posto de Trabalho</Th>
-              <Th>Telefone</Th>
+              <Th>Status</Th>
+              <Th>Solicitante</Th>
+              <Th>Telefone do Posto</Th>
+              <Th>Telefone do Solicitante</Th>
               <Th>Descrição</Th>
             </Tr>
           </Thead>
