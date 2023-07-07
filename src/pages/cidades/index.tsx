@@ -57,13 +57,17 @@ export function Cities() {
     let i = 0;
     setAux(i);
     const interval = setInterval(() => {
-      refetch?.();
-      if (i >= 3) {
-        setAux(i - i);
-        clearInterval(interval);
-      }
-      i += 1;
-      setAux(i);
+      const fetchData = async () => {
+        await refetch?.();
+        if (i >= 3) {
+          setAux(0);
+          clearInterval(interval);
+        }
+        i += 1;
+        setAux(i);
+      };
+
+      fetchData();
     }, 1000);
     return () => clearInterval(interval);
   }, [modalClosed, refetch]);
