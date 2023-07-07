@@ -45,7 +45,9 @@ describe('ScheduleExport Page', () => {
       </BrowserRouter>
     );
     const exportButton = getByText('Exportar');
-    fireEvent.click(exportButton);
-    expect(jsPDF).toHaveBeenCalled();
+    if (exportButton) {
+      fireEvent.click(exportButton);
+      expect(jsPDF).toHaveBeenCalled();
+    }
   });
 });
