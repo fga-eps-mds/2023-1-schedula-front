@@ -67,7 +67,7 @@ export const SideBarNotification = memo(
                 style={{
                   opacity:
                     filteredNotifications?.length === 0 ||
-                    user.profile !== 'BASIC'
+                    user.profile === 'USER'
                       ? 0
                       : 1,
                 }}

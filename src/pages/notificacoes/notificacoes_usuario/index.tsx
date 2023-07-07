@@ -1,5 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import {
+  Button,
   Input,
   InputGroup,
   InputLeftElement,
@@ -14,8 +16,11 @@ import { useGetAllNotification } from '@/features/notifications/api/get-all-noti
 import { ListView } from '@/components/list';
 import { NotificationPendencyModal } from '@/features/notifications/components/notification-pendency-modal';
 import { usePutUpdateNotifications } from '@/features/notifications/api/put-update-notifications';
+import { Permission } from '@/components/permission';
 
 export function NotificacaoUsuario() {
+  const navigate = useNavigate();
+
   const { data: notifications, isLoading } = useGetAllNotification();
 
   const [filteredNotifications, setFilteredNotifications] = useState<
@@ -104,7 +109,16 @@ export function NotificacaoUsuario() {
 
   return (
     <>
-      <PageHeader title="Notificações" />
+      <PageHeader title="Notificações">
+        <Permission allowedRoles={['ADMIN']}>
+          <Button
+            variant="primary"
+            onClick={() => navigate('notificacoes_admin')}
+          >
+            Gerenciamento de Notificações
+          </Button>
+        </Permission>
+      </PageHeader>
 
       <div>
         <InputGroup>

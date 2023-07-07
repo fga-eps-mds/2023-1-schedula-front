@@ -20,6 +20,7 @@ import { RegistrarAgendamento } from '@/pages/agendamento_externo/index';
 import { AgendamentosAbertos } from '@/pages/agendamentos_abertos';
 import { DefaultLayoutOpen } from '@/components/layout/default-layout-open';
 import { Notificacoes } from '@/pages/notificacoes';
+import { NotificacaoAdmin } from '@/pages/notificacoes/notificacoes_admin';
 
 export function Router() {
   return (
@@ -154,6 +155,14 @@ export function Router() {
           element={
             <RequireAuth>
               <Notificacoes />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="notificacoes/notificacoes_admin"
+          element={
+            <RequireAuth>
+              <NotificacaoAdmin />
             </RequireAuth>
           }
         />
