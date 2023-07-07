@@ -43,8 +43,13 @@ const schedule: Schedule = {
 };
 
 const workstation = {
-  id: 1,
-  name: 'Workstation 1',
+  id: '1',
+  name: 'mockStation',
+  city: { id: '2', name: 'Goiás', state: 'Goiânia' },
+  phone: '9999999999',
+  ip: '127.0.0.0',
+  gateway: 'mockGate',
+  is_regional: true,
 };
 
 const selectedSchedules: Schedule[] = [];
