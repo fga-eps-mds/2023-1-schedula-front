@@ -17,7 +17,7 @@ export const getAllNotifications = async () =>
       const errMessage =
         err?.response?.data?.message ??
         'Não foi possível carregar as notificações. Tente novamente mais tarde!';
-      toast.error(errMessage);
+      // toast.error(errMessage);
       return [] as GetAllNotificationsResponse;
     });
 

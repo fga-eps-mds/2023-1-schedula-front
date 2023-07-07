@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useNavigate } from 'react-router-dom';
 import { useCallback, useState, useEffect } from 'react';
-import { Button, useDisclosure, HStack, Spinner } from '@chakra-ui/react';
+import {
+  Button,
+  useDisclosure,
+  HStack,
+  Spinner,
+  Tooltip,
+} from '@chakra-ui/react';
+import { IoArrowBackCircleOutline } from 'react-icons/all';
 import { Select } from 'chakra-react-select';
 import { PageHeader } from '@/components/page-header';
 import { useGetallAlerts } from '@/features/alerts/api/get-all-alerts';
@@ -16,8 +24,11 @@ import {
 } from '@/components/form-fields/controlled-select/styles';
 import { Permission } from '@/components/permission';
 import { AlertModal } from '@/features/alerts/components/alert-modal';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function NotificacaoAdmin() {
+  const navigate = useNavigate();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: alerts, isLoading, refetch } = useGetallAlerts();
 
@@ -29,10 +40,11 @@ export function NotificacaoAdmin() {
   const onDelete = useCallback(
     (alertId: string) => {
       deleteAlert({ alertId });
-      // setModalClosed((prevModalClosed) => !prevModalClosed);
     },
     [deleteAlert]
   );
+
+  const userAuth = useAuth();
 
   const renderAlertItemManager = useCallback(
     (alert: Alert) => (
@@ -93,8 +105,23 @@ export function NotificacaoAdmin() {
 
   return (
     <>
-      <PageHeader title="Notificações">
+      <PageHeader title="Gerenciar notificações">
         <HStack spacing={2}>
+          <Tooltip
+            label="Voltar para Notificações"
+            placement="top"
+            color="white"
+            bg="gray"
+          >
+            <span>
+              {' '}
+              <IoArrowBackCircleOutline
+                style={{ cursor: 'pointer' }}
+                size={35}
+                onClick={() => navigate('/notificacoes')}
+              />
+            </span>
+          </Tooltip>
           <RefreshButton refresh={refetch} />
           <Permission allowedRoles={['ADMIN']}>
             <Button variant="primary" onClick={onOpen}>
@@ -123,7 +150,9 @@ export function NotificacaoAdmin() {
         <Spinner thickness="4px" speed="0.35s" color="orange.500" size="xl" />
       ) : (
         <ListView<Alert>
-          items={filteredAlerts}
+          items={filteredAlerts.filter((alert) => {
+            return alert.sourceEmail === userAuth.user?.email;
+          })}
           render={renderAlertItemManager}
           isLoading={isLoading}
         />

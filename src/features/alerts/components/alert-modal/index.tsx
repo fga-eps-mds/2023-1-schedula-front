@@ -30,6 +30,8 @@ export function AlertModal({
   const [filterBasicUsers, setFilterBasicUsers] = useState(users || []);
   const { user } = useAuth();
 
+  const userAuth = useAuth();
+
   const handleSubmit = useCallback(
     async ({ target, message }: AlertPayload) => {
       const { label, value } = target;
@@ -62,10 +64,14 @@ export function AlertModal({
 
   useEffect(() => {
     if (users) {
-      const filteredUsers = users.filter((user) => user.profile === 'BASIC');
+      const filteredUsers = users.filter(
+        (user) =>
+          (user.profile === 'BASIC' || user.profile === 'ADMIN') &&
+          user.email !== userAuth.user?.email
+      );
       setFilterBasicUsers(filteredUsers);
     }
-  }, [users]);
+  }, [users, userAuth.user?.email]);
 
   return (
     <Modal title="Criar alerta" size="2xl" onClose={onClose} {...props}>

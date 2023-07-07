@@ -48,7 +48,7 @@ export const SideBar = memo(() => {
           label="Notificações"
           pathname="/notificacoes"
           icon={AiOutlineBell}
-          allowedUsersPath={['ADMIN', 'BASIC', 'USER']}
+          allowedUsersPath={['ADMIN', 'BASIC']}
         />
       </Box>
       <Box shadow="xl" p=".5rem">
