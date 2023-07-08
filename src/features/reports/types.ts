@@ -4,6 +4,6 @@ export interface GetReportParams {
 }
 
 export interface GetReportResponse {
-  type: string,
-  data: ArrayBuffer,
+  type: string;
+  data: ArrayBuffer;
 }

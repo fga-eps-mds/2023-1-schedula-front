@@ -51,7 +51,6 @@ export function Chamados() {
   } = useGetReport({
     onSuccessCallBack: () => {},
   });
-  const sortedIssues = sortIssues(issues);
 
   const onDelete = useCallback(
     (issueId: string) => {
@@ -102,6 +101,16 @@ export function Chamados() {
     []
   );
 
+  const applyFilter = useCallback(() => {
+    setIsFiltering(true);
+  }, []);
+
+  const clearFilter = useCallback(() => {
+    setIsFiltering(false);
+    setStartDate(null);
+    setEndDate(null);
+  }, []);
+
   const handleExport = useCallback(async () => {
     if (!startDate || !endDate) {
       toast.warning('Selecione um período para exportar o relatório');
@@ -116,7 +125,7 @@ export function Chamados() {
 
     // Reset filter
     clearFilter();
-  }, [startDate, endDate]);
+  }, [startDate, endDate, getReport, clearFilter]);
 
   useEffect(() => {
     if (!isLoadingReport && report) {
@@ -135,17 +144,7 @@ export function Chamados() {
 
       console.log('Relatório gerado com sucesso!');
     }
-  }, [isLoadingReport]);
-
-  const applyFilter = useCallback(() => {
-    setIsFiltering(true);
-  }, []);
-
-  const clearFilter = useCallback(() => {
-    setIsFiltering(false);
-    setStartDate(null);
-    setEndDate(null);
-  }, []);
+  }, [isLoadingReport, report]);
 
   let filteredIssues = issues;
 

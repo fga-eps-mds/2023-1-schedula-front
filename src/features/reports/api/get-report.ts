@@ -18,7 +18,7 @@ const getReport = async ({ startDate, endDate }: GetReportParams) =>
         'Não foi possível carregar o relatório. Tente novamente mais tarde!'
       );
       return error;
-    })
+    });
 
 // Set this with mutation
 export const useGetReport = ({
@@ -36,14 +36,3 @@ export const useGetReport = ({
     },
   });
 };
-  // return useQuery(
-  //   [REPORT_CACHE_KEYS.reportsCache],
-  //   () => getReport({ startDate: null, endDate: null }),
-  //   {
-  //     onSuccess() {
-  //       onSuccessCallBack?.();
-  //     },
-  //   }
-  // );
-// }
-
