@@ -9,18 +9,20 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TiFilter } from 'react-icons/ti';
 import { IoClose } from 'react-icons/io5';
 import { RefreshButton } from '@/components/action-buttons/refresh-button';
 import { PageHeader } from '@/components/page-header';
 import { useGetAllIssues } from '@/features/issues/api/get-all-issues';
+import { useGetReport } from '@/features/reports/api/get-report';
 import { Issue } from '@/features/issues/types';
 import { Permission } from '@/components/permission';
 import { ListView } from '@/components/list';
 import { IssueItem } from '@/features/issues/components/issue-item';
 import { useDeleteIssue } from '@/features/issues/api/delete-issue';
 import { ScheduleModal } from '@/features/schedules/components/schedule-modal';
+import { toast } from '@/utils/toast';
 
 export function sortIssues(issues: Issue[] | undefined): Issue[] {
   if (!issues) {
@@ -41,8 +43,14 @@ export function Chamados() {
     isLoading: isLoadingIssues,
     refetch,
   } = useGetAllIssues();
-
   const { mutate: deleteIssue, isLoading: isRemovingIssue } = useDeleteIssue();
+  const {
+    isLoading: isLoadingReport,
+    data: report,
+    mutate: getReport,
+  } = useGetReport({
+    onSuccessCallBack: () => {},
+  });
 
   const onDelete = useCallback(
     (issueId: string) => {
@@ -103,6 +111,41 @@ export function Chamados() {
     setEndDate(null);
   }, []);
 
+  const handleExport = useCallback(async () => {
+    if (!startDate || !endDate) {
+      toast.warning('Selecione um período para exportar o relatório');
+      return;
+    }
+
+    // Wait for report to be generated
+    await getReport({
+      startDate,
+      endDate,
+    });
+
+    // Reset filter
+    clearFilter();
+  }, [startDate, endDate, getReport, clearFilter]);
+
+  useEffect(() => {
+    if (!isLoadingReport && report) {
+      const reportData = report.data;
+      const byteArray = new Uint8Array(reportData);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const fileUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = `RELATÓRIO-${new Date().toLocaleString('pr-br', {
+        timeZone: 'America/Sao_Paulo',
+      })}.pdf`;
+      link.click();
+
+      URL.revokeObjectURL(fileUrl);
+
+      console.log('Relatório gerado com sucesso!');
+    }
+  }, [isLoadingReport, report]);
+
   let filteredIssues = issues;
 
   if (isFiltering) {
@@ -122,6 +165,9 @@ export function Chamados() {
       <PageHeader title="Atendimentos">
         <HStack spacing={2}>
           <RefreshButton refresh={refetch} />
+          <Button onClick={handleExport} variant="outline">
+            Exportar
+          </Button>
           <Permission allowedRoles={['ADMIN', 'BASIC']}>
             <Link to="/chamados/registrar">
               <Button variant="primary">Novo Atendimento</Button>
