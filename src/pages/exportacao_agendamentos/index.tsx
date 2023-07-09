@@ -97,17 +97,19 @@ export function ScheduleExport() {
             </Tr>
           </Thead>
           <Tbody>
-            {schedules?.map((schedule) => (
-              <ScheduleTableItem
-                key={schedule.id}
-                schedule={schedule}
-                selectedSchedules={selectedSchedules}
-                setSelectedSchedules={setSelectedSchedules}
-                workstation={workstations?.find((workstation) => {
-                  return workstation?.id === schedule?.issue.workstation_id;
-                })}
-              />
-            ))}
+            {Array.isArray(schedules)
+              ? schedules?.map((schedule) => (
+                  <ScheduleTableItem
+                    key={schedule.id}
+                    schedule={schedule}
+                    selectedSchedules={selectedSchedules}
+                    setSelectedSchedules={setSelectedSchedules}
+                    workstation={workstations?.find((workstation) => {
+                      return workstation?.id === schedule?.issue.workstation_id;
+                    })}
+                  />
+                ))
+              : null}
           </Tbody>
         </Table>
       </TableContainer>
