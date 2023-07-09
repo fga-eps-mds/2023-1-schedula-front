@@ -4,8 +4,10 @@ export enum API_STATUS_CACHE_KEYS {
   locationsStatus = 'locations-service-status',
   usersStatus = 'users-service-status',
   tutorialsStatus = 'tutorials-service-status',
+  alertsStatus = 'alerts-service-status',
   usersServiceReleaseVersions = 'users-service-release-version',
   schedulesServiceReleaseVersions = 'schedules-service-release-version',
   locationsServiceReleaseVersions = 'locations-service-release-version',
   tutorialsServiceReleaseVersions = 'tutorials-service-release-version',
+  alertsServiceReleaseVersions = 'alerts-service-release-version',
 }
