@@ -2,6 +2,7 @@ import { useGetUsersApiStatus } from '@/features/api-status/api/get-users-api-st
 import { useGetScheduleApiStatus } from '@/features/api-status/api/get-schedule-api-status';
 import { useGetLocationsApiStatus } from '@/features/api-status/api/get-location-api-status';
 import { useGetTutorialsApiStatus } from '@/features/api-status/api/get-tutorial-api-status';
+import { useGetAlertsApiStatus } from '@/features/api-status/api/get-alert-api-status';
 
 export function useAPIStatus() {
   const {
@@ -20,6 +21,10 @@ export function useAPIStatus() {
     isError: tutorialServiceUnavailable,
     isLoading: isLoadingTutoriaisStatus,
   } = useGetTutorialsApiStatus();
+  const {
+    isError: alertServiceUnavailable,
+    isLoading: isLoadingAlertasStatus,
+  } = useGetAlertsApiStatus();
 
   return {
     usuariosStatus: userServiceUnavailable,
@@ -30,5 +35,7 @@ export function useAPIStatus() {
     isLoadingLocalidadesStatus,
     tutoriaisStatus: tutorialServiceUnavailable,
     isLoadingTutoriaisStatus,
+    alertasStatus: alertServiceUnavailable,
+    isLoadingAlertasStatus,
   };
 }

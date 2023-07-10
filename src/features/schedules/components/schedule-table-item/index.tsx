@@ -43,11 +43,11 @@ export function ScheduleTableItem({
           onChange={handleCheckToggle}
         />
       </Td>
-      <Td>{currentStatus ?? ''}</Td>
-      <Td>{schedule?.issue?.email}</Td>
-      <Td>{schedule?.issue?.requester ?? ''}</Td>
       <Td>{formatDate(schedule?.dateTime ?? '')}</Td>
-      <Td>{workstation.name}</Td>
+      <Td>{`${workstation?.name} - ${workstation?.city.name}`}</Td>
+      <Td>{currentStatus ?? ''}</Td>
+      <Td>{schedule?.issue?.requester ?? ''}</Td>
+      <Td>{workstation.phone}</Td>
       <Td>{schedule?.issue?.phone ?? ''}</Td>
       <Td>{schedule?.description ?? ''}</Td>
     </Tr>

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { vi } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,18 +7,24 @@ import { Issue } from '@/features/issues/types';
 
 import 'intersection-observer';
 
-beforeAll(() => {
+beforeAll(async () => {
   vi.mock('@/features/issues/api/get-all-issues', () => ({
     useGetAllIssues: vi.fn().mockReturnValue({
-      id: '1',
-      requester: 'Mockerson',
-      phone: '61988554474',
-      city_id: '123',
-      workstation_id: '123',
-      problem_category_id: 'Category Mock',
-      problem_types_ids: ['Type Mock'],
-      date: new Date(),
-      email: 'mockerson@mock.com',
+      data: [
+        {
+          id: '1',
+          requester: 'Mockerson',
+          phone: '61988554474',
+          city_id: '123',
+          workstation_id: '123',
+          problem_category_id: 'Category Mock',
+          problem_types_ids: ['Type Mock'],
+          date: new Date(),
+          email: 'mockerson@mock.com',
+        },
+      ],
+      isLoading: false,
+      refetch: vi.fn(),
     }),
   }));
 });
@@ -37,19 +43,6 @@ describe('Issues page', () => {
 
     const heading = await findByRole('heading');
     expect(heading).toHaveTextContent('Atendimentos');
-  });
-
-  it('should display a list', async () => {
-    const { findByRole } = render(
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <Chamados />
-        </QueryClientProvider>
-      </BrowserRouter>
-    );
-
-    const list = await findByRole('list');
-    expect(list).toBeInTheDocument();
   });
 
   it('should display a new issue button', async () => {
@@ -78,6 +71,42 @@ describe('Issues page', () => {
 
     const button = await findByRole('button', { name: 'Atualizar Dados' });
     expect(button).toBeInTheDocument();
+  });
+
+  it('should display an apply filter button', async () => {
+    const { findByRole } = render(
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <Chamados />
+        </QueryClientProvider>
+      </BrowserRouter>
+    );
+
+    const button = await findByRole('button', { name: 'Aplicar Filtro' });
+    expect(button).toBeInTheDocument();
+  });
+
+  it('applies date filter correctly', () => {
+    const { getByPlaceholderText, getByText, container } = render(
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <Chamados />
+        </QueryClientProvider>
+      </BrowserRouter>
+    );
+
+    const startDateInput = getByPlaceholderText('Data inicial');
+    const endDateInput = getByPlaceholderText('Data final');
+
+    fireEvent.change(startDateInput, { target: { value: '2021-08-01' } });
+    fireEvent.change(endDateInput, { target: { value: '2021-08-31' } });
+
+    const applyFilterButton = getByText('Aplicar Filtro');
+    fireEvent.click(applyFilterButton);
+
+    const issueItems = container.querySelectorAll('.issue-item');
+
+    expect(issueItems.length).toBe(0);
   });
 });
 

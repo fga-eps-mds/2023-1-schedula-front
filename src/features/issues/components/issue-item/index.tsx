@@ -37,9 +37,9 @@ export function IssueItem({
 
   const { data: schedules } = useGetAllSchedules();
 
-  const isIssueScheduled = schedules?.some(
-    (schedule) => schedule.issue.id === issue.id
-  );
+  const isIssueScheduled = Array.isArray(schedules)
+    ? schedules?.some((schedule) => schedule.issue.id === issue.id)
+    : false;
 
   return (
     <Box>
