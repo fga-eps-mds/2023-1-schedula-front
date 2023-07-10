@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
-  Flex,
   Grid,
   GridItem,
   Icon,
@@ -10,11 +8,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { BsPersonCircle, BsTelephoneFill } from 'react-icons/bs';
 import { HiOutlineMail } from 'react-icons/hi';
 import { useLocation } from 'react-router-dom';
-import { FaPlus } from 'react-icons/fa';
 import { ControlledSelect } from '@/components/form-fields';
 import { Input } from '@/components/form-fields/input';
 import { useGetAllCities } from '@/features/cities/api/get-all-cities';
@@ -28,8 +25,6 @@ import { parseSelectedDatetime } from '@/utils/format-date';
 import { useGetAllWorkstations } from '@/features/workstations/api/get-all-workstations';
 import { useGetAllProblemCategories } from '@/features/problem/api/get-all-problem-category';
 import { maskPhoneField } from '@/utils/form-utils';
-import { DeleteButton } from '@/components/action-buttons/delete-button';
-import { ActionButton } from '@/components/action-buttons';
 
 export function UpdateExternIssueForm() {
   const locate = useLocation();
@@ -46,7 +41,6 @@ export function UpdateExternIssueForm() {
     formState: { errors },
   } = useForm<IssuePayloadOpen>({
     // define alguns valores padrão para os campos abaixo.
-
     defaultValues: {
       city_payload: {
         label: locate.state.city.name ?? '',
@@ -107,6 +101,7 @@ export function UpdateExternIssueForm() {
   const category = watch('problem_category_payload');
   const problemTypes = watch('problem_types_payload');
 
+  // função que retorna os postos de trabalho de acordo com a cidade selecionada
   const workstationsOptions = city
     ? workstations
         ?.filter((workstation) => workstation.city.id === city.value)
@@ -116,6 +111,7 @@ export function UpdateExternIssueForm() {
         }))
     : [];
 
+  // função que retorna os tipos de problemas de acordo com a categoria selecionada
   const problemTypesOptions = category
     ? problem_categories
         ?.filter((cat) => cat.id === category.value)
@@ -167,23 +163,6 @@ export function UpdateExternIssueForm() {
       setSelectedProblemTypes(problemTypes);
     }
   }, [problemTypes]);
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    shouldUnregister: true,
-    name: 'alerts' as any,
-  });
-
-  const handleAddDate = useCallback(() => {
-    append({ label: '', value: '' });
-  }, [append]);
-
-  const handleRemoveDate = useCallback(
-    (index: number) => () => {
-      remove(index);
-    },
-    [remove]
-  );
 
   return (
     <form id="update-issue-form" onSubmit={handleSubmit(onSubmit)}>
@@ -279,10 +258,6 @@ export function UpdateExternIssueForm() {
         />
 
         <ControlledSelect
-          // defaultValue={{
-          //   label: city.name,
-          //   value: city.id,
-          // }}
           control={control}
           name="city_payload"
           id="city_payload"
@@ -292,17 +267,6 @@ export function UpdateExternIssueForm() {
           label="Cidade"
           rules={{ required: 'Campo obrigatório' }}
         />
-
-        {/* <Select
-          aria-label="Filtrar por cidade"
-          placeholder="Cidade"
-          options={citiesOptions}
-          onChange={(option) => setSelectedCity(option?.value || '')}
-          isClearable
-          isSearchable={false}
-          chakraStyles={chakraStyles}
-          components={customComponents}
-        /> */}
 
         <ControlledSelect
           control={control}
@@ -353,7 +317,7 @@ export function UpdateExternIssueForm() {
               },
             }}
             render={({
-              field: { onChange, onBlur, ref, value },
+              field: { onChange, onBlur, ref },
               fieldState: { error },
             }) => (
               <>
@@ -374,78 +338,6 @@ export function UpdateExternIssueForm() {
               </>
             )}
           />
-        </Box>
-
-        <Box>
-          <Flex gap={4} alignItems="center" my="-0.2rem">
-            <Text>Alertas</Text>
-          </Flex>
-          <Divider mb={4} mt={1} />
-          <Grid templateColumns="repeat(auto-fill, minmax(220px, 1fr))" gap={6}>
-            {fields?.map((field, index) => {
-              return (
-                <Flex key={field.id} gap={1}>
-                  <Controller
-                    control={control}
-                    name="alerts"
-                    rules={{
-                      min: {
-                        value: new Date().toISOString(),
-                        message: 'Informe uma data no futuro.',
-                      },
-                      required: 'Informe a data ou exclua o alerta',
-                    }}
-                    render={({
-                      field: { onChange, onBlur, ref, value },
-                      fieldState: { error },
-                    }) => (
-                      <Box w="full">
-                        <Input
-                          label={`Alerta ${index + 1}`}
-                          type="date"
-                          name={`alert_dates.${index}.date`}
-                          id={`alert_dates.${index}.date`}
-                          onChange={onChange}
-                          min={new Date().toISOString()}
-                          ref={ref}
-                          onBlur={onBlur}
-                          w="full"
-                          // value={value}
-                          value={value?.[0]?.toISOString() || ''}
-                        />
-                        <Text color="red.400" mt=".5rem">
-                          {error ? error.message : null}
-                        </Text>
-                      </Box>
-                    )}
-                  />
-
-                  <DeleteButton
-                    label={`Alerta ${index + 1}`}
-                    onClick={handleRemoveDate(index)}
-                    variant="ghost"
-                    alignSelf="flex-end"
-                    _hover={{
-                      backgroundColor: 'blackAlpha.300',
-                    }}
-                  />
-                </Flex>
-              );
-            })}
-          </Grid>
-          <Flex my="-0.3rem">
-            <ActionButton
-              label="Adicionar Alerta"
-              icon={<FaPlus />}
-              variant="outline"
-              disabled
-              color="primary"
-              tooltipProps={{
-                placement: 'bottom',
-              }}
-              onClick={handleAddDate}
-            />
-          </Flex>
         </Box>
 
         <GridItem colSpan={2} display="center" justifyContent="center">

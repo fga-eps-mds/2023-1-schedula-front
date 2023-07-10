@@ -86,8 +86,9 @@ export function ExternIssueItem({
     onDelete(externIssue.id);
   };
 
-  const handleApproveHomolog = (justify: string) => {
-    const updatedExternIssue = { ...externIssue };
+  // função de aprovar agendamento que passa os dados pro serviço de envio de email e criação de agendamento
+  const handleApproveHomolog = (justify: string, dateTime: Date) => {
+    const updatedExternIssue = { ...externIssue, dateTime };
 
     const issueOpenId = updatedExternIssue?.id ?? '';
 
